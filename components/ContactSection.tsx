@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { Zap, Headphones, CheckCircle2, Send, Globe, Loader2, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
+import axiosInstance from "../lib/axiosInstance";
+import { ENDPOINTS } from "../lib/endpoints";
 
 export default function ContactSection() {
   const [activeCategory, setActiveCategory] = useState("Inquiry");
@@ -20,25 +22,15 @@ export default function ContactSection() {
     setLoading(true);
     setStatusMessage(null);
 
-    const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:5000";
-
     try {
-      const res = await fetch(`${apiBase}/api/inquiry`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          parivar_name: formData.parivar_name,
-          email: formData.email,
-          mobile: formData.mobile,
-          note: `[Category: ${activeCategory}] ${formData.note}`,
-        }),
+      const res = await axiosInstance.post(ENDPOINTS.INQUIRY, {
+        parivar_name: formData.parivar_name,
+        email: formData.email,
+        mobile: formData.mobile,
+        note: `[Category: ${activeCategory}] ${formData.note}`,
       });
 
-      const data = await res.json();
-
-      if (res.ok) {
+      if (res.status === 200 || res.status === 201) {
         toast.success("Inquiry Submitted Successfully!", {
           description: `Thank you! Your request for "${formData.parivar_name}" has been received. Our team will contact you soon.`,
           duration: 5000,
@@ -49,7 +41,7 @@ export default function ContactSection() {
         });
         setFormData({ parivar_name: "", email: "", mobile: "", note: "" });
       } else {
-        const errorText = data.message || "Failed to submit inquiry. Please try again.";
+        const errorText = res.data?.message || "Failed to submit inquiry. Please try again.";
         toast.error("Submission Failed", {
           description: errorText,
         });
