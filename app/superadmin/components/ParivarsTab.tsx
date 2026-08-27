@@ -7,12 +7,20 @@ import { useSuperAdmin } from "../context/SuperAdminContext";
 export default function ParivarsTab() {
   const { parivars, parivarsLoading, parivarSearch, setParivarSearch, fetchParivars, setEditingParivar } = useSuperAdmin();
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       fetchParivars();
+      setCurrentPage(1); // Reset to first page on search
     }, 800);
     return () => clearTimeout(timeout);
   }, [parivarSearch]);
+
+  const totalPages = Math.ceil(parivars.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentParivars = parivars.slice(startIndex, startIndex + itemsPerPage);
 
   const openEditModal = (p: any) => {
     setEditingParivar({
@@ -28,18 +36,7 @@ export default function ParivarsTab() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-3">
-        <div className="relative flex-1 max-w-lg">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-          <input
-            type="text"
-            placeholder="Search parivar name, slug, admin..."
-            value={parivarSearch}
-            onChange={(e) => setParivarSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-slate-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 shadow-2xs"
-          />
-        </div>
-      </div>
+
 
       <div className="bg-white border border-slate-200/80 rounded-2xl shadow-2xs overflow-hidden">
         <div className="overflow-x-auto">
@@ -55,7 +52,7 @@ export default function ParivarsTab() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {parivarsLoading ? (
+              {parivarsLoading && parivars.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="text-center py-10 text-slate-400 font-medium">
                     Loading registered communities...
@@ -69,7 +66,7 @@ export default function ParivarsTab() {
                   </td>
                 </tr>
               ) : (
-                parivars.map((p) => (
+                currentParivars.map((p) => (
                   <tr key={p._id} className="hover:bg-slate-50/60 transition-colors">
                     <td className="px-5 py-4 font-bold text-[#0B1340]">
                       <div className="flex items-center gap-2.5">
@@ -119,7 +116,7 @@ export default function ParivarsTab() {
                         onClick={() => openEditModal(p)}
                         className="px-3 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200/80 text-xs font-bold transition-all cursor-pointer inline-flex items-center gap-1"
                       >
-                        <span>Manage</span>
+                        <span>Edit</span>
                         <ChevronRight className="w-3 h-3" />
                       </button>
                     </td>
@@ -129,6 +126,33 @@ export default function ParivarsTab() {
             </tbody>
           </table>
         </div>
+        
+        {parivars.length > 0 && (
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-5 py-4 border-t border-slate-200 bg-slate-50/50">
+            <span className="text-xs text-slate-500 font-medium">
+              Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, parivars.length)} of {parivars.length} parivars
+            </span>
+            <div className="flex items-center rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
+              <button 
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                className="px-3.5 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors border-r border-slate-200"
+              >
+                Previous
+              </button>
+              <div className="flex items-center px-4 py-1.5 text-xs font-bold text-slate-700 bg-slate-50/50 border-r border-slate-200">
+                Page {currentPage} of {totalPages || 1}
+              </div>
+              <button 
+                disabled={currentPage === totalPages || totalPages === 0}
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                className="px-3.5 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

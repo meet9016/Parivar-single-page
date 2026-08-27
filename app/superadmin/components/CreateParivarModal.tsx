@@ -16,6 +16,35 @@ export default function CreateParivarModal() {
     admin_password: "",
   });
 
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  const validateAndSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const newErrors: { [key: string]: string } = {};
+
+    if (!newParivar.parivar_name.trim()) newErrors.parivar_name = "Parivar Name is required.";
+    if (!newParivar.admin_first_name.trim()) newErrors.admin_first_name = "First Name is required.";
+    if (!newParivar.admin_email.trim()) {
+      newErrors.admin_email = "Email is required.";
+    } else if (!newParivar.admin_email.trim().toLowerCase().endsWith("@gmail.com")) {
+      newErrors.admin_email = "Only @gmail.com emails are allowed.";
+    }
+
+    if (!newParivar.admin_mobile.trim()) {
+      newErrors.admin_mobile = "Mobile Number is required.";
+    } else if (!/^\d{10}$/.test(newParivar.admin_mobile.trim())) {
+      newErrors.admin_mobile = "Mobile Number must be exactly 10 digits.";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
+    handleCreateParivar(e, newParivar, setNewParivar);
+  };
+
   if (!isCreateModalOpen) return null;
 
   return (
@@ -41,14 +70,13 @@ export default function CreateParivarModal() {
           </p>
         </div>
 
-        <form onSubmit={(e) => handleCreateParivar(e, newParivar, setNewParivar)} className="space-y-3.5">
+        <form onSubmit={validateAndSubmit} noValidate className="space-y-3.5">
           <div>
             <label className="block text-xs font-bold text-slate-700 mb-1">
-              Parivar Name *
+              Parivar Name <span className="text-rose-500">*</span>
             </label>
             <input
               type="text"
-              required
               placeholder="e.g. Patel Parivar / Vala Parivar"
               value={newParivar.parivar_name}
               onChange={(e) => setNewParivar({ ...newParivar, parivar_name: e.target.value })}
@@ -57,21 +85,22 @@ export default function CreateParivarModal() {
             <p className="text-[10px] text-slate-400 mt-1">
               Database: <span className="font-mono text-blue-600 font-semibold">parivar_{newParivar.parivar_name ? newParivar.parivar_name.toLowerCase().replace(/[^a-z0-9]+/g, '_') : 'name'}</span>
             </p>
+            {errors.parivar_name && <p className="text-[11px] text-rose-500 mt-1 font-semibold">{errors.parivar_name}</p>}
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
-                Admin First Name *
+                Admin First Name <span className="text-rose-500">*</span>
               </label>
               <input
                 type="text"
-                required
                 placeholder="e.g. Ramesh"
                 value={newParivar.admin_first_name}
                 onChange={(e) => setNewParivar({ ...newParivar, admin_first_name: e.target.value })}
                 className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none"
               />
+              {errors.admin_first_name && <p className="text-[11px] text-rose-500 mt-1 font-semibold">{errors.admin_first_name}</p>}
             </div>
 
             <div>
@@ -91,30 +120,31 @@ export default function CreateParivarModal() {
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
-                Admin Email *
+                Admin Email <span className="text-rose-500">*</span>
               </label>
               <input
                 type="email"
-                required
                 placeholder="admin@patel.com"
                 value={newParivar.admin_email}
                 onChange={(e) => setNewParivar({ ...newParivar, admin_email: e.target.value })}
                 className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none"
               />
+              {errors.admin_email && <p className="text-[11px] text-rose-500 mt-1 font-semibold">{errors.admin_email}</p>}
             </div>
 
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
-                Admin Mobile *
+                Admin Mobile <span className="text-rose-500">*</span>
               </label>
               <input
                 type="tel"
-                required
                 placeholder="9876543210"
+                maxLength={10}
                 value={newParivar.admin_mobile}
-                onChange={(e) => setNewParivar({ ...newParivar, admin_mobile: e.target.value })}
+                onChange={(e) => setNewParivar({ ...newParivar, admin_mobile: e.target.value.replace(/\D/g, '') })}
                 className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none"
               />
+              {errors.admin_mobile && <p className="text-[11px] text-rose-500 mt-1 font-semibold">{errors.admin_mobile}</p>}
             </div>
           </div>
 

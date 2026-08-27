@@ -11,6 +11,14 @@ import {
 } from "lucide-react";
 
 export default function Footer() {
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
+    e.preventDefault();
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <footer id="contact" className="bg-gradient-to-br from-[#070D2B] via-[#0B1340] to-[#030617] text-white pt-20 pb-8 border-t border-indigo-900/50 relative overflow-hidden">
       {/* Decorative Blur */}
@@ -90,25 +98,25 @@ export default function Footer() {
             </h4>
             <ul className="space-y-3.5 text-sm text-slate-400 font-medium">
               <li>
-                <a href="#home" className="hover:text-blue-400 transition-colors flex items-center gap-2 group">
+                <a href="#home" onClick={(e) => handleNavClick(e, 'home')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-500/50 group-hover:bg-blue-400 transition-colors" />
                   Home
                 </a>
               </li>
               <li>
-                <a href="#about" className="hover:text-blue-400 transition-colors flex items-center gap-2 group">
+                <a href="#about" onClick={(e) => handleNavClick(e, 'about')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-500/50 group-hover:bg-blue-400 transition-colors" />
                   About Us
                 </a>
               </li>
               <li>
-                <a href="#features" className="hover:text-blue-400 transition-colors flex items-center gap-2 group">
+                <a href="#features" onClick={(e) => handleNavClick(e, 'features')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-500/50 group-hover:bg-blue-400 transition-colors" />
                   Features
                 </a>
               </li>
               <li>
-                <a href="#contact" className="hover:text-blue-400 transition-colors flex items-center gap-2 group">
+                <a href="#contact" onClick={(e) => handleNavClick(e, 'contact')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-500/50 group-hover:bg-blue-400 transition-colors" />
                   Contact Us
                 </a>

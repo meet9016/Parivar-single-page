@@ -52,6 +52,7 @@ const features = [
 
 export default function FeaturesSection() {
   const [selectedFeature, setSelectedFeature] = useState<any>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   return (
     <section id="features" className="py-12 md:py-16 bg-[#fafcff] relative overflow-hidden">
@@ -132,7 +133,10 @@ export default function FeaturesSection() {
             
             {/* Close Button */}
             <button 
-              onClick={() => setSelectedFeature(null)}
+              onClick={() => {
+                setIsFullscreen(false);
+                setSelectedFeature(null);
+              }}
               className="absolute top-4 right-4 z-20 w-10 h-10 bg-white/80 hover:bg-white backdrop-blur-md rounded-full flex items-center justify-center text-slate-700 shadow-sm transition-colors border border-slate-200"
               aria-label="Close modal"
             >
@@ -140,12 +144,23 @@ export default function FeaturesSection() {
             </button>
 
             {/* Top Image Area */}
-            <div className="w-full bg-slate-50 flex items-center justify-center p-4 sm:p-8 border-b border-slate-100">
+            <div 
+              className={`w-full bg-slate-50 flex items-center justify-center p-4 sm:p-8 border-b border-slate-100 transition-all cursor-zoom-in ${isFullscreen ? 'fixed inset-0 z-50 bg-[#0B1340]/95 backdrop-blur-lg' : ''}`}
+              onClick={() => setIsFullscreen(!isFullscreen)}
+            >
               <img 
                 src={selectedFeature.image} 
                 alt={selectedFeature.title} 
-                className="w-full h-auto max-h-[50vh] object-contain rounded-xl drop-shadow-xl"
+                className={`w-full h-auto object-contain rounded-xl drop-shadow-xl transition-all ${isFullscreen ? 'max-h-[90vh] cursor-zoom-out' : 'max-h-[50vh]'}`}
               />
+              {isFullscreen && (
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setIsFullscreen(false); }}
+                  className="absolute top-6 right-6 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center backdrop-blur-md transition-colors"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              )}
             </div>
 
             {/* Bottom Content Area */}
@@ -156,7 +171,7 @@ export default function FeaturesSection() {
                 </div>
                 
                 <div className="space-y-2">
-                  <h3 className="text-2xl sm:text-3xl font-black text-[#0B1340] tracking-tight leading-snug">
+                  <h3 className="text-lg sm:text-xl font-bold text-[#0B1340] tracking-tight leading-snug">
                     {selectedFeature.title}
                   </h3>
                   <p className="text-slate-600 text-base sm:text-lg leading-relaxed font-medium">

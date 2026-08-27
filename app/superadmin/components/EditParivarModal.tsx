@@ -15,6 +15,30 @@ export default function EditParivarModal() {
     new_password: ""
   });
 
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  const validateAndSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const newErrors: { [key: string]: string } = {};
+
+    if (!editForm.parivar_name.trim()) newErrors.parivar_name = "Parivar Name is required.";
+    if (!editForm.admin_first_name.trim()) newErrors.admin_first_name = "First Name is required.";
+    
+    if (!editForm.admin_mobile.trim()) {
+      newErrors.admin_mobile = "Mobile Number is required.";
+    } else if (!/^\d{10}$/.test(editForm.admin_mobile.trim())) {
+      newErrors.admin_mobile = "Mobile Number must be exactly 10 digits.";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
+    handleEditParivar(e, editForm);
+  };
+
   useEffect(() => {
     if (editingParivar) {
       setEditForm({
@@ -44,9 +68,11 @@ export default function EditParivarModal() {
           Edit Parivar Details
         </h3>
         
-        <form onSubmit={(e) => handleEditParivar(e, editForm)} className="space-y-4">
+        <form onSubmit={validateAndSubmit} noValidate className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1.5">Parivar Name</label>
+            <label className="block text-xs font-bold text-slate-700 mb-1.5">
+              Parivar Name <span className="text-rose-500">*</span>
+            </label>
             <input
               type="text"
               required
@@ -54,17 +80,21 @@ export default function EditParivarModal() {
               onChange={(e) => setEditForm({...editForm, parivar_name: e.target.value})}
               className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500"
             />
+            {errors.parivar_name && <p className="text-[11px] text-rose-500 mt-1 font-semibold">{errors.parivar_name}</p>}
           </div>
           
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">Admin First Name</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                Admin First Name <span className="text-rose-500">*</span>
+              </label>
               <input
                 type="text"
                 value={editForm.admin_first_name}
                 onChange={(e) => setEditForm({...editForm, admin_first_name: e.target.value})}
                 className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500"
               />
+              {errors.admin_first_name && <p className="text-[11px] text-rose-500 mt-1 font-semibold">{errors.admin_first_name}</p>}
             </div>
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1.5">Admin Last Name</label>
@@ -78,13 +108,17 @@ export default function EditParivarModal() {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1.5">Admin Mobile</label>
+            <label className="block text-xs font-bold text-slate-700 mb-1.5">
+              Admin Mobile <span className="text-rose-500">*</span>
+            </label>
             <input
               type="text"
+              maxLength={10}
               value={editForm.admin_mobile}
-              onChange={(e) => setEditForm({...editForm, admin_mobile: e.target.value})}
+              onChange={(e) => setEditForm({...editForm, admin_mobile: e.target.value.replace(/\D/g, '')})}
               className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500"
             />
+            {errors.admin_mobile && <p className="text-[11px] text-rose-500 mt-1 font-semibold">{errors.admin_mobile}</p>}
           </div>
 
           <div>

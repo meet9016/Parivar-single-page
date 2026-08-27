@@ -1,10 +1,41 @@
-import React from "react";
+"use client";
+import React, { useState, useEffect } from "react";
+import { ArrowUp } from "lucide-react";
 
 export default function WhatsAppChat() {
   const whatsappNumber = "918866779008"; // Format: 91 followed by the 10-digit number
   
+  const [showScroll, setShowScroll] = useState(false);
+
+  useEffect(() => {
+    const checkScrollTop = () => {
+      if (!showScroll && window.pageYOffset > 400) {
+        setShowScroll(true);
+      } else if (showScroll && window.pageYOffset <= 400) {
+        setShowScroll(false);
+      }
+    };
+
+    window.addEventListener('scroll', checkScrollTop);
+    return () => window.removeEventListener('scroll', checkScrollTop);
+  }, [showScroll]);
+
+  const scrollTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
-    <div className="fixed bottom-8 right-6 z-50 sm:bottom-10 sm:right-8">
+    <div className="fixed bottom-8 right-6 z-50 sm:bottom-10 sm:right-8 flex flex-col items-center gap-4">
+      {/* Scroll to Top Button */}
+      {showScroll && (
+        <button
+          onClick={scrollTop}
+          className="flex items-center justify-center w-12 h-12 bg-white text-slate-700 rounded-full shadow-lg hover:shadow-xl hover:-translate-y-1 hover:bg-slate-50 transition-all duration-300 border border-slate-200"
+          aria-label="Scroll to top"
+        >
+          <ArrowUp className="w-5 h-5" />
+        </button>
+      )}
       <div className="relative group">
         {/* Tooltip */}
         <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-white text-slate-800 text-sm font-bold px-4 py-2 rounded-xl shadow-xl whitespace-nowrap border border-slate-100">
@@ -13,14 +44,14 @@ export default function WhatsAppChat() {
         </div>
         
         <a
-          href={`https://wa.me/${whatsappNumber}`}
+          href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent("Hello, I have visited your website and am interested in a demo of Parivar. Please share the details. Thank you!")}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center w-16 h-16 bg-[#0B1340] hover:bg-blue-900 text-white rounded-full shadow-2xl shadow-[#0B1340]/40 hover:shadow-blue-900/50 hover:scale-110 hover:-translate-y-1 transition-all duration-300 relative"
+          className="flex items-center justify-center w-16 h-16 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-2xl shadow-green-500/40 hover:shadow-green-600/50 hover:scale-110 hover:-translate-y-1 transition-all duration-300 relative"
           aria-label="Chat on WhatsApp"
         >
           {/* Ripple Effect Background */}
-          <div className="absolute inset-0 rounded-full border border-[#0B1340] animate-ping opacity-40"></div>
+          <div className="absolute inset-0 rounded-full border border-green-500 animate-ping opacity-40"></div>
           
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
