@@ -6,10 +6,14 @@ import AboutSection from "@/components/AboutSection";
 import FeaturesSection from "@/components/FeaturesSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
+import WhatsAppChat from "@/components/WhatsAppChat";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-600 selection:text-white">
+    <main className="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-600 selection:text-white relative">
+      {/* Floating WhatsApp Widget */}
+      <WhatsAppChat />
+
       {/* 1. Top Bar */}
       <TopHeader />
 

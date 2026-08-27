@@ -1,11 +1,19 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Search, MessageSquare, Phone, Mail, Calendar, CheckCircle, Clock } from "lucide-react";
 import { useSuperAdmin } from "../context/SuperAdminContext";
 
 export default function InquiriesTab() {
   const { inquiries, inquiriesLoading, inquirySearch, setInquirySearch, fetchInquiries, handleInquiryStatus } = useSuperAdmin();
+
+  // Debounce search
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      fetchInquiries();
+    }, 800);
+    return () => clearTimeout(timeout);
+  }, [inquirySearch]);
 
   return (
     <div className="space-y-4">
@@ -17,16 +25,9 @@ export default function InquiriesTab() {
             placeholder="Search inquiries by Parivar name, phone, email..."
             value={inquirySearch}
             onChange={(e) => setInquirySearch(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && fetchInquiries()}
             className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-slate-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 shadow-2xs"
           />
         </div>
-        <button
-          onClick={fetchInquiries}
-          className="px-5 py-2.5 rounded-xl bg-[#0B1340] hover:bg-blue-900 text-white text-xs font-bold transition-all cursor-pointer shadow-2xs"
-        >
-          Search
-        </button>
       </div>
 
       <div className="bg-white border border-slate-200/80 rounded-2xl shadow-2xs overflow-hidden">
@@ -79,10 +80,15 @@ export default function InquiriesTab() {
                         </div>
                       )}
                     </td>
-                    <td className="px-5 py-4 max-w-sm">
-                      <p className="text-xs text-slate-600 leading-relaxed line-clamp-2">
-                        {inq.note || "—"}
+                    <td className="px-5 py-3.5 relative group">
+                      <p className="text-slate-600 line-clamp-2 max-w-[200px] cursor-pointer" title={inq.note || ""}>
+                        {inq.note || "-"}
                       </p>
+                      {inq.note && inq.note.length > 50 && (
+                        <div className="absolute left-1/2 bottom-full mb-2 -translate-x-1/2 hidden group-hover:block w-max max-w-xs bg-slate-800 text-white text-xs rounded-md p-2 z-50 whitespace-pre-wrap shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                          {inq.note}
+                        </div>
+                      )}
                     </td>
                     <td className="px-5 py-4 text-xs text-slate-500 whitespace-nowrap">
                       <div className="flex items-center gap-1.5">

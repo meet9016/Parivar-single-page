@@ -12,14 +12,14 @@ import {
 
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-br from-[#070D2B] via-[#0B1340] to-[#030617] text-white pt-20 pb-8 border-t border-indigo-900/50 relative overflow-hidden">
+    <footer id="contact" className="bg-gradient-to-br from-[#070D2B] via-[#0B1340] to-[#030617] text-white pt-20 pb-8 border-t border-indigo-900/50 relative overflow-hidden">
       {/* Decorative Blur */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/5 rounded-full blur-[100px] pointer-events-none" />
       
-      <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Main Footer Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 pb-12 border-b border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-6 pb-8 border-b border-white/10">
           
           {/* Column 1: Brand Info */}
           <div className="lg:col-span-5 space-y-6">
@@ -131,7 +131,9 @@ export default function Footer() {
                 <div className="w-8 h-8 rounded-lg bg-blue-900/40 text-blue-400 flex items-center justify-center">
                   <Phone className="w-4 h-4" />
                 </div>
-                <span>+91 99793-40210</span>
+                <a href="https://wa.me/918866779008" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                  +91 88667-79008
+                </a>
               </div>
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-blue-900/40 text-blue-400 flex items-center justify-center">

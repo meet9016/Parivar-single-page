@@ -8,11 +8,13 @@ export default function TopHeader() {
         {/* Contact Details */}
         <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 md:gap-6 text-slate-300">
           <a
-            href="tel:+919979340210"
+            href="https://wa.me/918866779008"
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex items-center gap-1.5 hover:text-white transition-colors"
           >
             <Phone className="w-3.5 h-3.5 text-blue-400" />
-            <span>+91 99793 40210</span>
+            <span>+91 88667 79008</span>
           </a>
           <a
             href="mailto:info@parivar.me"

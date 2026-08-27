@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { toast } from "sonner";
+import { useParams, useRouter } from "next/navigation";
 import axiosInstance from "../../../lib/axiosInstance";
 import { ENDPOINTS } from "../../../lib/endpoints";
 
@@ -9,7 +10,7 @@ interface SuperAdminContextType {
   isAuthenticated: boolean;
   loginError: string;
   loginLoading: boolean;
-  handleLogin: (e: React.FormEvent, form: any) => Promise<void>;
+  handleLogin: (e: React.FormEvent, form: any, rememberMe?: boolean) => Promise<void>;
   handleLogout: () => void;
   
   activeTab: "inquiries" | "parivars";
@@ -43,11 +44,27 @@ interface SuperAdminContextType {
 const SuperAdminContext = createContext<SuperAdminContextType | undefined>(undefined);
 
 export function SuperAdminProvider({ children }: { children: ReactNode }) {
+  const router = useRouter();
+  const params = useParams();
+  
+  const tabPath = params?.tab?.[0];
+  const derivedTab = tabPath === "inquiries" ? "inquiries" : "parivars";
+
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   
-  const [activeTab, setActiveTab] = useState<"inquiries" | "parivars">("parivars");
+  const [activeTab, setActiveTabState] = useState<"inquiries" | "parivars">(derivedTab);
+
+  useEffect(() => {
+    setActiveTabState(derivedTab);
+  }, [derivedTab]);
+
+  const setActiveTab = (tab: "inquiries" | "parivars") => {
+    setActiveTabState(tab);
+    const path = tab === "inquiries" ? "inquiries" : "all-parivar";
+    router.push(`/superadmin/${path}`);
+  };
 
   const [inquiries, setInquiries] = useState<any[]>([]);
   const [inquiriesLoading, setInquiriesLoading] = useState(false);
@@ -65,8 +82,9 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
   const [editLoading, setEditLoading] = useState(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem("superadmin_auth");
-    if (saved === "true") {
+    const savedLocal = localStorage.getItem("superadmin_auth");
+    const savedSession = sessionStorage.getItem("superadmin_auth");
+    if (savedLocal === "true" || savedSession === "true") {
       setIsAuthenticated(true);
     }
   }, []);
@@ -106,7 +124,7 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
     }
   }, [isAuthenticated, activeTab]);
 
-  const handleLogin = async (e: React.FormEvent, loginForm: any) => {
+  const handleLogin = async (e: React.FormEvent, loginForm: any, rememberMe = false) => {
     e.preventDefault();
     setLoginError("");
     setLoginLoading(true);
@@ -119,9 +137,16 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
 
       if (res.status === 200 && res.data.status === 200) {
         setIsAuthenticated(true);
-        localStorage.setItem("superadmin_auth", "true");
-        if (res.data.data?.token) {
-          localStorage.setItem("superadmin_token", res.data.data.token);
+        if (rememberMe) {
+          localStorage.setItem("superadmin_auth", "true");
+          if (res.data.data?.token) {
+            localStorage.setItem("superadmin_token", res.data.data.token);
+          }
+        } else {
+          sessionStorage.setItem("superadmin_auth", "true");
+          if (res.data.data?.token) {
+            sessionStorage.setItem("superadmin_token", res.data.data.token);
+          }
         }
       } else {
         setLoginError(res.data.message || "Invalid Super Admin credentials! Please check.");
@@ -130,7 +155,11 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
       console.error("Login API error:", err);
       if (loginForm.email.trim() === "superadmin@gmail.com" && loginForm.password === "admin@123") {
         setIsAuthenticated(true);
-        localStorage.setItem("superadmin_auth", "true");
+        if (rememberMe) {
+          localStorage.setItem("superadmin_auth", "true");
+        } else {
+          sessionStorage.setItem("superadmin_auth", "true");
+        }
       } else {
         setLoginError("Could not connect to server or invalid credentials.");
       }
@@ -143,6 +172,8 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
     setIsAuthenticated(false);
     localStorage.removeItem("superadmin_auth");
     localStorage.removeItem("superadmin_token");
+    sessionStorage.removeItem("superadmin_auth");
+    sessionStorage.removeItem("superadmin_token");
   };
 
   const handleInquiryStatus = async (id: string, currentStatus: number) => {

@@ -3,12 +3,12 @@ import { Heart, Check, ArrowRight } from "lucide-react";
 
 export default function AboutSection() {
   return (
-    <section id="about" className="py-20 md:py-32 bg-white relative overflow-hidden">
+    <section id="about" className="py-12 md:py-16 bg-white relative overflow-hidden">
       {/* Decorative Blob */}
       <div className="absolute top-1/4 right-0 w-[400px] h-[400px] bg-blue-50/50 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-20 items-center">
           
           {/* Left Column: Image (about_sec_img.png) */}
           <div className="lg:col-span-6 flex justify-center items-center relative">
@@ -31,7 +31,7 @@ export default function AboutSection() {
             </div>
 
             {/* Headline */}
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#0B1340] leading-[1.1] tracking-tighter">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0B1340] leading-[1.1] tracking-tighter">
               Built For Communities. <br />
               Designed For{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-500">Togetherness.</span>
@@ -75,7 +75,9 @@ export default function AboutSection() {
             {/* Join Parivar Button */}
             <div className="pt-6">
               <a
-                href="#contact"
+                href="https://wa.me/918866779008"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-3 bg-[#0B1340] hover:bg-blue-900 text-white font-bold text-sm sm:text-base px-8 py-4 rounded-xl shadow-lg shadow-blue-900/20 hover:shadow-xl hover:shadow-blue-900/30 hover:-translate-y-1 transition-all duration-300 group"
               >
                 <span>Join Parivar</span>

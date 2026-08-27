@@ -9,14 +9,12 @@ export default function Sidebar() {
 
   return (
     <aside className="w-64 bg-white border-r border-slate-200/80 flex flex-col justify-between shrink-0 h-full shadow-xs z-30">
-      <div className="p-5 border-b border-slate-100 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center font-black shrink-0 shadow-2xs">
-          <Shield className="w-5 h-5" />
-        </div>
-        <div>
-          <h1 className="text-sm font-extrabold tracking-tight text-slate-900 leading-none">Parivar Super Admin</h1>
-          <span className="text-[10px] text-indigo-600 font-bold uppercase tracking-wider mt-1 block">Master SaaS Panel</span>
-        </div>
+      <div className="p-5 border-b border-slate-100 flex items-center justify-center">
+        <img
+          src="/logo.png"
+          alt="Parivar.me Logo"
+          className="h-10 w-auto object-contain"
+        />
       </div>
 
       <div className="p-4 space-y-6 flex-1 overflow-y-auto">
@@ -80,10 +78,6 @@ export default function Sidebar() {
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="p-4 border-t border-slate-100 text-center">
-        <span className="text-[11px] font-semibold text-slate-400">Parivar SaaS v2.4</span>
       </div>
     </aside>
   );

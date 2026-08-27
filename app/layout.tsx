@@ -20,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${notoSans.variable}`}>
+    <html lang="en" className={`${notoSans.variable} scroll-smooth`}>
       <body className="min-h-full flex flex-col antialiased bg-white text-slate-900 font-sans">
         {children}
         <Toaster richColors position="top-right" closeButton />

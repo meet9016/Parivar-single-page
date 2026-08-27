@@ -4,14 +4,14 @@ import { Sparkles, Heart } from "lucide-react";
 
 export default function HeroSection() {
   return (
-    <section id="home" className="relative overflow-hidden bg-[#fafcff] py-16 sm:py-24 lg:py-32">
+    <section id="home" className="relative overflow-hidden bg-[#fafcff] py-12 lg:py-16">
       {/* Dynamic Background Gradients */}
       <div className="absolute inset-0 bg-grid-pattern opacity-40 pointer-events-none" />
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-400/20 rounded-full blur-[120px] pointer-events-none animate-pulse" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-500/15 rounded-full blur-[120px] pointer-events-none animate-pulse" style={{ animationDelay: "2s" }} />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-center">
           
           {/* Left Column Content */}
           <div className="lg:col-span-7 space-y-8 text-left z-10">
@@ -22,7 +22,7 @@ export default function HeroSection() {
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black text-[#0B1340] leading-[1.05] tracking-tighter">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#0B1340] leading-[1.05] tracking-tighter">
               Community <br />
               Management <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-500">
@@ -38,7 +38,9 @@ export default function HeroSection() {
             {/* CTA Button & Trust Indicators */}
             <div className="pt-2 flex flex-col sm:flex-row items-start sm:items-center gap-6">
               <a
-                href="#contact"
+                href="https://wa.me/918866779008"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-3 bg-[#0B1340] hover:bg-blue-900 text-white font-bold text-sm sm:text-base px-8 py-4 rounded-xl shadow-lg shadow-blue-900/20 hover:shadow-xl hover:shadow-blue-900/30 hover:-translate-y-1 transition-all duration-300 group w-full sm:w-auto"
               >
                 <span>Get Started Now</span>
