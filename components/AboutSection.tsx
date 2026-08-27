@@ -1,84 +1,85 @@
 import React from "react";
-import { Heart, Check } from "lucide-react";
+import { Heart, Check, ArrowRight } from "lucide-react";
 
 export default function AboutSection() {
   return (
-    <section id="about" className="py-16 md:py-24 bg-white relative">
-      <div className="max-w-7xl mx-auto px-4 md:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+    <section id="about" className="py-20 md:py-32 bg-white relative overflow-hidden">
+      {/* Decorative Blob */}
+      <div className="absolute top-1/4 right-0 w-[400px] h-[400px] bg-blue-50/50 rounded-full blur-[100px] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-12 items-center">
           
           {/* Left Column: Image (about_sec_img.png) */}
-          <div className="lg:col-span-6 flex justify-center items-center">
-            <div className="relative w-full max-w-[540px] lg:max-w-full">
+          <div className="lg:col-span-6 flex justify-center items-center relative">
+            {/* Image backdrop styling */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-blue-100/50 to-indigo-100/30 rounded-[3rem] transform -rotate-6 scale-95" />
+            <div className="relative w-full max-w-[540px] lg:max-w-full rounded-[3rem] overflow-hidden bg-white/50 backdrop-blur-sm p-4 shadow-2xl shadow-blue-900/10 border border-white">
               <img
                 src="/about_sec_img.png"
                 alt="About Parivar Mobile App Screenshot"
-                className="w-full h-auto object-contain drop-shadow-xl hover:scale-[1.01] transition-transform duration-300"
+                className="w-full h-auto object-cover rounded-[2.5rem] hover:scale-105 transition-transform duration-700 ease-out"
               />
             </div>
           </div>
 
           {/* Right Column: About Content */}
-          <div className="lg:col-span-6 space-y-6 text-left">
+          <div className="lg:col-span-6 space-y-8 text-left">
             {/* Tag / Badge */}
-            <div className="inline-flex items-center gap-2 text-[#3B82F6] font-bold text-sm tracking-wide">
-              {/* Icon badge */}
-              <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                <path d="M12 2a2 2 0 012 2v1h1a3 3 0 013 3v2a3 3 0 01-3 3h-1v1a2 2 0 01-2 2h-4a2 2 0 01-2-2v-1H6a3 3 0 01-3-3V8a3 3 0 013-3h1V4a2 2 0 012-2h4zm-2 5a1.5 1.5 0 100 3 1.5 1.5 0 000-3zm4 0a1.5 1.5 0 100 3 1.5 1.5 0 000-3z" />
-              </svg>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 font-bold text-xs tracking-widest uppercase shadow-sm">
               <span>About Parivar</span>
             </div>
 
             {/* Headline */}
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0B1340] leading-[1.15] tracking-tight">
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[#0B1340] leading-[1.1] tracking-tighter">
               Built For Communities. <br />
               Designed For{" "}
-              <span className="text-[#3B82F6]">Togetherness.</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-500">Togetherness.</span>
             </h2>
 
             {/* Description */}
-            <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-xl font-normal">
-              Parivar Is A Powerful Community Management Platform Built For Organizations, Groups, And Networks To Stay Connected, Organized, And Engaged.
+            <p className="text-slate-500 text-base sm:text-lg leading-relaxed max-w-xl font-medium">
+              Parivar is a powerful community management platform built for organizations, groups, and networks to stay connected, organized, and engaged in a private, secure space.
             </p>
 
             {/* Feature List */}
-            <div className="space-y-4 pt-2">
-              <div className="flex items-center gap-3 border-b border-slate-100/80 pb-3">
-                <div className="w-5 h-5 rounded-full bg-[#0B1340] text-white flex items-center justify-center flex-shrink-0">
-                  <Check className="w-3.5 h-3.5 stroke-[3]" />
+            <div className="space-y-5 pt-2">
+              <div className="flex items-center gap-4 group">
+                <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                  <Check className="w-5 h-5 stroke-[2.5]" />
                 </div>
-                <span className="text-slate-800 text-sm sm:text-base font-semibold">
+                <span className="text-slate-700 text-base font-semibold group-hover:text-slate-900 transition-colors">
                   Bring Every Generation Onto One Private Space
                 </span>
               </div>
 
-              <div className="flex items-center gap-3 border-b border-slate-100/80 pb-3">
-                <div className="w-5 h-5 rounded-full bg-[#0B1340] text-white flex items-center justify-center flex-shrink-0">
-                  <Check className="w-3.5 h-3.5 stroke-[3]" />
+              <div className="flex items-center gap-4 group">
+                <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                  <Check className="w-5 h-5 stroke-[2.5]" />
                 </div>
-                <span className="text-slate-800 text-sm sm:text-base font-semibold">
+                <span className="text-slate-700 text-base font-semibold group-hover:text-slate-900 transition-colors">
                   Plan Events, Share Photos & Preserve Memories
                 </span>
               </div>
 
-              <div className="flex items-center gap-3 border-b border-slate-100/80 pb-3">
-                <div className="w-5 h-5 rounded-full bg-[#0B1340] text-white flex items-center justify-center flex-shrink-0">
-                  <Check className="w-3.5 h-3.5 stroke-[3]" />
+              <div className="flex items-center gap-4 group">
+                <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                  <Check className="w-5 h-5 stroke-[2.5]" />
                 </div>
-                <span className="text-slate-800 text-sm sm:text-base font-semibold">
+                <span className="text-slate-700 text-base font-semibold group-hover:text-slate-900 transition-colors">
                   Designed With Privacy & Warmth At Its Core
                 </span>
               </div>
             </div>
 
             {/* Join Parivar Button */}
-            <div className="pt-2">
+            <div className="pt-6">
               <a
                 href="#contact"
-                className="inline-flex items-center gap-2.5 bg-[#0B1340] hover:bg-blue-900 text-white font-semibold text-sm sm:text-base px-6 py-3 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 group"
+                className="inline-flex items-center gap-3 bg-[#0B1340] hover:bg-blue-900 text-white font-bold text-sm sm:text-base px-8 py-4 rounded-xl shadow-lg shadow-blue-900/20 hover:shadow-xl hover:shadow-blue-900/30 hover:-translate-y-1 transition-all duration-300 group"
               >
-                <Heart className="w-4 h-4 text-white fill-white group-hover:scale-110 transition-transform" />
                 <span>Join Parivar</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </a>
             </div>
           </div>

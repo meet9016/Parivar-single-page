@@ -12,23 +12,26 @@ import {
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0B1340] text-white pt-16 pb-8 border-t border-slate-800">
-      <div className="max-w-7xl mx-auto px-4 md:px-8">
+    <footer className="bg-gradient-to-br from-[#070D2B] via-[#0B1340] to-[#030617] text-white pt-20 pb-8 border-t border-indigo-900/50 relative overflow-hidden">
+      {/* Decorative Blur */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/5 rounded-full blur-[100px] pointer-events-none" />
+      
+      <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
         
         {/* Main Footer Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 pb-12 border-b border-slate-800">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 pb-12 border-b border-white/10">
           
           {/* Column 1: Brand Info */}
-          <div className="lg:col-span-5 space-y-5">
+          <div className="lg:col-span-5 space-y-6">
             <a href="#" className="flex items-center gap-2.5">
               <img
                 src="/logo.png"
                 alt="Parivar.me Logo"
-                className="h-10 w-auto object-contain brightness-0 invert"
+                className="h-12 w-auto object-contain brightness-0 invert opacity-90 hover:opacity-100 transition-opacity"
               />
             </a>
 
-            <p className="text-slate-300 text-sm leading-relaxed max-w-sm">
+            <p className="text-slate-400 text-sm leading-relaxed max-w-sm font-medium">
               A Warm, Modern Home For Families And Communities... Where Every Member Matters And Every Memory Is Preserved For Generations.
             </p>
 
@@ -36,7 +39,7 @@ export default function Footer() {
             <div className="flex items-center gap-3 pt-2">
               <a
                 href="#"
-                className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-blue-600 text-slate-300 hover:text-white flex items-center justify-center transition-colors"
+                className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 hover:bg-blue-600 hover:border-blue-500 text-slate-300 hover:text-white flex items-center justify-center transition-all duration-300 hover:-translate-y-1 shadow-lg shadow-black/20"
                 aria-label="Facebook"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -45,7 +48,7 @@ export default function Footer() {
               </a>
               <a
                 href="#"
-                className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-blue-600 text-slate-300 hover:text-white flex items-center justify-center transition-colors"
+                className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 hover:bg-blue-600 hover:border-blue-500 text-slate-300 hover:text-white flex items-center justify-center transition-all duration-300 hover:-translate-y-1 shadow-lg shadow-black/20"
                 aria-label="Instagram"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -54,7 +57,7 @@ export default function Footer() {
               </a>
               <a
                 href="#"
-                className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-blue-600 text-slate-300 hover:text-white flex items-center justify-center transition-colors"
+                className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 hover:bg-blue-600 hover:border-blue-500 text-slate-300 hover:text-white flex items-center justify-center transition-all duration-300 hover:-translate-y-1 shadow-lg shadow-black/20"
                 aria-label="Twitter"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -63,7 +66,7 @@ export default function Footer() {
               </a>
               <a
                 href="#"
-                className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-blue-600 text-slate-300 hover:text-white flex items-center justify-center transition-colors"
+                className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 hover:bg-blue-600 hover:border-blue-500 text-slate-300 hover:text-white flex items-center justify-center transition-all duration-300 hover:-translate-y-1 shadow-lg shadow-black/20"
                 aria-label="Youtube"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -72,7 +75,7 @@ export default function Footer() {
               </a>
               <a
                 href="#"
-                className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-blue-600 text-slate-300 hover:text-white flex items-center justify-center transition-colors"
+                className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 hover:bg-blue-600 hover:border-blue-500 text-slate-300 hover:text-white flex items-center justify-center transition-all duration-300 hover:-translate-y-1 shadow-lg shadow-black/20"
                 aria-label="Website"
               >
                 <Globe className="w-4 h-4" />
@@ -81,28 +84,32 @@ export default function Footer() {
           </div>
 
           {/* Column 2: Navigation Links (Same as Header) */}
-          <div className="lg:col-span-3 space-y-4">
-            <h4 className="text-base font-bold text-white tracking-wide">
+          <div className="lg:col-span-3 space-y-6">
+            <h4 className="text-sm font-bold text-white tracking-widest uppercase">
               Quick Links
             </h4>
-            <ul className="space-y-2.5 text-sm text-slate-300">
+            <ul className="space-y-3.5 text-sm text-slate-400 font-medium">
               <li>
-                <a href="#home" className="hover:text-blue-400 transition-colors">
+                <a href="#home" className="hover:text-blue-400 transition-colors flex items-center gap-2 group">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500/50 group-hover:bg-blue-400 transition-colors" />
                   Home
                 </a>
               </li>
               <li>
-                <a href="#about" className="hover:text-blue-400 transition-colors">
+                <a href="#about" className="hover:text-blue-400 transition-colors flex items-center gap-2 group">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500/50 group-hover:bg-blue-400 transition-colors" />
                   About Us
                 </a>
               </li>
               <li>
-                <a href="#features" className="hover:text-blue-400 transition-colors">
+                <a href="#features" className="hover:text-blue-400 transition-colors flex items-center gap-2 group">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500/50 group-hover:bg-blue-400 transition-colors" />
                   Features
                 </a>
               </li>
               <li>
-                <a href="#contact" className="hover:text-blue-400 transition-colors">
+                <a href="#contact" className="hover:text-blue-400 transition-colors flex items-center gap-2 group">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500/50 group-hover:bg-blue-400 transition-colors" />
                   Contact Us
                 </a>
               </li>
@@ -110,26 +117,32 @@ export default function Footer() {
           </div>
 
           {/* Column 4: Stay In The Loop & Contact */}
-          <div className="lg:col-span-3 space-y-4">
-            <h4 className="text-base font-bold text-white tracking-wide">
+          <div className="lg:col-span-4 space-y-6">
+            <h4 className="text-sm font-bold text-white tracking-widest uppercase">
               Stay In The Loop
             </h4>
-            <p className="text-slate-300 text-xs leading-relaxed">
+            <p className="text-slate-400 text-sm leading-relaxed font-medium">
               Get Community Stories And Product Updates — Once A Month, Never Spamming.
             </p>
 
             {/* Contact details */}
-            <div className="pt-3 space-y-2 text-xs text-slate-300">
-              <div className="flex items-center gap-2">
-                <Phone className="w-3.5 h-3.5 text-blue-400" />
+            <div className="pt-2 space-y-4 text-sm text-slate-300 font-medium">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-900/40 text-blue-400 flex items-center justify-center">
+                  <Phone className="w-4 h-4" />
+                </div>
                 <span>+91 99793-40210</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Mail className="w-3.5 h-3.5 text-blue-400" />
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-900/40 text-blue-400 flex items-center justify-center">
+                  <Mail className="w-4 h-4" />
+                </div>
                 <span>info@Parivar.me</span>
               </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="w-3.5 h-3.5 text-blue-400" />
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-900/40 text-blue-400 flex items-center justify-center">
+                  <MapPin className="w-4 h-4" />
+                </div>
                 <span>Surat, Gujarat, India</span>
               </div>
             </div>
@@ -138,13 +151,13 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs sm:text-sm text-slate-500 font-medium gap-4">
           <div>© 2026 Parivar.me. All Rights Reserved.</div>
           <div className="flex items-center gap-6">
             <a href="#" className="hover:text-white transition-colors">
               Privacy Policy
             </a>
-            <span>•</span>
+            <span className="text-slate-700">•</span>
             <a href="#" className="hover:text-white transition-colors">
               Terms of Service
             </a>

@@ -3,7 +3,7 @@ import { Phone, Mail, MapPin, Globe } from "lucide-react";
 
 export default function TopHeader() {
   return (
-    <div className="bg-[#0B1340] text-white text-xs py-2.5 px-4 md:px-8 border-b border-slate-800">
+    <div className="bg-gradient-to-r from-[#070D2B] via-[#0B1340] to-[#070D2B] text-white text-xs py-2.5 px-4 md:px-8 border-b border-indigo-900/50">
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
         {/* Contact Details */}
         <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 md:gap-6 text-slate-300">

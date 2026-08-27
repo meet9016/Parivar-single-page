@@ -7,7 +7,6 @@ import axiosInstance from "../lib/axiosInstance";
 import { ENDPOINTS } from "../lib/endpoints";
 
 export default function ContactSection() {
-  const [activeCategory, setActiveCategory] = useState("Inquiry");
   const [formData, setFormData] = useState({
     parivar_name: "",
     email: "",
@@ -16,18 +15,31 @@ export default function ContactSection() {
   });
   const [loading, setLoading] = useState(false);
   const [statusMessage, setStatusMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [errors, setErrors] = useState<{ parivar_name?: string; mobile?: string }>({});
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validation
+    let newErrors: { parivar_name?: string; mobile?: string } = {};
+    if (!formData.parivar_name.trim()) newErrors.parivar_name = "Parivar Name is required";
+    if (!formData.mobile.trim()) newErrors.mobile = "Mobile Number is required";
+    
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+    
     setLoading(true);
     setStatusMessage(null);
+    setErrors({});
 
     try {
       const res = await axiosInstance.post(ENDPOINTS.INQUIRY, {
         parivar_name: formData.parivar_name,
         email: formData.email,
         mobile: formData.mobile,
-        note: `[Category: ${activeCategory}] ${formData.note}`,
+        note: formData.note,
       });
 
       if (res.status === 200 || res.status === 201) {
@@ -65,47 +77,50 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact" className="py-16 md:py-24 bg-[#F4F7FF] relative">
-      <div className="max-w-7xl mx-auto px-4 md:px-6">
+    <section id="contact" className="py-12 md:py-16 bg-[#fafcff] relative">
+      <div className="max-w-7xl mx-auto px-4 md:px-8">
 
         {/* Main Card Container */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 rounded-2xl overflow-hidden shadow-xl border border-slate-200/80">
+        <div className="grid grid-cols-1 lg:grid-cols-12 rounded-3xl overflow-hidden shadow-2xl shadow-blue-900/10 border border-white bg-white">
 
           {/* Left Column: Solid Dark Navy Box */}
-          <div className="lg:col-span-5 bg-[#0B1340] text-white p-7 sm:p-9 flex flex-col justify-between space-y-8">
-            <div className="space-y-5">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-blue-400 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block"></span>
-                <span>GET IN TOUCH</span>
+          <div className="lg:col-span-5 bg-gradient-to-br from-[#0B1340] via-[#101c5a] to-[#070D2B] text-white p-8 sm:p-12 flex flex-col justify-between space-y-10 relative overflow-hidden">
+            {/* Subtle light effects */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl" />
+            
+            <div className="relative z-10 space-y-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 font-bold text-xs tracking-widest uppercase shadow-sm">
+                <span>Get In Touch</span>
               </div>
 
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white leading-tight tracking-tight">
-                Let's Create Something
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tighter">
+                Let's Create <br/> Something
               </h2>
 
-              <p className="text-slate-300 text-xs sm:text-sm leading-relaxed font-normal">
+              <p className="text-blue-100/80 text-sm sm:text-base leading-relaxed font-medium">
                 We Help Communities Connect, Grow, And Scale Digitally With Beautiful Experiences.
               </p>
 
               {/* Feature Points */}
-              <div className="space-y-3.5 pt-3">
-                <div className="flex items-center gap-3 text-xs sm:text-sm font-semibold">
-                  <div className="w-7 h-7 rounded bg-blue-900/80 text-blue-300 flex items-center justify-center">
-                    <Zap className="w-3.5 h-3.5" />
+              <div className="space-y-4 pt-4">
+                <div className="flex items-center gap-4 text-sm font-semibold">
+                  <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/20 text-blue-300 flex items-center justify-center backdrop-blur-sm">
+                    <Zap className="w-5 h-5" />
                   </div>
                   <span>Fast Response</span>
                 </div>
 
-                <div className="flex items-center gap-3 text-xs sm:text-sm font-semibold">
-                  <div className="w-7 h-7 rounded bg-blue-900/80 text-blue-300 flex items-center justify-center">
-                    <Headphones className="w-3.5 h-3.5" />
+                <div className="flex items-center gap-4 text-sm font-semibold">
+                  <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/20 text-blue-300 flex items-center justify-center backdrop-blur-sm">
+                    <Headphones className="w-5 h-5" />
                   </div>
                   <span>Friendly Support</span>
                 </div>
 
-                <div className="flex items-center gap-3 text-xs sm:text-sm font-semibold">
-                  <div className="w-7 h-7 rounded bg-blue-900/80 text-blue-300 flex items-center justify-center">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
+                <div className="flex items-center gap-4 text-sm font-semibold">
+                  <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/20 text-blue-300 flex items-center justify-center backdrop-blur-sm">
+                    <CheckCircle2 className="w-5 h-5" />
                   </div>
                   <span>Free Setup</span>
                 </div>
@@ -161,50 +176,36 @@ export default function ContactSection() {
           </div>
 
           {/* Right Column: Contact Form */}
-          <div className="lg:col-span-7 bg-white p-7 sm:p-9 flex flex-col justify-center">
-            <div className="w-full space-y-5">
+          <div className="lg:col-span-7 bg-white p-8 sm:p-12 flex flex-col justify-center">
+            <div className="w-full space-y-8">
               <div>
-                <h3 className="text-xl sm:text-2xl font-black text-[#0B1340]">
+                <h3 className="text-2xl sm:text-3xl font-black text-[#0B1340] tracking-tight">
                   Send Message
                 </h3>
-                <p className="text-slate-500 text-xs mt-0.5">
+                <p className="text-slate-500 text-sm mt-2 font-medium">
                   We Typically Respond Within A Few Hours.
                 </p>
               </div>
 
-              {/* Category Pills */}
-              <div className="flex items-center gap-2">
-                {["Join", "Inquiry", "RSVP"].map((cat) => (
-                  <button
-                    key={cat}
-                    type="button"
-                    onClick={() => setActiveCategory(cat)}
-                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${activeCategory === cat
-                      ? "bg-[#0B1340] text-white shadow-xs"
-                      : "bg-slate-100 text-slate-600 border border-slate-200/80 hover:bg-slate-200"
-                      }`}
-                  >
-                    {cat}
-                  </button>
-                ))}
-              </div>
-
               {/* Form Controls */}
-              <form onSubmit={handleSubmit} className="space-y-3.5">
+              <form onSubmit={handleSubmit} className="space-y-5 font-sans">
                 <div>
                   <input
                     type="text"
-                    required
                     placeholder="Parivar Name / Your Community Name"
                     value={formData.parivar_name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, parivar_name: e.target.value })
-                    }
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-[#F4F7FC] border border-slate-200/80 text-slate-900 placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+                    onChange={(e) => {
+                      setFormData({ ...formData, parivar_name: e.target.value });
+                      if (errors.parivar_name) setErrors({ ...errors, parivar_name: "" });
+                    }}
+                    className={`w-full px-4 py-3.5 rounded-xl bg-slate-50 border ${errors.parivar_name ? 'border-rose-400 focus:ring-rose-500 focus:bg-rose-50/30' : 'border-slate-200 focus:ring-blue-500'} text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:bg-white transition-all font-medium shadow-sm`}
                   />
+                  {errors.parivar_name && (
+                    <p className="text-xs text-rose-500 mt-2 font-semibold pl-1">{errors.parivar_name}</p>
+                  )}
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div>
                     <input
                       type="email"
@@ -213,33 +214,36 @@ export default function ContactSection() {
                       onChange={(e) =>
                         setFormData({ ...formData, email: e.target.value })
                       }
-                      className="w-full px-3.5 py-2.5 rounded-lg bg-[#F4F7FC] border border-slate-200/80 text-slate-900 placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+                      className="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all font-medium shadow-sm"
                     />
                   </div>
 
                   <div>
                     <input
                       type="tel"
-                      required
                       placeholder="Mobile Number"
                       value={formData.mobile}
-                      onChange={(e) =>
-                        setFormData({ ...formData, mobile: e.target.value })
-                      }
-                      className="w-full px-3.5 py-2.5 rounded-lg bg-[#F4F7FC] border border-slate-200/80 text-slate-900 placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+                      onChange={(e) => {
+                        setFormData({ ...formData, mobile: e.target.value });
+                        if (errors.mobile) setErrors({ ...errors, mobile: "" });
+                      }}
+                      className={`w-full px-4 py-3.5 rounded-xl bg-slate-50 border ${errors.mobile ? 'border-rose-400 focus:ring-rose-500 focus:bg-rose-50/30' : 'border-slate-200 focus:ring-blue-500'} text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:bg-white transition-all font-medium shadow-sm`}
                     />
+                    {errors.mobile && (
+                      <p className="text-xs text-rose-500 mt-2 font-semibold pl-1">{errors.mobile}</p>
+                    )}
                   </div>
                 </div>
 
                 <div>
                   <textarea
-                    rows={3}
+                    rows={4}
                     placeholder="Your Note / Inquiry Details"
                     value={formData.note}
                     onChange={(e) =>
                       setFormData({ ...formData, note: e.target.value })
                     }
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-[#F4F7FC] border border-slate-200/80 text-slate-900 placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all resize-none"
+                    className="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all resize-none font-medium shadow-sm"
                   ></textarea>
                 </div>
 
@@ -263,16 +267,16 @@ export default function ContactSection() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-[#0B1340] hover:bg-blue-900 text-white font-bold text-xs sm:text-sm py-3 px-5 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 group cursor-pointer disabled:opacity-70"
+                  className="w-full bg-[#0B1340] hover:bg-blue-900 text-white font-bold text-sm py-4 px-6 rounded-xl shadow-lg shadow-blue-900/20 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 group cursor-pointer disabled:opacity-70 disabled:hover:translate-y-0 font-sans mt-2"
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="w-4 h-4 animate-spin text-white" />
+                      <Loader2 className="w-5 h-5 animate-spin text-white" />
                       <span>Submitting...</span>
                     </>
                   ) : (
                     <>
-                      <Send className="w-3.5 h-3.5 text-white group-hover:translate-x-1 transition-transform" />
+                      <Send className="w-4 h-4 text-white group-hover:translate-x-1 transition-transform" />
                       <span>Send Message</span>
                     </>
                   )}

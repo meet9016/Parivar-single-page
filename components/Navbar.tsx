@@ -16,7 +16,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-xs">
+    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/50 shadow-sm transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-3.5 flex items-center justify-between">
         
         {/* Brand Logo */}
@@ -29,34 +29,38 @@ export default function Navbar() {
         </a>
 
         {/* Desktop Nav Links with Icons */}
-        <nav className="hidden md:flex items-center gap-7 text-sm font-semibold text-[#0B1340]">
+        <nav className="hidden md:flex items-center gap-8 text-[13px] font-bold text-slate-600 uppercase tracking-wider">
           <a
             href="#home"
-            className="flex items-center gap-1.5 text-blue-600 font-bold hover:text-blue-700 transition-colors py-1"
+            className="flex items-center gap-1.5 text-blue-600 hover:text-blue-700 transition-colors py-2 relative group"
           >
-            <Home className="w-4 h-4 text-blue-600" />
+            <Home className="w-3.5 h-3.5 mb-0.5" />
             <span>Home</span>
+            <span className="absolute bottom-0 left-0 w-full h-[2px] bg-blue-600 transform scale-x-100 transition-transform origin-left rounded-full" />
           </a>
           <a
             href="#about"
-            className="flex items-center gap-1.5 hover:text-blue-600 transition-colors py-1"
+            className="flex items-center gap-1.5 hover:text-blue-600 transition-colors py-2 relative group"
           >
-            <Info className="w-4 h-4 text-slate-500" />
+            <Info className="w-3.5 h-3.5 mb-0.5" />
             <span>About</span>
+            <span className="absolute bottom-0 left-0 w-full h-[2px] bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left rounded-full" />
           </a>
           <a
             href="#features"
-            className="flex items-center gap-1.5 hover:text-blue-600 transition-colors py-1"
+            className="flex items-center gap-1.5 hover:text-blue-600 transition-colors py-2 relative group"
           >
-            <Layers className="w-4 h-4 text-slate-500" />
-            <span>Feature</span>
+            <Layers className="w-3.5 h-3.5 mb-0.5" />
+            <span>Features</span>
+            <span className="absolute bottom-0 left-0 w-full h-[2px] bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left rounded-full" />
           </a>
           <a
             href="#contact"
-            className="flex items-center gap-1.5 hover:text-blue-600 transition-colors py-1"
+            className="flex items-center gap-1.5 hover:text-blue-600 transition-colors py-2 relative group"
           >
-            <Mail className="w-4 h-4 text-slate-500" />
+            <Mail className="w-3.5 h-3.5 mb-0.5" />
             <span>Contact</span>
+            <span className="absolute bottom-0 left-0 w-full h-[2px] bg-blue-600 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left rounded-full" />
           </a>
         </nav>
 
@@ -64,9 +68,9 @@ export default function Navbar() {
         <div className="hidden md:flex items-center">
           <a
             href="#contact"
-            className="bg-[#0B1340] hover:bg-blue-900 text-white font-bold text-xs sm:text-sm px-4 py-2 rounded-md shadow-md hover:shadow-lg transition-all duration-200 flex items-center gap-2"
+            className="bg-[#0B1340] hover:bg-blue-900 text-white font-bold text-xs uppercase tracking-wide px-5 py-2.5 rounded-full shadow-md shadow-blue-900/20 hover:shadow-lg hover:shadow-blue-900/30 hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2"
           >
-            <LogIn className="w-4 h-4 text-white" />
+            <LogIn className="w-3.5 h-3.5 text-white" />
             <span>Inquiry Now</span>
           </a>
         </div>
