@@ -12,7 +12,11 @@ import CreateParivarModal from "../components/CreateParivarModal";
 import EditParivarModal from "../components/EditParivarModal";
 
 function DashboardLayout() {
-  const { isAuthenticated, activeTab, setIsCreateModalOpen } = useSuperAdmin();
+  const { isAuthenticated, isInitializing, activeTab, setIsCreateModalOpen } = useSuperAdmin();
+
+  if (isInitializing) {
+    return <div className="h-screen w-full bg-[#F4F7FF]"></div>;
+  }
 
   if (!isAuthenticated) {
     return <LoginView />;

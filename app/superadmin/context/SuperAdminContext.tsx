@@ -10,6 +10,7 @@ interface SuperAdminContextType {
   isAuthenticated: boolean;
   loginError: string;
   loginLoading: boolean;
+  isInitializing: boolean;
   handleLogin: (e: React.FormEvent, form: any, rememberMe?: boolean) => Promise<void>;
   handleLogout: () => void;
   
@@ -51,6 +52,7 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
   const derivedTab = tabPath === "inquiries" ? "inquiries" : "parivars";
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(true);
   const [loginError, setLoginError] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   
@@ -63,7 +65,7 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
   const setActiveTab = (tab: "inquiries" | "parivars") => {
     setActiveTabState(tab);
     const path = tab === "inquiries" ? "inquiries" : "all-parivar";
-    router.push(`/superadmin/${path}`);
+    window.history.pushState(null, '', `/superadmin/${path}`);
   };
 
   const [inquiries, setInquiries] = useState<any[]>([]);
@@ -87,6 +89,7 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
     if (savedLocal === "true" || savedSession === "true") {
       setIsAuthenticated(true);
     }
+    setIsInitializing(false);
   }, []);
 
   const fetchInquiries = async () => {
@@ -260,7 +263,7 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
   };
 
   const value = {
-    isAuthenticated, loginError, loginLoading, handleLogin, handleLogout,
+    isAuthenticated, isInitializing, loginError, loginLoading, handleLogin, handleLogout,
     activeTab, setActiveTab,
     inquiries, inquiriesLoading, inquirySearch, setInquirySearch, fetchInquiries, handleInquiryStatus,
     parivars, parivarsLoading, parivarSearch, setParivarSearch, fetchParivars,
