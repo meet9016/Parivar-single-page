@@ -15,15 +15,26 @@ export default function ContactSection() {
   });
   const [loading, setLoading] = useState(false);
   const [statusMessage, setStatusMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
-  const [errors, setErrors] = useState<{ parivar_name?: string; mobile?: string }>({});
+  const [errors, setErrors] = useState<{ parivar_name?: string; email?: string; mobile?: string }>({});
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Validation
-    let newErrors: { parivar_name?: string; mobile?: string } = {};
+    let newErrors: { parivar_name?: string; email?: string; mobile?: string } = {};
     if (!formData.parivar_name.trim()) newErrors.parivar_name = "Parivar Name is required";
-    if (!formData.mobile.trim()) newErrors.mobile = "Mobile Number is required";
+    
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!formData.email.trim().toLowerCase().endsWith("@gmail.com")) {
+      newErrors.email = "Only @gmail.com emails are allowed";
+    }
+
+    if (!formData.mobile.trim()) {
+      newErrors.mobile = "Mobile Number is required";
+    } else if (!/^\d{10}$/.test(formData.mobile.trim())) {
+      newErrors.mobile = "Mobile Number must be exactly 10 digits";
+    }
     
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -211,20 +222,25 @@ export default function ContactSection() {
                       type="email"
                       placeholder="Email Address"
                       value={formData.email}
-                      onChange={(e) =>
-                        setFormData({ ...formData, email: e.target.value })
-                      }
-                      className="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all font-medium shadow-sm"
+                      onChange={(e) => {
+                        setFormData({ ...formData, email: e.target.value });
+                        if (errors.email) setErrors({ ...errors, email: "" });
+                      }}
+                      className={`w-full px-4 py-3.5 rounded-xl bg-slate-50 border ${errors.email ? 'border-rose-400 focus:ring-rose-500 focus:bg-rose-50/30' : 'border-slate-200 focus:ring-blue-500'} text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:bg-white transition-all font-medium shadow-sm`}
                     />
+                    {errors.email && (
+                      <p className="text-xs text-rose-500 mt-2 font-semibold pl-1">{errors.email}</p>
+                    )}
                   </div>
 
                   <div>
                     <input
                       type="tel"
                       placeholder="Mobile Number"
+                      maxLength={10}
                       value={formData.mobile}
                       onChange={(e) => {
-                        setFormData({ ...formData, mobile: e.target.value });
+                        setFormData({ ...formData, mobile: e.target.value.replace(/\D/g, '') });
                         if (errors.mobile) setErrors({ ...errors, mobile: "" });
                       }}
                       className={`w-full px-4 py-3.5 rounded-xl bg-slate-50 border ${errors.mobile ? 'border-rose-400 focus:ring-rose-500 focus:bg-rose-50/30' : 'border-slate-200 focus:ring-blue-500'} text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:bg-white transition-all font-medium shadow-sm`}
