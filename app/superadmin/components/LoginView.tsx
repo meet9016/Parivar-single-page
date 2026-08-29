@@ -43,13 +43,10 @@ export default function LoginView() {
       errors.password = "Password is required";
       hasError = true;
     }
-
     if (hasError) {
       setFormErrors(errors);
       return;
     }
-
-    // Save or clear login details
     if (rememberMe) {
       localStorage.setItem("parivar_saved_login", JSON.stringify(loginForm));
     } else {

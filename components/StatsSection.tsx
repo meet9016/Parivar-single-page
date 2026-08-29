@@ -1,30 +1,46 @@
+"use client";
 import React from "react";
 import { Building2, Users, Calendar, Image as ImageIcon } from "lucide-react";
-
-const stats = [
-  {
-    icon: Building2,
-    value: "500+",
-    label: "Communities",
-  },
-  {
-    icon: Users,
-    value: "50K+",
-    label: "Members",
-  },
-  {
-    icon: Calendar,
-    value: "12K+",
-    label: "Events Hosted",
-  },
-  {
-    icon: ImageIcon,
-    value: "1M+",
-    label: "Memories Shared",
-  },
-];
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function StatsSection() {
+  const { t, language } = useLanguage();
+
+  const getStats = () => {
+    // English defaults
+    let labels = ["Communities", "Members", "Events Hosted", "Memories Shared"];
+    if (language === 'gu') {
+      labels = ["સમાજ", "સક્રિય સભ્યો", "ઇવેન્ટ્સ", "શેર કરેલી યાદો"];
+    } else if (language === 'hi') {
+      labels = ["समुदाय", "सक्रिय सदस्य", "आयोजित कार्यक्रम", "साझा की गई यादें"];
+    }
+
+    return [
+      {
+        icon: Building2,
+        value: "500+",
+        label: labels[0],
+      },
+      {
+        icon: Users,
+        value: "50K+",
+        label: labels[1],
+      },
+      {
+        icon: Calendar,
+        value: "12K+",
+        label: labels[2],
+      },
+      {
+        icon: ImageIcon,
+        value: "100K+",
+        label: labels[3],
+      },
+    ];
+  };
+
+  const stats = getStats();
+
   return (
     <section className="relative z-20 -mt-8 sm:-mt-12 px-4 md:px-8">
       <div className="max-w-7xl mx-auto">

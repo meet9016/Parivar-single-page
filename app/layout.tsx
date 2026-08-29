@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Noto_Sans } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
+import { LanguageProvider } from "@/context/LanguageContext";
 
 const notoSans = Noto_Sans({
   subsets: ["latin"],
@@ -22,10 +23,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${notoSans.variable} scroll-smooth`}>
       <body className="min-h-full flex flex-col antialiased bg-white text-slate-900 font-sans">
-        {children}
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
         <Toaster richColors position="top-right" closeButton />
       </body>
     </html>
   );
 }
-

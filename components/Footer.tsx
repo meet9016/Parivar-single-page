@@ -9,14 +9,22 @@ import {
   MapPin,
   Send,
 } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
+import { LanguageCode } from "@/lib/translations";
 
 export default function Footer() {
+  const { language, setLanguage, t } = useLanguage();
+
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
+  };
+
+  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLanguage(e.target.value as LanguageCode);
   };
 
   return (
@@ -40,7 +48,7 @@ export default function Footer() {
             </a>
 
             <p className="text-slate-400 text-sm leading-relaxed max-w-sm font-medium">
-              A Warm, Modern Home For Families And Communities... Where Every Member Matters And Every Memory Is Preserved For Generations.
+              {t('footer.desc')}
             </p>
 
             {/* Social Icons */}
@@ -94,31 +102,31 @@ export default function Footer() {
           {/* Column 2: Navigation Links (Same as Header) */}
           <div className="lg:col-span-3 space-y-6">
             <h4 className="text-sm font-bold text-white tracking-widest uppercase">
-              Quick Links
+              {t('footer.quickLinks')}
             </h4>
             <ul className="space-y-3.5 text-sm text-slate-400 font-medium">
               <li>
                 <a href="#home" onClick={(e) => handleNavClick(e, 'home')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-500/50 group-hover:bg-blue-400 transition-colors" />
-                  Home
+                  {t('nav.home')}
                 </a>
               </li>
               <li>
                 <a href="#about" onClick={(e) => handleNavClick(e, 'about')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-500/50 group-hover:bg-blue-400 transition-colors" />
-                  About Us
+                  {t('nav.about')}
                 </a>
               </li>
               <li>
                 <a href="#features" onClick={(e) => handleNavClick(e, 'features')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-500/50 group-hover:bg-blue-400 transition-colors" />
-                  Features
+                  {t('nav.features')}
                 </a>
               </li>
               <li>
                 <a href="#contact" onClick={(e) => handleNavClick(e, 'contact')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-500/50 group-hover:bg-blue-400 transition-colors" />
-                  Contact Us
+                  {t('nav.contact')}
                 </a>
               </li>
             </ul>
@@ -127,14 +135,31 @@ export default function Footer() {
           {/* Column 4: Stay In The Loop & Contact */}
           <div className="lg:col-span-4 space-y-6">
             <h4 className="text-sm font-bold text-white tracking-widest uppercase">
-              Stay In The Loop
+              {t('footer.contact')}
             </h4>
-            <p className="text-slate-400 text-sm leading-relaxed font-medium">
-              Get Community Stories And Product Updates — Once A Month, Never Spamming.
-            </p>
+            
+            {/* Language Switcher */}
+            <div className="pt-2">
+              <label htmlFor="language" className="block text-xs text-slate-400 mb-2 font-medium uppercase tracking-wider">{t('footer.language')}</label>
+              <div className="relative inline-block w-48">
+                <select 
+                  id="language"
+                  value={language}
+                  onChange={handleLanguageChange}
+                  className="w-full bg-white/5 border border-white/10 text-white text-sm rounded-xl px-4 py-2.5 outline-none focus:border-blue-500 appearance-none cursor-pointer hover:bg-white/10 transition-colors"
+                >
+                  <option value="gu" className="bg-slate-900 text-white">ગુજરાતી (Gujarati)</option>
+                  <option value="en" className="bg-slate-900 text-white">English</option>
+                  <option value="hi" className="bg-slate-900 text-white">हिंदी (Hindi)</option>
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <Globe className="w-4 h-4 text-slate-400" />
+                </div>
+              </div>
+            </div>
 
             {/* Contact details */}
-            <div className="pt-2 space-y-4 text-sm text-slate-300 font-medium">
+            <div className="pt-4 space-y-4 text-sm text-slate-300 font-medium">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-blue-900/40 text-blue-400 flex items-center justify-center">
                   <Phone className="w-4 h-4" />
@@ -162,7 +187,13 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs sm:text-sm text-slate-500 font-medium gap-4">
-          <div>© 2026 Parivar.me. All Rights Reserved.</div>
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span>Copyright © 2026 Parivar. All rights reserved.</span>
+            <span className="hidden sm:inline">•</span>
+            <a href="https://digitalkstechno.com/" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-blue-400 underline transition-colors">
+              A product of Digitalks Techno LLP.
+            </a>
+          </div>
           <div className="flex items-center gap-6">
             <a href="#" className="hover:text-white transition-colors">
               Privacy Policy
