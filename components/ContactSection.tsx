@@ -65,6 +65,9 @@ export default function ContactSection() {
           type: "success",
           text: "Thank you! Your inquiry has been submitted successfully.",
         });
+        setTimeout(() => {
+          setStatusMessage(null);
+        }, 2000);
         setShowSuccessModal(true);
         setFormData({ parivar_name: "", email: "", mobile: "", note: "" });
       } else {

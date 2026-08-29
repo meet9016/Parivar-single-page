@@ -7,7 +7,6 @@ export default function StatsSection() {
   const { t, language } = useLanguage();
 
   const getStats = () => {
-    // English defaults
     let labels = ["Communities", "Members", "Events Hosted", "Memories Shared"];
     if (language === 'gu') {
       labels = ["સમાજ", "સક્રિય સભ્યો", "ઇવેન્ટ્સ", "શેર કરેલી યાદો"];
@@ -18,12 +17,12 @@ export default function StatsSection() {
     return [
       {
         icon: Building2,
-        value: "500+",
+        value: "200+",
         label: labels[0],
       },
       {
         icon: Users,
-        value: "50K+",
+        value: "20K+",
         label: labels[1],
       },
       {
