@@ -202,10 +202,11 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
       const res = await axiosInstance.post(ENDPOINTS.REGISTER_PARIVAR, newParivar);
 
       if (res.status === 200 || res.status === 201) {
-        toast.success(`Parivar "${newParivar.parivar_name}" created successfully!`);
+        const displayName = newParivar.parivar_name || newParivar.village_name;
+        toast.success(`${newParivar.community_type} "${displayName}" created successfully!`);
         setCreateStatus({
           type: "success",
-          text: `Parivar "${newParivar.parivar_name}" registered with database "parivar_${newParivar.parivar_name.toLowerCase().replace(/[^a-z0-9]+/g, '_')}"!`,
+          text: `${newParivar.community_type} "${displayName}" registered with database "parivar_${displayName.toLowerCase().replace(/[^a-z0-9]+/g, '_')}"!`,
         });
         setNewParivar({
           parivar_name: "", admin_first_name: "", admin_last_name: "",

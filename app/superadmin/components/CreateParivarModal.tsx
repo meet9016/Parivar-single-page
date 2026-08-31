@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
-import { PlusCircle, RefreshCw, CheckCircle, AlertCircle } from "lucide-react";
+import { PlusCircle, RefreshCw, CheckCircle, AlertCircle, Eye, EyeOff } from "lucide-react";
 import { useSuperAdmin } from "../context/SuperAdminContext";
 
 export default function CreateParivarModal() {
   const { isCreateModalOpen, setIsCreateModalOpen, createLoading, createStatus, handleCreateParivar } = useSuperAdmin();
 
   const [newParivar, setNewParivar] = useState({
+    community_type: "Parivar",
     parivar_name: "",
     admin_first_name: "",
     admin_last_name: "",
@@ -17,12 +18,13 @@ export default function CreateParivarModal() {
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const validateAndSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const newErrors: { [key: string]: string } = {};
 
-    if (!newParivar.parivar_name.trim()) newErrors.parivar_name = "Parivar Name is required.";
+    if (!newParivar.parivar_name.trim()) newErrors.parivar_name = `${newParivar.community_type} Name is required.`;
     if (!newParivar.admin_first_name.trim()) newErrors.admin_first_name = "First Name is required.";
     if (!newParivar.admin_email.trim()) {
       newErrors.admin_email = "Email is required.";
@@ -42,7 +44,16 @@ export default function CreateParivarModal() {
     }
 
     setErrors({});
-    handleCreateParivar(e, newParivar, setNewParivar);
+    
+    // Construct the payload based on community type
+    const payload = {
+      ...newParivar,
+      ...(newParivar.community_type === 'Village' 
+        ? { village_name: newParivar.parivar_name, parivar_name: undefined } 
+        : {})
+    };
+
+    handleCreateParivar(e, payload, setNewParivar);
   };
 
   if (!isCreateModalOpen) return null;
@@ -71,18 +82,51 @@ export default function CreateParivarModal() {
         </div>
 
         <form onSubmit={validateAndSubmit} noValidate className="space-y-3.5">
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">
-              Parivar Name <span className="text-rose-500">*</span>
-            </label>
-            <input
-              type="text"
-              placeholder="e.g. Patel Parivar / Vala Parivar"
-              value={newParivar.parivar_name}
-              onChange={(e) => setNewParivar({ ...newParivar, parivar_name: e.target.value })}
-              className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none"
-            />
-            <p className="text-[10px] text-slate-400 mt-1">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">
+                Community Type <span className="text-rose-500">*</span>
+              </label>
+              <select
+                value={newParivar.community_type}
+                onChange={(e) => {
+                  const type = e.target.value;
+                  setNewParivar({
+                    ...newParivar,
+                    community_type: type,
+                    admin_last_name: type === 'Village' ? '' : newParivar.parivar_name.split(' ')[0]
+                  });
+                }}
+                className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none cursor-pointer"
+              >
+                <option value="Parivar">Parivar</option>
+                <option value="Village">Village</option>
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">
+                {newParivar.community_type === 'Village' ? 'Village Name' : 'Parivar Name'} <span className="text-rose-500">*</span>
+              </label>
+              <input
+                type="text"
+                placeholder={newParivar.community_type === 'Village' ? "e.g. Dharmaj" : "e.g. Patel Parivar"}
+                value={newParivar.parivar_name}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setNewParivar({
+                    ...newParivar,
+                    parivar_name: val,
+                    ...(newParivar.community_type === 'Parivar' ? { admin_last_name: val.split(' ')[0] } : {})
+                  });
+                }}
+                className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none"
+              />
+            </div>
+          </div>
+          
+          <div className="px-1">
+            <p className="text-[10px] text-slate-400">
               Database: <span className="font-mono text-blue-600 font-semibold">parivar_{newParivar.parivar_name ? newParivar.parivar_name.toLowerCase().replace(/[^a-z0-9]+/g, '_') : 'name'}</span>
             </p>
             {errors.parivar_name && <p className="text-[11px] text-rose-500 mt-1 font-semibold">{errors.parivar_name}</p>}
@@ -152,13 +196,22 @@ export default function CreateParivarModal() {
             <label className="block text-xs font-bold text-slate-700 mb-1">
               Initial Admin Password (Optional)
             </label>
-            <input
-              type="password"
-              placeholder="Default: Parivar@123"
-              value={newParivar.admin_password}
-              onChange={(e) => setNewParivar({ ...newParivar, admin_password: e.target.value })}
-              className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Default: Parivar@123"
+                value={newParivar.admin_password}
+                onChange={(e) => setNewParivar({ ...newParivar, admin_password: e.target.value })}
+                className="w-full pl-3.5 pr-10 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600 focus:outline-none"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
             <p className="text-[10px] text-slate-400 mt-1">
               Default if empty: <span className="font-mono font-bold text-slate-600">Parivar@123</span>
             </p>
