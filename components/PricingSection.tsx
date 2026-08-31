@@ -1,13 +1,15 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { CheckCircle2, MessageCircle, Sparkles } from "lucide-react";
+import { CheckCircle2, MessageCircle, X } from "lucide-react";
 import axiosInstance from "../lib/axiosInstance";
 import { ENDPOINTS } from "../lib/endpoints";
 
 export default function PricingSection() {
   const [plans, setPlans] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [selectedPlanForModal, setSelectedPlanForModal] = useState<any | null>(null);
+  
   const whatsappNumber = "918866779008"; 
 
   useEffect(() => {
@@ -73,6 +75,10 @@ export default function PricingSection() {
             const defaultMsg = `Hello, I want to book a free demo of Parivar for the "${plan.title}" package.`;
             const waMsg = plan.whatsappMessage || defaultMsg;
             const waLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(waMsg)}`;
+            
+            // Show maximum 3 features in the card
+            const visibleFeatures = plan.features?.slice(0, 3) || [];
+            const hasMoreFeatures = plan.features?.length > 3;
 
             return (
               <div
@@ -112,7 +118,7 @@ export default function PricingSection() {
 
                   {/* Features List */}
                   <div className="space-y-3.5 pt-2">
-                    {plan.features?.map((feature: string, idx: number) => (
+                    {visibleFeatures.map((feature: string, idx: number) => (
                       <div key={idx} className="flex items-start gap-3">
                         <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
                         <span className="text-slate-700 text-sm font-semibold">
@@ -120,6 +126,15 @@ export default function PricingSection() {
                         </span>
                       </div>
                     ))}
+                    
+                    {hasMoreFeatures && (
+                      <button
+                        onClick={() => setSelectedPlanForModal(plan)}
+                        className="text-blue-600 hover:text-blue-700 text-xs font-extrabold flex items-center gap-1 mt-2.5 cursor-pointer underline decoration-2 underline-offset-2"
+                      >
+                        + View All {plan.features.length} Features
+                      </button>
+                    )}
                   </div>
                 </div>
 
@@ -148,6 +163,46 @@ export default function PricingSection() {
         </div>
 
       </div>
+
+      {/* Features Modal Pop Up */}
+      {selectedPlanForModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-white border border-slate-200 rounded-3xl shadow-xl w-full max-w-md overflow-hidden animate-in zoom-in duration-200">
+            <div className="flex justify-between items-center px-6 py-4.5 border-b border-slate-100">
+              <div>
+                <h3 className="text-base font-black text-slate-900">{selectedPlanForModal.title}</h3>
+                <p className="text-xs font-medium text-slate-500">{selectedPlanForModal.subtitle || "Included Features"}</p>
+              </div>
+              <button
+                onClick={() => setSelectedPlanForModal(null)}
+                className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-full transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="p-6 max-h-[60vh] overflow-y-auto space-y-4">
+              <div className="space-y-3.5">
+                {selectedPlanForModal.features?.map((feature: string, idx: number) => (
+                  <div key={idx} className="flex items-start gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                    <span className="text-slate-700 text-sm font-semibold">{feature}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="px-6 py-4.5 border-t border-slate-100 bg-slate-50 flex justify-end">
+              <button
+                onClick={() => setSelectedPlanForModal(null)}
+                className="bg-[#0B1340] hover:bg-[#070D2B] text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-colors cursor-pointer"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

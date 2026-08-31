@@ -386,28 +386,6 @@ export default function PricingTab() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Display Order</label>
-                  <input
-                    type="number"
-                    value={formData.order}
-                    onChange={(e) => setFormData({ ...formData, order: e.target.value })}
-                    className="w-full text-sm border border-slate-200 rounded-xl px-4 py-2.5 outline-hidden focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Status</label>
-                  <select
-                    value={formData.status}
-                    onChange={(e) => setFormData({ ...formData, status: Number(e.target.value) })}
-                    className="w-full text-sm border border-slate-200 rounded-xl px-4 py-2.5 bg-white outline-hidden focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                  >
-                    <option value={1}>Active (Visible)</option>
-                    <option value={0}>Inactive (Hidden)</option>
-                  </select>
-                </div>
-              </div>
 
               <div className="flex justify-end gap-3.5 pt-4 border-t border-slate-100">
                 <button

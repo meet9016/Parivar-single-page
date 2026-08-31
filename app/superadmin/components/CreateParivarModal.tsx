@@ -122,14 +122,13 @@ export default function CreateParivarModal() {
                 }}
                 className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-blue-500 focus:bg-white outline-none"
               />
+              <div className="px-1 mt-1">
+                <p className="text-[10px] text-slate-400">
+                  Database: <span className="font-mono text-blue-600 font-semibold">parivar_{newParivar.parivar_name ? newParivar.parivar_name.toLowerCase().replace(/[^a-z0-9]+/g, '_') : 'name'}</span>
+                </p>
+                {errors.parivar_name && <p className="text-[11px] text-rose-500 mt-0.5 font-semibold">{errors.parivar_name}</p>}
+              </div>
             </div>
-          </div>
-          
-          <div className="px-1">
-            <p className="text-[10px] text-slate-400">
-              Database: <span className="font-mono text-blue-600 font-semibold">parivar_{newParivar.parivar_name ? newParivar.parivar_name.toLowerCase().replace(/[^a-z0-9]+/g, '_') : 'name'}</span>
-            </p>
-            {errors.parivar_name && <p className="text-[11px] text-rose-500 mt-1 font-semibold">{errors.parivar_name}</p>}
           </div>
 
           <div className="grid grid-cols-2 gap-3">
