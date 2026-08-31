@@ -6,6 +6,7 @@ import StatsSection from "@/components/StatsSection";
 import AboutSection from "@/components/AboutSection";
 import ComparisonSection from "@/components/ComparisonSection";
 import FeaturesSection from "@/components/FeaturesSection";
+import PricingSection from "@/components/PricingSection";
 import WhatsAppBanner from "@/components/WhatsAppBanner";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
@@ -71,7 +72,12 @@ export default function Home() {
         <FeaturesSection />
       </div>
 
-      {/* 6. WhatsApp CTA Banner */}
+      {/* 7. Superadmin Managed Pricing Section */}
+      <div className="scroll-animate">
+        <PricingSection />
+      </div>
+
+      {/* 8. WhatsApp CTA Banner */}
       <div className="scroll-animate">
         <WhatsAppBanner />
       </div>

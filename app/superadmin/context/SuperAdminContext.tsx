@@ -14,8 +14,8 @@ interface SuperAdminContextType {
   handleLogin: (e: React.FormEvent, form: any, rememberMe?: boolean) => Promise<void>;
   handleLogout: () => void;
   
-  activeTab: "inquiries" | "parivars";
-  setActiveTab: (tab: "inquiries" | "parivars") => void;
+  activeTab: "inquiries" | "parivars" | "pricing";
+  setActiveTab: (tab: "inquiries" | "parivars" | "pricing") => void;
 
   inquiries: any[];
   inquiriesLoading: boolean;
@@ -40,6 +40,14 @@ interface SuperAdminContextType {
   setEditingParivar: (val: any) => void;
   editLoading: boolean;
   handleEditParivar: (e: React.FormEvent, form: any) => Promise<void>;
+
+  // Pricing Plans
+  pricingPlans: any[];
+  pricingLoading: boolean;
+  fetchPricingPlans: () => Promise<void>;
+  handleCreatePricingPlan: (plan: any) => Promise<boolean>;
+  handleEditPricingPlan: (id: string, plan: any) => Promise<boolean>;
+  handleDeletePricingPlan: (id: string) => Promise<boolean>;
 }
 
 const SuperAdminContext = createContext<SuperAdminContextType | undefined>(undefined);
@@ -49,22 +57,22 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
   const params = useParams();
   
   const tabPath = params?.tab?.[0];
-  const derivedTab = tabPath === "inquiries" ? "inquiries" : "parivars";
+  const derivedTab = tabPath === "inquiries" ? "inquiries" : tabPath === "pricing" ? "pricing" : "parivars";
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
   const [loginError, setLoginError] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   
-  const [activeTab, setActiveTabState] = useState<"inquiries" | "parivars">(derivedTab);
+  const [activeTab, setActiveTabState] = useState<"inquiries" | "parivars" | "pricing">(derivedTab);
 
   useEffect(() => {
     setActiveTabState(derivedTab);
   }, [derivedTab]);
 
-  const setActiveTab = (tab: "inquiries" | "parivars") => {
+  const setActiveTab = (tab: "inquiries" | "parivars" | "pricing") => {
     setActiveTabState(tab);
-    const path = tab === "inquiries" ? "inquiries" : "all-parivar";
+    const path = tab === "inquiries" ? "inquiries" : tab === "pricing" ? "pricing" : "all-parivar";
     window.history.pushState(null, '', `/superadmin/${path}`);
   };
 
@@ -82,6 +90,10 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
 
   const [editingParivar, setEditingParivar] = useState<any>(null);
   const [editLoading, setEditLoading] = useState(false);
+
+  // Pricing States
+  const [pricingPlans, setPricingPlans] = useState<any[]>([]);
+  const [pricingLoading, setPricingLoading] = useState(false);
 
   useEffect(() => {
     const savedLocal = localStorage.getItem("superadmin_auth");
@@ -120,10 +132,25 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const fetchPricingPlans = async () => {
+    setPricingLoading(true);
+    try {
+      const res = await axiosInstance.get(ENDPOINTS.PRICING_ALL);
+      if (res.status === 200) {
+        setPricingPlans(Array.isArray(res.data.data) ? res.data.data : []);
+      }
+    } catch (err) {
+      console.error("Failed to load pricing plans", err);
+    } finally {
+      setPricingLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (isAuthenticated) {
       fetchInquiries();
       fetchParivars();
+      fetchPricingPlans();
     }
   }, [isAuthenticated, activeTab]);
 
@@ -263,13 +290,59 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const handleCreatePricingPlan = async (plan: any) => {
+    try {
+      const res = await axiosInstance.post(ENDPOINTS.PRICING, plan);
+      if (res.status === 200 || res.status === 201) {
+        toast.success("Pricing plan created successfully!");
+        fetchPricingPlans();
+        return true;
+      }
+      return false;
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to create pricing plan.");
+      return false;
+    }
+  };
+
+  const handleEditPricingPlan = async (id: string, plan: any) => {
+    try {
+      const res = await axiosInstance.put(ENDPOINTS.UPDATE_PRICING(id), plan);
+      if (res.status === 200) {
+        toast.success("Pricing plan updated successfully!");
+        fetchPricingPlans();
+        return true;
+      }
+      return false;
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to update pricing plan.");
+      return false;
+    }
+  };
+
+  const handleDeletePricingPlan = async (id: string) => {
+    try {
+      const res = await axiosInstance.delete(ENDPOINTS.UPDATE_PRICING(id));
+      if (res.status === 200) {
+        toast.success("Pricing plan deleted successfully!");
+        fetchPricingPlans();
+        return true;
+      }
+      return false;
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to delete pricing plan.");
+      return false;
+    }
+  };
+
   const value = {
     isAuthenticated, isInitializing, loginError, loginLoading, handleLogin, handleLogout,
     activeTab, setActiveTab,
     inquiries, inquiriesLoading, inquirySearch, setInquirySearch, fetchInquiries, handleInquiryStatus,
     parivars, parivarsLoading, parivarSearch, setParivarSearch, fetchParivars,
     isCreateModalOpen, setIsCreateModalOpen, createLoading, createStatus, handleCreateParivar,
-    editingParivar, setEditingParivar, editLoading, handleEditParivar
+    editingParivar, setEditingParivar, editLoading, handleEditParivar,
+    pricingPlans, pricingLoading, fetchPricingPlans, handleCreatePricingPlan, handleEditPricingPlan, handleDeletePricingPlan
   };
 
   return <SuperAdminContext.Provider value={value}>{children}</SuperAdminContext.Provider>;

@@ -8,6 +8,7 @@ import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import InquiriesTab from "../components/InquiriesTab";
 import ParivarsTab from "../components/ParivarsTab";
+import PricingTab from "../components/PricingTab";
 import CreateParivarModal from "../components/CreateParivarModal";
 import EditParivarModal from "../components/EditParivarModal";
 
@@ -35,10 +36,12 @@ function DashboardLayout() {
               <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
                 {activeTab === "parivars" && "All Parivars (Tenants)"}
                 {activeTab === "inquiries" && "User Inquiries"}
+                {activeTab === "pricing" && "Landing Page Pricing plans"}
               </h2>
               <p className="text-xs text-slate-500 mt-0.5">
                 {activeTab === "parivars" && "Manage all isolated community databases, admins, and status"}
                 {activeTab === "inquiries" && "Landing page visitor requests and contact inquiries"}
+                {activeTab === "pricing" && "Manage the dynamic pricing plans shown on parivar.me"}
               </p>
             </div>
 
@@ -81,6 +84,7 @@ function DashboardLayout() {
 
           {activeTab === "inquiries" && <InquiriesTab />}
           {activeTab === "parivars" && <ParivarsTab />}
+          {activeTab === "pricing" && <PricingTab />}
         </main>
 
         <CreateParivarModal />

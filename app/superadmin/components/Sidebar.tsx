@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { Shield, Building2, MessageSquare } from "lucide-react";
+import { Shield, Building2, MessageSquare, Tag } from "lucide-react";
 import { useSuperAdmin } from "../context/SuperAdminContext";
 
 export default function Sidebar() {
-  const { activeTab, setActiveTab, parivars, inquiries } = useSuperAdmin();
+  const { activeTab, setActiveTab, parivars, inquiries, pricingPlans } = useSuperAdmin();
 
   return (
     <aside className="w-64 bg-white border-r border-slate-200/80 flex flex-col justify-between shrink-0 h-full shadow-xs z-30">
@@ -58,6 +58,25 @@ export default function Sidebar() {
                 activeTab === "inquiries" ? "bg-white/20 text-white" : "bg-slate-100 text-slate-600"
               }`}>
                 {inquiries.length}
+              </span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab("pricing")}
+              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                activeTab === "pricing"
+                  ? "bg-[#0B1340] text-white shadow-sm shadow-[#0B1340]/25"
+                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+              }`}
+            >
+              <div className="flex items-center gap-2.5">
+                <Tag className={`w-4 h-4 ${activeTab === "pricing" ? "text-white" : "text-blue-600"}`} />
+                <span>Pricing & Offers</span>
+              </div>
+              <span className={`px-2 py-0.5 rounded-md text-[10px] font-extrabold ${
+                activeTab === "pricing" ? "bg-white/20 text-white" : "bg-slate-100 text-slate-600"
+              }`}>
+                {pricingPlans.length}
               </span>
             </button>
           </nav>
