@@ -118,13 +118,13 @@ export default function PricingTab() {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-lg font-bold text-slate-800">Manage Pricing Plans / Deals</h2>
+        <h2 className="text-sm font-bold text-slate-600">All Plans</h2>
         <button
           onClick={handleOpenCreate}
-          className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-xs transition-colors"
+          className="inline-flex items-center gap-2 bg-[#0B1340] hover:bg-[#0d1855] text-white font-bold text-xs px-4 py-2 rounded-lg shadow-sm transition-colors"
         >
-          <Plus className="w-4 h-4" />
-          <span>Add Pricing Plan</span>
+          <Plus className="w-3.5 h-3.5" />
+          <span>Add Plan</span>
         </button>
       </div>
 
@@ -207,20 +207,20 @@ export default function PricingTab() {
                       </span>
                     </td>
                     <td className="px-5 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2.5">
+                      <div className="flex items-center justify-end gap-1.5">
                         <button
                           onClick={() => handleOpenEdit(plan)}
-                          className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
-                          title="Edit Deal"
+                          className="p-1.5 rounded-lg bg-[#0B1340]/5 hover:bg-[#0B1340] text-[#0B1340] hover:text-white transition-all"
+                          title="Edit Plan"
                         >
-                          <Edit2 className="w-4 h-4" />
+                          <Edit2 className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => handleDelete(plan._id)}
-                          className="p-1.5 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
-                          title="Delete Deal"
+                          className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-600 text-rose-500 hover:text-white transition-all"
+                          title="Delete Plan"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     </td>
@@ -396,19 +396,19 @@ export default function PricingTab() {
               </div>
 
 
-              <div className="flex justify-end gap-3.5 pt-4 border-t border-slate-100">
+              <div className="flex justify-end gap-2.5 pt-4 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs px-5 py-3 rounded-xl transition-colors"
+                  className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs px-5 py-2.5 rounded-lg transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-6 py-3 rounded-xl transition-colors"
+                  className="bg-[#0B1340] hover:bg-[#0d1855] text-white font-bold text-xs px-6 py-2.5 rounded-lg transition-colors"
                 >
-                  Save Deal
+                  Save Plan
                 </button>
               </div>
             </form>

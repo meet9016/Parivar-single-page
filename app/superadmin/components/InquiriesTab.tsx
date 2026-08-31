@@ -117,10 +117,10 @@ export default function InquiriesTab() {
                     <td className="px-5 py-4 text-right">
                       <button
                         onClick={() => handleInquiryStatus(inq._id, inq.status)}
-                        className={`px-3 py-1 rounded-lg border text-xs font-bold transition-all cursor-pointer ${
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer border ${
                           inq.status === 1
-                            ? "border-emerald-200 text-emerald-700 hover:bg-emerald-50"
-                            : "border-slate-200 text-slate-600 hover:bg-slate-100"
+                            ? "bg-[#0B1340] hover:bg-[#0d1855] text-white border-[#0B1340]"
+                            : "bg-slate-100 hover:bg-slate-200 text-slate-600 border-slate-200"
                         }`}
                       >
                         {inq.status === 1 ? "Mark Resolved" : "Mark Pending"}
@@ -138,21 +138,21 @@ export default function InquiriesTab() {
             <span className="text-xs text-slate-500 font-medium">
               Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, inquiries.length)} of {inquiries.length} inquiries
             </span>
-            <div className="flex items-center rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
+            <div className="flex items-center rounded-lg border border-slate-200 bg-white overflow-hidden">
               <button 
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                className="px-3.5 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors border-r border-slate-200"
+                className="px-3.5 py-1.5 text-xs font-bold text-slate-600 hover:bg-[#0B1340] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors border-r border-slate-200"
               >
                 Previous
               </button>
-              <div className="flex items-center px-4 py-1.5 text-xs font-bold text-slate-700 bg-slate-50/50 border-r border-slate-200">
-                Page {currentPage} of {totalPages || 1}
+              <div className="flex items-center px-4 py-1.5 text-xs font-bold text-slate-700 bg-slate-50 border-r border-slate-200">
+                {currentPage} / {totalPages || 1}
               </div>
               <button 
                 disabled={currentPage === totalPages || totalPages === 0}
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                className="px-3.5 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-3.5 py-1.5 text-xs font-bold text-slate-600 hover:bg-[#0B1340] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 Next
               </button>

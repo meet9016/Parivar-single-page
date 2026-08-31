@@ -1,14 +1,73 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { CheckCircle2, MessageCircle, X } from "lucide-react";
+import { CheckCircle2, MessageCircle, ChevronDown, ChevronUp } from "lucide-react";
 import axiosInstance from "../lib/axiosInstance";
 import { ENDPOINTS } from "../lib/endpoints";
+import { useLanguage } from "../context/LanguageContext";
+
+const guSubstitutions: Array<[RegExp, string]> = [
+  [/Instant Notifications+s*/gi, "ઇન્સ્ટન્ટ નોટિફિકેશન"],
+  [/Continued Smart Automation/gi, "સતત સ્માર્ટ ઓટોમેશન"],
+  [/Smart Automation/gi, "સ્માર્ટ ઓટોમેશન"],
+  [/Preserved Digital Heritage/gi, "સુરક્ષિત ડિજિટલ વારસો"],
+  [/1 Official WhatsApp API Number/gi, "1 ઓફિશિયલ વોટ્સએપ API નંબર"],
+  [/Official WhatsApp API Number/gi, "ઓફિશિયલ વોટ્સએપ API નંબર"],
+  [/Additional WhatsApp Number/gi, "વધારાનો WhatsApp નંબર"],
+  [/Special Renewal Deal/gi, "સ્પેશિયલ રીન્યુઅલ ડીલ"],
+  [/Exclusive Deal/gi, "એક્સક્લુસિવ ડીલ"],
+  [/RENEWAL OFFER/gi, "રીન્યુઅલ ઓફર"],
+  [/NEW OFFER/gi, "નવી ઓફર"],
+  [/Renewal Offer/gi, "રીન્યુઅલ ઓફર"],
+  [/New Offer/gi, "નવી ઓફર"],
+  [/Renew your package at just ₹6,000/gi, "માત્ર ₹6,000 માં તમારું પેકેજ રીન્યુ કરો"],
+  [/Get the Complete Package at Just ₹10,000/gi, "માત્ર ₹10,000 માં સંપૂર્ણ પેકેજ મેળવો"],
+  [/Only ₹6,000/gi, "માત્ર ₹6,000"],
+  [/Only ₹10,000/gi, "માત્ર ₹10,000"],
+  [/Get Free Demo/gi, "ફ્રી ડેમો મેળવો"],
+];
+
+const hiSubstitutions: Array<[RegExp, string]> = [
+  [/Instant Notifications+s*/gi, "इंस्टेंट नोटिफिकेशन"],
+  [/Continued Smart Automation/gi, "निरंतर स्मार्ट ऑटोमेशन"],
+  [/Smart Automation/gi, "स्मार्ट ऑटोमेशन"],
+  [/Preserved Digital Heritage/gi, "संरक्षित डिजिटल विरासत"],
+  [/1 Official WhatsApp API Number/gi, "1 आधिकारिक व्हाट्सएप एपीआई नंबर"],
+  [/Official WhatsApp API Number/gi, "आधिकारिक व्हाट्सएप एपीआई नंबर"],
+  [/Additional WhatsApp Number/gi, "अतिरिक्त WhatsApp नंबर"],
+  [/Special Renewal Deal/gi, "स्पेशल रिन्यूअल डील"],
+  [/Exclusive Deal/gi, "एक्सक्लूसिव डील"],
+  [/RENEWAL OFFER/gi, "रिन्यूअल ऑफर"],
+  [/NEW OFFER/gi, "नया ऑफर"],
+  [/Renewal Offer/gi, "रिन्यूअल ऑफर"],
+  [/New Offer/gi, "नया ऑफर"],
+  [/Renew your package at just ₹6,000/gi, "मात्र ₹6,000 में अपना पैकेज रिन्यू करें"],
+  [/Get the Complete Package at Just ₹10,000/gi, "मात्र ₹10,000 में पूरा पैकेज प्राप्त करें"],
+  [/Only ₹6,000/gi, "मात्र ₹6,000"],
+  [/Only ₹10,000/gi, "मात्र ₹10,000"],
+  [/Get Free Demo/gi, "फ्री डेमो प्राप्त करें"],
+];
+
+function translateText(text: string, lang: string): string {
+  if (!text) return "";
+  let result = text;
+  if (lang === "gu") {
+    for (const [pattern, replacement] of guSubstitutions) {
+      result = result.replace(pattern, replacement);
+    }
+  } else if (lang === "hi") {
+    for (const [pattern, replacement] of hiSubstitutions) {
+      result = result.replace(pattern, replacement);
+    }
+  }
+  return result;
+}
 
 export default function PricingSection() {
   const [plans, setPlans] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [selectedPlanForModal, setSelectedPlanForModal] = useState<any | null>(null);
+  const [expandedPlans, setExpandedPlans] = useState<Record<string, boolean>>({});
+  const { t, language } = useLanguage();
   
   const whatsappNumber = "918866779008"; 
 
@@ -29,19 +88,19 @@ export default function PricingSection() {
     fetchPlans();
   }, []);
 
+  const togglePlanExpand = (planId: string) => {
+    setExpandedPlans((prev) => ({ ...prev, [planId]: !prev[planId] }));
+  };
+
   if (loading || plans.length === 0) {
-    return null; // Don't show anything if loading or no active plans
+    return null;
   }
 
   return (
     <section className="relative overflow-hidden bg-[#fafcff] py-16 md:py-24 border-t border-slate-100">
-      
-      {/* Background elements to match the parivar.me theme */}
+      {/* Background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Subtle grid pattern */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
-        
-        {/* Glowing orbs */}
         <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-blue-300/10 rounded-full blur-[100px]" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-indigo-300/10 rounded-full blur-[100px]" />
       </div>
@@ -55,17 +114,17 @@ export default function PricingSection() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
             </span>
-            <span>Limited Time Offer</span>
+            <span>{t("pricing.tag")}</span>
           </div>
           
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-            Choose the Perfect Package for Your{" "}
+            {t("pricing.title1")}{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
-              Community
+              {t("pricing.title2")}
             </span>
           </h2>
           <p className="text-slate-600 text-base font-medium max-w-lg mx-auto">
-            Get the full management panel setup, WhatsApp automation features, and support at exclusive deal pricing.
+            {t("pricing.subtitle")}
           </p>
         </div>
 
@@ -76,26 +135,27 @@ export default function PricingSection() {
             const waMsg = plan.whatsappMessage || defaultMsg;
             const waLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(waMsg)}`;
             
-            // Show maximum 3 features in the card
-            const visibleFeatures = plan.features?.slice(0, 3) || [];
-            const hasMoreFeatures = plan.features?.length > 3;
+            const isExpanded = !!expandedPlans[plan._id];
+            const allFeatures = plan.features || [];
+            const remainingCount = allFeatures.length - 3;
+            const visibleFeatures = isExpanded ? allFeatures : allFeatures.slice(0, 3);
 
             return (
               <div
                 key={plan._id}
                 className="bg-white/80 backdrop-blur-md border-2 border-indigo-100/50 hover:border-indigo-600 rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-[0_4px_25px_-4px_rgba(59,130,246,0.06)] hover:shadow-[0_10px_35px_-4px_rgba(59,130,246,0.12)] transition-all duration-300 relative group overflow-hidden"
               >
-                {/* Subtle top decoration */}
+                {/* Top highlight bar */}
                 <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 
                 <div className="space-y-6 relative z-10">
                   {/* Badges / Header */}
                   <div className="text-center space-y-2.5">
                     <span className="inline-flex items-center gap-1.5 bg-blue-50 border border-blue-100/50 text-blue-700 text-[10px] md:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                      🎯 {plan.subtitle || "Exclusive Deal"}
+                      🎯 {translateText(plan.subtitle || "Exclusive Deal", language)}
                     </span>
                     <h3 className="text-xl md:text-2xl font-black text-[#0B1340]">
-                      {plan.title}
+                      {translateText(plan.title, language)}
                     </h3>
                   </div>
 
@@ -111,7 +171,7 @@ export default function PricingSection() {
                     </div>
                     {plan.description && (
                       <p className="text-slate-500 text-xs md:text-sm font-medium">
-                        {plan.description}
+                        {translateText(plan.description, language)}
                       </p>
                     )}
                   </div>
@@ -122,18 +182,30 @@ export default function PricingSection() {
                       <div key={idx} className="flex items-start gap-3">
                         <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
                         <span className="text-slate-700 text-sm font-semibold">
-                          {feature}
+                          {translateText(feature, language)}
                         </span>
                       </div>
                     ))}
                     
-                    {hasMoreFeatures && (
-                      <button
-                        onClick={() => setSelectedPlanForModal(plan)}
-                        className="text-blue-600 hover:text-blue-700 text-xs font-extrabold flex items-center gap-1 mt-2.5 cursor-pointer underline decoration-2 underline-offset-2"
-                      >
-                        + View All {plan.features.length} Features
-                      </button>
+                    {allFeatures.length > 3 && (
+                      <div className="flex justify-end pt-1">
+                        <button
+                          onClick={() => togglePlanExpand(plan._id)}
+                          className="text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200/80 px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer inline-flex items-center gap-1 shadow-2xs"
+                        >
+                          {isExpanded ? (
+                            <>
+                              <span>{t("pricing.less")}</span>
+                              <ChevronUp className="w-3.5 h-3.5" />
+                            </>
+                          ) : (
+                            <>
+                              <span>+{remainingCount} {t("pricing.more")}</span>
+                              <ChevronDown className="w-3.5 h-3.5" />
+                            </>
+                          )}
+                        </button>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -142,7 +214,7 @@ export default function PricingSection() {
                 <div className="mt-8 pt-6 border-t border-slate-100 space-y-4 relative z-10">
                   {plan.badgeText && (
                     <div className="bg-[#FEF9C3] border border-yellow-200/70 text-yellow-900 text-center font-bold text-xs py-2.5 px-3 rounded-xl shadow-3xs flex items-center justify-center gap-2">
-                      💡 {plan.badgeText}
+                      💡 {translateText(plan.badgeText, language)}
                     </div>
                   )}
 
@@ -153,7 +225,7 @@ export default function PricingSection() {
                     className="w-full inline-flex items-center justify-center gap-2.5 bg-green-500 hover:bg-green-600 text-white font-bold text-sm md:text-base py-3.5 rounded-full shadow-[0_4px_15px_rgba(34,197,94,0.25)] hover:shadow-[0_4px_25px_rgba(34,197,94,0.4)] active:scale-98 transition-all duration-300 text-center"
                   >
                     <MessageCircle className="w-5 h-5 fill-white stroke-none" />
-                    <span>{plan.buttonText || "Get Free Demo"}</span>
+                    <span>{translateText(plan.buttonText || "Get Free Demo", language)}</span>
                   </a>
                 </div>
 
@@ -163,46 +235,6 @@ export default function PricingSection() {
         </div>
 
       </div>
-
-      {/* Features Modal Pop Up */}
-      {selectedPlanForModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="bg-white border border-slate-200 rounded-3xl shadow-xl w-full max-w-md overflow-hidden animate-in zoom-in duration-200">
-            <div className="flex justify-between items-center px-6 py-4.5 border-b border-slate-100">
-              <div>
-                <h3 className="text-base font-black text-slate-900">{selectedPlanForModal.title}</h3>
-                <p className="text-xs font-medium text-slate-500">{selectedPlanForModal.subtitle || "Included Features"}</p>
-              </div>
-              <button
-                onClick={() => setSelectedPlanForModal(null)}
-                className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-full transition-colors cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            
-            <div className="p-6 max-h-[60vh] overflow-y-auto space-y-4">
-              <div className="space-y-3.5">
-                {selectedPlanForModal.features?.map((feature: string, idx: number) => (
-                  <div key={idx} className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
-                    <span className="text-slate-700 text-sm font-semibold">{feature}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="px-6 py-4.5 border-t border-slate-100 bg-slate-50 flex justify-end">
-              <button
-                onClick={() => setSelectedPlanForModal(null)}
-                className="bg-[#0B1340] hover:bg-[#070D2B] text-white font-bold text-xs px-5 py-2.5 rounded-xl transition-colors cursor-pointer"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 }

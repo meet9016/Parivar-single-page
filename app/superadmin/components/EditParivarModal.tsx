@@ -149,14 +149,14 @@ export default function EditParivarModal() {
             <button
               type="button"
               onClick={() => setEditingParivar(null)}
-              className="flex-1 py-3 rounded-xl font-bold text-slate-700 bg-slate-100 hover:bg-slate-200"
+              className="flex-1 py-2.5 rounded-xl font-bold text-xs text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={editLoading}
-              className="flex-1 py-3 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+              className="flex-1 py-2.5 rounded-xl font-bold text-xs text-white bg-[#0B1340] hover:bg-[#070D2B] shadow-sm transition-all cursor-pointer disabled:opacity-50"
             >
               {editLoading ? "Saving..." : "Save Changes"}
             </button>

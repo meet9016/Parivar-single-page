@@ -147,7 +147,7 @@ export default function LoginView() {
           <button
             type="submit"
             disabled={loginLoading}
-            className="w-full mt-2 bg-[#4338ca] hover:bg-[#3730a3] text-white py-3.5 rounded-2xl font-semibold text-sm tracking-wider transition-all duration-300 shadow-md shadow-indigo-500/20 hover:shadow-lg disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full mt-2 bg-[#0B1340] hover:bg-[#070D2B] text-white py-3.5 rounded-2xl font-semibold text-sm tracking-wider transition-all duration-300 shadow-md shadow-[#0B1340]/20 hover:shadow-lg disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
           >
             {loginLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : null}
             <span>{loginLoading ? "Login..." : "Login"}</span>

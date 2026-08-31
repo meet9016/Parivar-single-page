@@ -87,6 +87,17 @@ export const translations = {
       quickLinks: "Quick Links",
       contact: "Contact Us",
       language: "Select Language"
+    },
+    pricing: {
+      tag: "Limited Time Offer",
+      title1: "Choose the Perfect Package for Your",
+      title2: "Community",
+      subtitle: "Get the full management panel setup, WhatsApp automation features, and support at exclusive deal pricing.",
+      deal: "Exclusive Deal",
+      renewal: "Renewal Offer",
+      more: "More",
+      less: "Show Less",
+      demo: "Get Free Demo"
     }
   },
   gu: {
@@ -175,6 +186,17 @@ export const translations = {
       quickLinks: "ઝડપી લિંક્સ",
       contact: "અમારો સંપર્ક કરો",
       language: "ભાષા પસંદ કરો"
+    },
+    pricing: {
+      tag: "મર્યાદિત સમયની ઓફર",
+      title1: "તમારા સમાજ માટે શ્રેષ્ઠ પેકેજ",
+      title2: "પસંદ કરો",
+      subtitle: "સંપૂર્ણ મેનેજમેન્ટ પેનલ સેટઅપ, વોટ્સએપ ઓટોમેશન ફીચર્સ અને સપોર્ટ ખાસ ડીલ ભાવે મેળવો.",
+      deal: "ખાસ ડીલ ઓફર",
+      renewal: "રીન્યુઅલ ઓફર",
+      more: "વધુ",
+      less: "ઓછું દર્શાવો",
+      demo: "ફ્રી ડેમો મેળવો"
     }
   },
   hi: {
@@ -263,6 +285,17 @@ export const translations = {
       quickLinks: "त्वरित लिंक",
       contact: "संपर्क करें",
       language: "भाषा चुनें"
+    },
+    pricing: {
+      tag: "सीमित समय की पेशकश",
+      title1: "अपने समुदाय के लिए सही पैकेज",
+      title2: "चुनें",
+      subtitle: "विशेष डील मूल्य निर्धारण पर संपूर्ण प्रबंधन पैनल सेटअप, व्हाट्सएप स्वचालन सुविधाएं और सहायता प्राप्त करें।",
+      deal: "विशेष डील ऑफर",
+      renewal: "नवीनीकरण ऑफर",
+      more: "और देखें",
+      less: "कम दिखाएं",
+      demo: "फ्री डेमो प्राप्त करें"
     }
   }
 };

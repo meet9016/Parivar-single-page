@@ -121,7 +121,7 @@ export default function ParivarsTab() {
                     <td className="px-5 py-4 text-right whitespace-nowrap">
                       <button
                         onClick={() => openEditModal(p)}
-                        className="px-3 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200/80 text-xs font-bold transition-all cursor-pointer inline-flex items-center gap-1"
+                        className="px-3 py-1.5 rounded-lg bg-[#0B1340] hover:bg-[#0d1855] text-white text-xs font-bold transition-all cursor-pointer inline-flex items-center gap-1.5 shadow-sm"
                       >
                         <span>Edit</span>
                         <ChevronRight className="w-3 h-3" />
@@ -139,21 +139,21 @@ export default function ParivarsTab() {
             <span className="text-xs text-slate-500 font-medium">
               Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, parivars.length)} of {parivars.length} parivars
             </span>
-            <div className="flex items-center rounded-lg border border-slate-200 bg-white shadow-sm overflow-hidden">
+            <div className="flex items-center rounded-lg border border-slate-200 bg-white overflow-hidden">
               <button 
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                className="px-3.5 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors border-r border-slate-200"
+                className="px-3.5 py-1.5 text-xs font-bold text-slate-600 hover:bg-[#0B1340] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors border-r border-slate-200"
               >
                 Previous
               </button>
-              <div className="flex items-center px-4 py-1.5 text-xs font-bold text-slate-700 bg-slate-50/50 border-r border-slate-200">
-                Page {currentPage} of {totalPages || 1}
+              <div className="flex items-center px-4 py-1.5 text-xs font-bold text-slate-700 bg-slate-50 border-r border-slate-200">
+                {currentPage} / {totalPages || 1}
               </div>
               <button 
                 disabled={currentPage === totalPages || totalPages === 0}
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                className="px-3.5 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-50 hover:text-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="px-3.5 py-1.5 text-xs font-bold text-slate-600 hover:bg-[#0B1340] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 Next
               </button>
