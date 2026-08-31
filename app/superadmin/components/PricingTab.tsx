@@ -337,12 +337,21 @@ export default function PricingTab() {
                 {formData.features.length > 0 && (
                   <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 space-y-2">
                     {formData.features.map((feature, idx) => (
-                      <div key={idx} className="flex justify-between items-center gap-2 bg-white px-3 py-1.5 border border-slate-100 rounded-lg text-xs font-semibold text-slate-700 shadow-3xs">
-                        <span className="truncate">{feature}</span>
+                      <div key={idx} className="flex justify-between items-center gap-2 bg-white px-3 py-1.5 border border-slate-100 rounded-lg shadow-3xs">
+                        <input
+                          type="text"
+                          value={feature}
+                          onChange={(e) => {
+                            const newFeatures = [...formData.features];
+                            newFeatures[idx] = e.target.value;
+                            setFormData({ ...formData, features: newFeatures });
+                          }}
+                          className="w-full bg-transparent border-none outline-hidden focus:ring-0 text-xs font-semibold text-slate-700 p-0"
+                        />
                         <button
                           type="button"
                           onClick={() => handleRemoveFeature(idx)}
-                          className="text-slate-400 hover:text-red-500 p-0.5 rounded-md hover:bg-slate-50 transition-all"
+                          className="text-slate-400 hover:text-red-500 p-0.5 rounded-md hover:bg-slate-50 transition-all shrink-0"
                         >
                           <X className="w-3.5 h-3.5" />
                         </button>
