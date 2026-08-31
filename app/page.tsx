@@ -52,10 +52,10 @@ export default function Home() {
         <HeroSection />
       </div>
 
-      {/* 3. Statistics Banner */}
-      <div className="scroll-animate">
+      {/* 3. Statistics Banner (Hidden) */}
+      {/* <div className="scroll-animate">
         <StatsSection />
-      </div>
+      </div> */}
 
       {/* 4. About Parivar Section */}
       <div className="scroll-animate">
