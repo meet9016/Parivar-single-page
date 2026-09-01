@@ -135,15 +135,7 @@ export default function ContactSection() {
               </div>
             </div>
 
-            {/* Community Illustration graphic at bottom */}
-            <div className="relative z-10 pt-4 flex justify-end">
-              <div className="w-36 h-28 bg-blue-600/20 rounded-2xl border border-blue-400/20 backdrop-blur-xs p-3 flex flex-col justify-between items-center text-blue-200">
-                <div className="w-10 h-10 rounded-full bg-blue-500/30 flex items-center justify-center text-white font-bold text-lg">
-                  👥
-                </div>
-                <span className="text-[11px] font-bold text-center">Parivar Community</span>
-              </div>
-            </div>
+
           </div>
 
           {/* Right Column: Contact Form */}

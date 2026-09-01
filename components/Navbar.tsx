@@ -13,7 +13,7 @@ export default function Navbar() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
       
-      const sections = ["home", "about", "features", "contact"];
+      const sections = ["home", "about", "features", "pricing", "contact"];
       const current = sections.find((section) => {
         const element = document.getElementById(section);
         if (element) {
@@ -36,7 +36,7 @@ export default function Navbar() {
     { name: t("nav.home"), href: "#home", id: "home" },
     { name: t("nav.about"), href: "#about", id: "about" },
     { name: t("nav.features"), href: "#features", id: "features" },
-    { name: t("nav.contact"), href: "#contact", id: "contact" },
+    { name: t("nav.plans"), href: "#pricing", id: "pricing" },
   ];
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
@@ -60,7 +60,7 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-1 lg:space-x-2">
             {navLinks.map((link) => (
               <a
-                key={link.name}
+                key={link.id}
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.id)}
                 className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
@@ -96,7 +96,7 @@ export default function Navbar() {
         <div className="md:hidden absolute top-full left-0 w-full bg-white border-t border-slate-100 shadow-xl py-4 px-4 flex flex-col space-y-2">
           {navLinks.map((link) => (
             <a
-              key={link.name}
+              key={link.id}
               href={link.href}
               onClick={(e) => handleNavClick(e, link.id)}
               className={`px-4 py-3 rounded-xl text-base font-semibold ${

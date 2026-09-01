@@ -1,19 +1,21 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { CheckCircle2, MessageCircle } from "lucide-react";
+import { CheckCircle2, MessageCircle, ChevronDown, ChevronUp } from "lucide-react";
 import axiosInstance from "../lib/axiosInstance";
 import { ENDPOINTS } from "../lib/endpoints";
 import { useLanguage } from "../context/LanguageContext";
 
 // ─── PHRASE-LEVEL TRANSLATIONS (checked first, longest match wins) ───
 const guPhrases: Record<string, string> = {
-  "special renewal deal": "ખાસ રિન્યુઅલ ડીલ",
-  "exclusive deal": "ખાસ ડીલ",
+  "year renewal deal": "વાર્ષિક રિન્યુઅલ પ્લાન",
+  "annual renewal deal": "વાર્ષિક રિન્યુઅલ પ્લાન",
+  "special renewal deal": "ખાસ રિન્યુઅલ પ્લાન",
+  "exclusive deal": "પ્રથમ વર્ષનો પ્લાન",
   "new offer": "નવી ઓફર",
   "renewal offer": "રિન્યુઅલ ઓફર",
   "special": "ખાસ",
-  "deal": "ડીલ",
+  "deal": "પ્લાન",
   "offer": "ઓફર",
   "get free demo": "ફ્રી ડેમો મેળવો",
   "get demo": "ફ્રી ડેમો મેળવો",
@@ -47,12 +49,14 @@ const guPhrases: Record<string, string> = {
 };
 
 const hiPhrases: Record<string, string> = {
-  "special renewal deal": "विशेष नवीनीकरण डील",
-  "exclusive deal": "खास डील",
+  "year renewal deal": "वार्षिक नवीनीकरण प्लान",
+  "annual renewal deal": "वार्षिक नवीनीकरण प्लान",
+  "special renewal deal": "विशेष नवीनीकरण प्लान",
+  "exclusive deal": "प्रथम वर्ष का प्लान",
   "new offer": "नई ऑफर",
   "renewal offer": "नवीनीकरण ऑफर",
   "special": "खास",
-  "deal": "डील",
+  "deal": "प्लान",
   "offer": "ऑफर",
   "get free demo": "फ्री डेमो प्राप्त करें",
   "get demo": "फ्री डेमो प्राप्त करें",
@@ -90,22 +94,22 @@ const guWords: Record<string, string> = {
   "whatsapp": "વોટ્સએપ", "free": "ફ્રી", "domain": "ડોમેન", "server": "સર્વર", "smart": "સ્માર્ટ", 
   "app": "એપ", "solution": "સોલ્યુશન", "backup": "બેકઅપ", "instant": "ઇન્સ્ટન્ટ",
   "technical": "ટેકનિકલ", "support": "સપોર્ટ", "renewal": "રિન્યુઅલ", "plan": "પ્લાન",
-  "new": "નવી", "offer": "ઓફર", "special": "ખાસ", "deal": "ડીલ", "exclusive": "ખાસ",
+  "new": "નવી", "offer": "ઓફર", "special": "ખાસ", "deal": "પ્લાન", "exclusive": "ખાસ",
   "continued": "નિરંતર", "automation": "ઓટોમેશન", "preserved": "સુરક્ષિત", "digital": "ડિજિટલ",
   "heritage": "વારસો", "play": "પ્લે", "store": "સ્ટોર", "application": "એપ્લિકેશન",
   "available": "ઉપલબ્ધ", "sms": "એસએમએસ", "additional": "વધારાનો", "number": "નંબર",
-  "get": "મેળવો", "demo": "ડેમો"
+  "get": "મેળવો", "demo": "ડેમો", "year": "વાર્ષિક", "annual": "વાર્ષિક"
 };
 
 const hiWords: Record<string, string> = {
   "whatsapp": "व्हाट्सएप", "free": "फ्री", "domain": "डोमेन", "server": "सर्वर", "smart": "स्मार्ट",
   "app": "ऐप", "solution": "सॉल्यूशन", "backup": "बैकअप", "instant": "इंस्टेंट",
   "technical": "टेक्निकल", "support": "सपोर्ट", "renewal": "रिन्यूअल", "plan": "प्लान",
-  "new": "नया", "offer": "ऑफर", "special": "खास", "deal": "डील", "exclusive": "खास",
+  "new": "नया", "offer": "ऑफर", "special": "खास", "deal": "प्लान", "exclusive": "खास",
   "continued": "निरंतर", "automation": "ऑटोमेशन", "preserved": "सुरक्षित", "digital": "डिजिटल",
   "heritage": "विरासत", "play": "प्ले", "store": "स्टोर", "application": "एप्लिकेशन",
   "available": "उपलब्ध", "sms": "एसएमएस", "additional": "अतिरिक्त", "number": "नंबर",
-  "get": "प्राप्त करें", "demo": "डेमो"
+  "get": "प्राप्त करें", "demo": "डेमो", "year": "वार्षिक", "annual": "वार्षिक"
 };
 
 const pricePatterns: Array<{ pattern: RegExp; gu: string; hi: string }> = [
@@ -149,6 +153,46 @@ function translateText(text: string, lang: string): string {
 
   return result.replace(/\s{2,}/g, " ").trim();
 }
+
+// Helpers to identify plan types
+const isRenewalPlan = (plan: any) => {
+  const t = (plan.title || "").toLowerCase();
+  const s = (plan.subtitle || "").toLowerCase();
+  return (
+    t.includes("renewal") ||
+    s.includes("renewal") ||
+    t.includes("રિન્યુઅલ") ||
+    s.includes("રિન્યુઅલ") ||
+    t.includes("नवीनीकरण") ||
+    s.includes("नवीनीकरण") ||
+    plan.badgeType === "renewal"
+  );
+};
+
+const isNewDealPlan = (plan: any) => {
+  if (isRenewalPlan(plan)) return false;
+  const t = (plan.title || "").toLowerCase();
+  const s = (plan.subtitle || "").toLowerCase();
+  return (
+    t.includes("new") ||
+    s.includes("new") ||
+    t.includes("exclusive") ||
+    s.includes("exclusive") ||
+    t.includes("special") ||
+    s.includes("special") ||
+    t.includes("પ્રથમ") ||
+    t.includes("ખાસ") ||
+    t.includes("નવી") ||
+    t.includes("નવું") ||
+    s.includes("નવી") ||
+    s.includes("નવું") ||
+    s.includes("ખાસ") ||
+    s.includes("नई") ||
+    s.includes("विशेष") ||
+    plan.badgeType === "new" ||
+    Number(plan.discountedPrice || 0) > 15000
+  );
+};
 
 const DEFAULT_PLANS = [
   {
@@ -208,11 +252,12 @@ export default function PricingSection() {
         const res = await axiosInstance.get(ENDPOINTS.PRICING);
         if (res.status === 200 && Array.isArray(res.data.data) && res.data.data.length > 0) {
           const fetchedPlans = res.data.data;
+          // Sort to ensure New Deal/Exclusive plan is always 1st (on the left) and Renewal is 2nd
           const sortedPlans = [...fetchedPlans].sort((a: any, b: any) => {
-            const isNewA = (a.title || "").toLowerCase().includes("new") || (a.title || "").includes("પ્રથમ") || (a.discountedPrice || 0) > 15000;
-            const isNewB = (b.title || "").toLowerCase().includes("new") || (b.title || "").includes("પ્રથમ") || (b.discountedPrice || 0) > 15000;
-            if (isNewA && !isNewB) return -1;
-            if (!isNewA && isNewB) return 1;
+            const isA_New = isNewDealPlan(a);
+            const isB_New = isNewDealPlan(b);
+            if (isA_New && !isB_New) return -1;
+            if (!isA_New && isB_New) return 1;
             return (a.order || 0) - (b.order || 0);
           });
           setPlans(sortedPlans);
@@ -225,11 +270,22 @@ export default function PricingSection() {
   }, []);
 
   const togglePlanExpand = (planId: string) => {
-    setExpandedPlans((prev) => ({ ...prev, [planId]: !prev[planId] }));
+    setExpandedPlans((prev) => {
+      const willExpand = !prev[planId];
+      if (willExpand) {
+        setTimeout(() => {
+          const cardEl = document.getElementById(planId);
+          if (cardEl) {
+            cardEl.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          }
+        }, 100);
+      }
+      return { ...prev, [planId]: willExpand };
+    });
   };
 
   return (
-    <section className="relative overflow-hidden bg-[#fafcff] py-16 md:py-24 border-t border-slate-100">
+    <section id="pricing" className="relative overflow-hidden bg-[#fafcff] py-16 md:py-24 border-t border-slate-100">
       {/* Background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
@@ -270,11 +326,13 @@ export default function PricingSection() {
             const planId = plan._id || `plan-${index}`;
             const isExpanded = !!expandedPlans[planId];
             const allFeatures = plan.features || [];
-            const isNewPlan = (plan.title || "").includes("પ્રથમ") || (plan.title || "").toLowerCase().includes("new") || (plan.discountedPrice || 0) > 15000 || plan.badgeType === "new";
+            const displayedFeatures = isExpanded ? allFeatures : allFeatures.slice(0, 4);
+            const isNewPlan = isNewDealPlan(plan);
 
             return (
               <div
                 key={planId}
+                id={planId}
                 className={`bg-white/90 backdrop-blur-md border-2 ${isNewPlan ? 'border-emerald-200 hover:border-emerald-500 shadow-[0_4px_25px_-4px_rgba(16,185,129,0.12)]' : 'border-blue-100 hover:border-blue-500 shadow-[0_4px_25px_-4px_rgba(59,130,246,0.12)]'} rounded-3xl p-6 md:p-8 flex flex-col justify-between transition-all duration-300 relative group overflow-hidden`}
               >
                 {/* Top highlight bar */}
@@ -308,16 +366,45 @@ export default function PricingSection() {
                     )}
                   </div>
 
-                  {/* Features List */}
+                  {/* Features List (Max 4 by default, with right-aligned toggle) */}
                   <div className="space-y-3 pt-2">
-                    {allFeatures.map((feature: string, idx: number) => (
-                      <div key={idx} className="flex items-start gap-3">
+                    {displayedFeatures.map((feature: string, idx: number) => (
+                      <div key={idx} className="flex items-start gap-3 transition-all duration-200">
                         <CheckCircle2 className={`w-5 h-5 ${isNewPlan ? 'text-emerald-600' : 'text-blue-600'} shrink-0 mt-0.5`} />
                         <span className="text-slate-800 text-sm font-semibold">
                           {translateText(feature, language)}
                         </span>
                       </div>
                     ))}
+
+                    {allFeatures.length > 4 && (
+                      <div className="flex justify-end pt-1">
+                        <button
+                          type="button"
+                          onClick={() => togglePlanExpand(planId)}
+                          className={`inline-flex items-center gap-1.5 text-xs font-bold px-3.5 py-1.5 rounded-xl border transition-all duration-200 cursor-pointer shadow-2xs hover:shadow-xs active:scale-95 ${
+                            isNewPlan
+                              ? "bg-emerald-50 hover:bg-emerald-100/80 text-emerald-800 border-emerald-200"
+                              : "bg-blue-50 hover:bg-blue-100/80 text-blue-800 border-blue-200"
+                          }`}
+                        >
+                          <span>
+                            {isExpanded
+                              ? (language === "gu" ? "ઓછું દર્શાવો" : language === "hi" ? "कम दिखाएं" : "Show Less")
+                              : (language === "gu"
+                                  ? `+${allFeatures.length - 4} વધુ જુઓ`
+                                  : language === "hi"
+                                  ? `+${allFeatures.length - 4} और देखें`
+                                  : `+${allFeatures.length - 4} More Points`)}
+                          </span>
+                          {isExpanded ? (
+                            <ChevronUp className="w-3.5 h-3.5" />
+                          ) : (
+                            <ChevronDown className="w-3.5 h-3.5" />
+                          )}
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
 

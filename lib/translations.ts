@@ -6,6 +6,7 @@ export const translations = {
       home: "Home",
       about: "About",
       features: "Features",
+      plans: "Plans",
       contact: "Contact",
       inquiry: "Inquiry Now"
     },
@@ -105,6 +106,7 @@ export const translations = {
       home: "હોમ",
       about: "અમારા વિશે",
       features: "સુવિધાઓ",
+      plans: "પ્લાન",
       contact: "સંપર્ક",
       inquiry: "પૂછપરછ કરો"
     },
@@ -210,6 +212,7 @@ export const translations = {
       home: "होम",
       about: "हमारे बारे में",
       features: "सुविधाएं",
+      plans: "प्लान",
       contact: "संपर्क करें",
       inquiry: "पूछताछ करें"
     },
