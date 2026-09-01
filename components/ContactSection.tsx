@@ -24,14 +24,8 @@ export default function ContactSection() {
     e.preventDefault();
     
     // Validation
-    let newErrors: { parivar_name?: string; email?: string; mobile?: string } = {};
+    let newErrors: { parivar_name?: string; mobile?: string } = {};
     if (!formData.parivar_name.trim()) newErrors.parivar_name = "Parivar Name is required";
-    
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!formData.email.trim().toLowerCase().endsWith("@gmail.com")) {
-      newErrors.email = "Only @gmail.com emails are allowed";
-    }
 
     if (!formData.mobile.trim()) {
       newErrors.mobile = "Mobile Number is required";
@@ -51,7 +45,7 @@ export default function ContactSection() {
     try {
       const res = await axiosInstance.post(ENDPOINTS.INQUIRY, {
         parivar_name: formData.parivar_name,
-        email: formData.email,
+        email: "",
         mobile: formData.mobile,
         note: formData.note,
       });
@@ -98,21 +92,17 @@ export default function ContactSection() {
     <section id="contact" className="py-12 md:py-16 bg-[#fafcff] relative">
       <div className="max-w-7xl mx-auto px-4 md:px-8">
 
-        {/* Main Card Container */}
         <div className="grid grid-cols-1 lg:grid-cols-12 rounded-3xl overflow-hidden shadow-2xl shadow-blue-900/10 border border-white bg-white">
-
-          {/* Left Column: Solid Dark Navy Box */}
           <div className="lg:col-span-5 bg-gradient-to-br from-[#0B1340] via-[#101c5a] to-[#070D2B] text-white p-8 sm:p-12 flex flex-col justify-between space-y-10 relative overflow-hidden">
-            {/* Subtle light effects */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl" />
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl" />
-            
             <div className="relative z-10 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 font-bold text-xs tracking-widest uppercase shadow-sm">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 font-bold text-xs tracking-wider uppercase shadow-xs">
+                <Send className="w-3.5 h-3.5" />
                 <span>{t("nav.contact")}</span>
               </div>
 
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tighter">
+              <h2 className="text-3xl sm:text-4xl lg:text-4xl font-black text-white leading-tight tracking-tight">
                 {t("contact.title")}
               </h2>
 
@@ -123,40 +113,53 @@ export default function ContactSection() {
               {/* Feature Points */}
               <div className="space-y-4 pt-4">
                 <div className="flex items-center gap-4 text-sm font-semibold">
-                  <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/20 text-blue-300 flex items-center justify-center backdrop-blur-sm">
+                  <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/20 text-blue-300 flex items-center justify-center backdrop-blur-xs">
                     <Zap className="w-5 h-5" />
                   </div>
                   <span>{t("contact.f1")}</span>
                 </div>
 
                 <div className="flex items-center gap-4 text-sm font-semibold">
-                  <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/20 text-blue-300 flex items-center justify-center backdrop-blur-sm">
+                  <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/20 text-blue-300 flex items-center justify-center backdrop-blur-xs">
                     <Headphones className="w-5 h-5" />
                   </div>
                   <span>{t("contact.f2")}</span>
                 </div>
 
                 <div className="flex items-center gap-4 text-sm font-semibold">
-                  <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/20 text-blue-300 flex items-center justify-center backdrop-blur-sm">
+                  <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/20 text-blue-300 flex items-center justify-center backdrop-blur-xs">
                     <CheckCircle2 className="w-5 h-5" />
                   </div>
                   <span>{t("contact.f3")}</span>
                 </div>
               </div>
             </div>
+
+            {/* Community Illustration graphic at bottom */}
+            <div className="relative z-10 pt-4 flex justify-end">
+              <div className="w-36 h-28 bg-blue-600/20 rounded-2xl border border-blue-400/20 backdrop-blur-xs p-3 flex flex-col justify-between items-center text-blue-200">
+                <div className="w-10 h-10 rounded-full bg-blue-500/30 flex items-center justify-center text-white font-bold text-lg">
+                  👥
+                </div>
+                <span className="text-[11px] font-bold text-center">Parivar Community</span>
+              </div>
+            </div>
           </div>
 
           {/* Right Column: Contact Form */}
           <div className="lg:col-span-7 bg-white p-8 sm:p-12 flex flex-col justify-center">
-            <div className="w-full space-y-8">
-              <div>
-                <h3 className="text-2xl sm:text-3xl font-black text-[#0B1340] tracking-tight">
-                  {t("contact.submit")}
+            <div className="w-full space-y-6">
+              <div className="space-y-1">
+                <h3 className="text-2xl sm:text-3xl font-black text-[#0B1340] tracking-tight flex items-center gap-2">
+                  <span className="text-blue-600">👤</span> {t("contact.formHeader")}
                 </h3>
+                <p className="text-slate-500 text-xs sm:text-sm font-medium">
+                  {t("contact.formSubtitle")}
+                </p>
               </div>
 
               {/* Form Controls */}
-              <form onSubmit={handleSubmit} className="space-y-5 font-sans">
+              <form onSubmit={handleSubmit} className="space-y-4 font-sans">
                 <div>
                   <input
                     type="text"
@@ -166,46 +169,28 @@ export default function ContactSection() {
                       setFormData({ ...formData, parivar_name: e.target.value });
                       if (errors.parivar_name) setErrors({ ...errors, parivar_name: "" });
                     }}
-                    className={`w-full px-4 py-3.5 rounded-xl bg-slate-50 border ${errors.parivar_name ? 'border-rose-400 focus:ring-rose-500 focus:bg-rose-50/30' : 'border-slate-200 focus:ring-blue-500'} text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:bg-white transition-all font-medium shadow-sm`}
+                    className={`w-full px-4 py-3.5 rounded-xl bg-slate-50 border ${errors.parivar_name ? 'border-rose-400 focus:ring-rose-500 focus:bg-rose-50/30' : 'border-slate-200 focus:ring-blue-500'} text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:bg-white transition-all font-medium shadow-2xs`}
                   />
                   {errors.parivar_name && (
-                    <p className="text-xs text-rose-500 mt-2 font-semibold pl-1">{errors.parivar_name}</p>
+                    <p className="text-xs text-rose-500 mt-1.5 font-semibold pl-1">{errors.parivar_name}</p>
                   )}
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <div>
-                    <input
-                      type="email"
-                      placeholder={t("contact.email")}
-                      value={formData.email}
-                      onChange={(e) => {
-                        setFormData({ ...formData, email: e.target.value });
-                        if (errors.email) setErrors({ ...errors, email: "" });
-                      }}
-                      className={`w-full px-4 py-3.5 rounded-xl bg-slate-50 border ${errors.email ? 'border-rose-400 focus:ring-rose-500 focus:bg-rose-50/30' : 'border-slate-200 focus:ring-blue-500'} text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:bg-white transition-all font-medium shadow-sm`}
-                    />
-                    {errors.email && (
-                      <p className="text-xs text-rose-500 mt-2 font-semibold pl-1">{errors.email}</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <input
-                      type="tel"
-                      placeholder={t("contact.mobile")}
-                      maxLength={10}
-                      value={formData.mobile}
-                      onChange={(e) => {
-                        setFormData({ ...formData, mobile: e.target.value.replace(/\D/g, '') });
-                        if (errors.mobile) setErrors({ ...errors, mobile: "" });
-                      }}
-                      className={`w-full px-4 py-3.5 rounded-xl bg-slate-50 border ${errors.mobile ? 'border-rose-400 focus:ring-rose-500 focus:bg-rose-50/30' : 'border-slate-200 focus:ring-blue-500'} text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:bg-white transition-all font-medium shadow-sm`}
-                    />
-                    {errors.mobile && (
-                      <p className="text-xs text-rose-500 mt-2 font-semibold pl-1">{errors.mobile}</p>
-                    )}
-                  </div>
+                <div>
+                  <input
+                    type="tel"
+                    placeholder={t("contact.mobile")}
+                    maxLength={10}
+                    value={formData.mobile}
+                    onChange={(e) => {
+                      setFormData({ ...formData, mobile: e.target.value.replace(/\D/g, '') });
+                      if (errors.mobile) setErrors({ ...errors, mobile: "" });
+                    }}
+                    className={`w-full px-4 py-3.5 rounded-xl bg-slate-50 border ${errors.mobile ? 'border-rose-400 focus:ring-rose-500 focus:bg-rose-50/30' : 'border-slate-200 focus:ring-blue-500'} text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:bg-white transition-all font-medium shadow-2xs`}
+                  />
+                  {errors.mobile && (
+                    <p className="text-xs text-rose-500 mt-1.5 font-semibold pl-1">{errors.mobile}</p>
+                  )}
                 </div>
 
                 <div>
@@ -216,7 +201,7 @@ export default function ContactSection() {
                     onChange={(e) =>
                       setFormData({ ...formData, note: e.target.value })
                     }
-                    className="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all resize-none font-medium shadow-sm"
+                    className="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all resize-none font-medium shadow-2xs"
                   ></textarea>
                 </div>
 
@@ -254,6 +239,11 @@ export default function ContactSection() {
                     </>
                   )}
                 </button>
+
+                <p className="text-center text-xs text-slate-500 font-medium pt-2 flex items-center justify-center gap-1.5">
+                  <span>🔒</span>
+                  <span>{t("contact.securityNote")}</span>
+                </p>
               </form>
             </div>
           </div>

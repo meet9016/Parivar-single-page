@@ -9,6 +9,7 @@ import FeaturesSection from "@/components/FeaturesSection";
 import PricingSection from "@/components/PricingSection";
 import WhatsAppBanner from "@/components/WhatsAppBanner";
 import ContactSection from "@/components/ContactSection";
+import CompanySection from "@/components/CompanySection";
 import Footer from "@/components/Footer";
 import WhatsAppChat from "@/components/WhatsAppChat";
 import InquiryPopup from "@/components/InquiryPopup";
@@ -82,12 +83,17 @@ export default function Home() {
         <WhatsAppBanner />
       </div>
 
-      {/* 7. Contact Us / Let's Create Something Section */}
+      {/* 9. Contact Us / Let's Create Something Section */}
       <div className="scroll-animate">
         <ContactSection />
       </div>
 
-      {/* 8. Footer Section */}
+      {/* 10. DigiTalks Company & Team Section */}
+      <div className="scroll-animate">
+        <CompanySection />
+      </div>
+
+      {/* 11. Footer Section */}
       <Footer />
     </main>
   );

@@ -1,286 +1,115 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { CheckCircle2, MessageCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { CheckCircle2, MessageCircle } from "lucide-react";
 import axiosInstance from "../lib/axiosInstance";
 import { ENDPOINTS } from "../lib/endpoints";
 import { useLanguage } from "../context/LanguageContext";
 
 // ─── PHRASE-LEVEL TRANSLATIONS (checked first, longest match wins) ───
 const guPhrases: Record<string, string> = {
-  "instant notifications": "ઇન્સ્ટન્ટ નોટિફિકેશન",
-  "continued smart automation": "સતત સ્માર્ટ ઓટોમેશન",
+  "special renewal deal": "ખાસ રિન્યુઅલ ડીલ",
+  "exclusive deal": "ખાસ ડીલ",
+  "new offer": "નવી ઓફર",
+  "renewal offer": "રિન્યુઅલ ઓફર",
+  "special": "ખાસ",
+  "deal": "ડીલ",
+  "offer": "ઓફર",
+  "get free demo": "ફ્રી ડેમો મેળવો",
+  "get demo": "ફ્રી ડેમો મેળવો",
+  "continued smart automation": "નિરંતર સ્માર્ટ ઓટોમેશન",
   "smart automation": "સ્માર્ટ ઓટોમેશન",
   "preserved digital heritage": "સુરક્ષિત ડિજિટલ વારસો",
-  "1 official whatsapp api number": "1 ઓફિશિયલ વોટ્સએપ API નંબર",
-  "official whatsapp api number": "ઓફિશિયલ વોટ્સએપ API નંબર",
-  "additional whatsapp number": "વધારાનો WhatsApp નંબર",
-  "special renewal deal": "સ્પેશિયલ રીન્યુઅલ ડીલ",
-  "exclusive deal": "એક્સક્લુસિવ ડીલ",
-  "renewal offer": "રીન્યુઅલ ઓફર",
-  "new offer": "નવી ઓફર",
-  "get free demo": "ફ્રી ડેમો મેળવો",
+  "play store, app store application available": "પ્લે સ્ટોર, એપ સ્ટોર એપ્લિકેશન ઉપલબ્ધ",
+  "play store, app store application": "પ્લે સ્ટોર, એપ સ્ટોર એપ્લિકેશન",
+  "additional whatsapp number": "વધારાનો વોટ્સએપ નંબર",
+  "free sms": "ફ્રી એસએમએસ",
+  "1st year plan": "પ્રથમ વર્ષનો પ્લાન",
+  "first year plan": "પ્રથમ વર્ષનો પ્લાન",
+  "new plan": "નવી ઓફર",
+  "annual renewal plan": "વાર્ષિક રિન્યુઅલ પ્લાન",
+  "renewal plan": "રિન્યુઅલ ઓફર",
+  "smart app solution": "સ્માર્ટ એપ સોલ્યુશન",
+  "complete smart app solution": "સંપૂર્ણ સ્માર્ટ એપ સોલ્યુશન",
+  "instant notifications": "ઇન્સ્ટન્ટ નોટિફિકેશન",
+  "instant notification": "ઇન્સ્ટન્ટ નોટિફિકેશન",
+  "secure data backup": "સુરક્ષિત ડેટા બેકઅપ",
   "free domain": "ફ્રી ડોમેન",
   "free server": "ફ્રી સર્વર",
-  "free sms": "ફ્રી એસએમએસ",
-  "free ads": "ફ્રી એડ્સ",
-  "free training": "ફ્રી ટ્રેનિંગ",
-  "free setup": "ફ્રી સેટઅપ",
-  "free support": "ફ્રી સપોર્ટ",
-  "free update": "ફ્રી અપડેટ",
-  "free updates": "ફ્રી અપડેટ્સ",
-  "free maintenance": "ફ્રી મેઇન્ટેનન્સ",
-  "free hosting": "ફ્રી હોસ્ટિંગ",
-  "free consultation": "ફ્રી કન્સલ્ટેશન",
-  "free migration": "ફ્રી માઇગ્રેશન",
-  "play store, app store application available": "પ્લે સ્ટોર અને એપ સ્ટોર પર એપ્લિકેશન ઉપલબ્ધ",
-  "play store and app store available": "પ્લે સ્ટોર અને એપ સ્ટોર ઉપલબ્ધ",
-  "whatsapp automation": "વોટ્સએપ ઓટોમેશન",
-  "whatsapp integration": "વોટ્સએપ ઇન્ટીગ્રેશન",
-  "member management": "સભ્ય મેનેજમેન્ટ",
-  "event management": "ઇવેન્ટ મેનેજમેન્ટ",
-  "donation management": "ડોનેશન મેનેજમેન્ટ",
-  "expense management": "ખર્ચ મેનેજમેન્ટ",
-  "gallery management": "ગેલેરી મેનેજમેન્ટ",
-  "committee management": "સમિતિ મેનેજમેન્ટ",
-  "business directory": "બિઝનેસ ડિરેક્ટરી",
-  "matrimonial module": "મેટ્રિમોનિયલ મોડ્યુલ",
-  "job vacancy module": "જોબ વેકેન્સી મોડ્યુલ",
-  "student module": "સ્ટુડન્ટ મોડ્યુલ",
-  "news module": "ન્યૂઝ મોડ્યુલ",
-  "post module": "પોસ્ટ મોડ્યુલ",
-  "push notifications": "પુશ નોટિફિકેશન",
-  "custom branding": "કસ્ટમ બ્રાન્ડિંગ",
-  "custom domain": "કસ્ટમ ડોમેન",
-  "data backup": "ડેટા બેકઅપ",
-  "cloud storage": "ક્લાઉડ સ્ટોરેજ",
-  "admin panel": "એડમિન પેનલ",
-  "super admin": "સુપર એડમિન",
-  "role management": "રોલ મેનેજમેન્ટ",
-  "annual plan": "વાર્ષિક પ્લાન",
-  "monthly plan": "માસિક પ્લાન",
-  "lifetime access": "લાઇફટાઇમ એક્સેસ",
-  "unlimited members": "અનલિમિટેડ સભ્યો",
-  "unlimited storage": "અનલિમિટેડ સ્ટોરેજ",
-  "priority support": "પ્રાયોરિટી સપોર્ટ",
-  "24/7 support": "24/7 સપોર્ટ",
-  "dedicated support": "ડેડિકેટેડ સપોર્ટ",
-  "technical support": "ટેકનિકલ સપોર્ટ",
-  "mobile app": "મોબાઇલ એપ",
-  "web panel": "વેબ પેનલ",
-  "festival greetings": "તહેવાર શુભેચ્છાઓ",
-  "birthday greetings": "જન્મદિવસ શુભેચ્છાઓ",
-  "bulk sms": "બલ્ક એસએમએસ",
-  "bulk notification": "બલ્ક નોટિફિકેશન",
-  "auto notification": "ઓટો નોટિફિકેશન",
-  "auto reminder": "ઓટો રિમાઇન્ડર",
+  "website and app customization": "વેબસાઇટ અને એપ પર કસ્ટમાઇઝેશન",
+  "customization on website and app": "વેબસાઇટ અને એપ પર કસ્ટમાઇઝેશન",
+  "free technical support": "ફ્રી ટેકનિકલ સપોર્ટ",
+  "official whatsapp support - ₹6,000": "ઓફિશિયલ વોટ્સએપ સપોર્ટ – ₹6,000",
+  "official whatsapp support": "ઓફિશિયલ વોટ્સએપ સપોર્ટ – ₹6,000",
+  "contact on whatsapp": "વોટ્સએપ પર સંપર્ક કરો",
+  "whatsapp contact": "વોટ્સએપ પર સંપર્ક કરો",
+  "our experts will guide you.": "અમારા એક્સપર્ટ તમને માર્ગદર્શન આપશે.",
 };
 
 const hiPhrases: Record<string, string> = {
-  "instant notifications": "इंस्टेंट नोटिफिकेशन",
+  "special renewal deal": "विशेष नवीनीकरण डील",
+  "exclusive deal": "खास डील",
+  "new offer": "नई ऑफर",
+  "renewal offer": "नवीनीकरण ऑफर",
+  "special": "खास",
+  "deal": "डील",
+  "offer": "ऑफर",
+  "get free demo": "फ्री डेमो प्राप्त करें",
+  "get demo": "फ्री डेमो प्राप्त करें",
   "continued smart automation": "निरंतर स्मार्ट ऑटोमेशन",
   "smart automation": "स्मार्ट ऑटोमेशन",
-  "preserved digital heritage": "संरक्षित डिजिटल विरासत",
-  "1 official whatsapp api number": "1 आधिकारिक व्हाट्सएप एपीआई नंबर",
-  "official whatsapp api number": "आधिकारिक व्हाट्सएप एपीआई नंबर",
-  "additional whatsapp number": "अतिरिक्त WhatsApp नंबर",
-  "special renewal deal": "स्पेशल रिन्यूअल डील",
-  "exclusive deal": "एक्सक्लूसिव डील",
-  "renewal offer": "रिन्यूअल ऑफर",
-  "new offer": "नया ऑफर",
-  "get free demo": "फ्री डेमो प्राप्त करें",
+  "preserved digital heritage": "सुरक्षित डिजिटल विरासत",
+  "play store, app store application available": "प्ले स्टोर, ऐप स्टोर एप्लिकेशन उपलब्ध",
+  "play store, app store application": "प्ले स्टोर, ऐप स्टोर एप्लिकेशन",
+  "additional whatsapp number": "अतिरिक्त व्हाट्सएप नंबर",
+  "free sms": "फ्री एसएमएस",
+  "1st year plan": "प्रथम वर्ष का प्लान",
+  "first year plan": "प्रथम वर्ष का प्लान",
+  "new plan": "नया प्लान",
+  "annual renewal plan": "वार्षिक नवीनीकरण प्लान",
+  "renewal plan": "नवीनीकरण प्लान",
+  "smart app solution": "स्मार्ट ऐप सॉल्यूशन",
+  "complete smart app solution": "संपूर्ण स्मार्ट ऐप सॉल्यूशन",
+  "instant notifications": "इंस्टेंट नोटिफिकेशन",
+  "instant notification": "इंस्टेंट नोटिफिकेशन",
+  "secure data backup": "सुरक्षित डेटा बैकअप",
   "free domain": "फ्री डोमेन",
   "free server": "फ्री सर्वर",
-  "free sms": "फ्री एसएमएस",
-  "free ads": "फ्री एड्स",
-  "free training": "फ्री ट्रेनिंग",
-  "free setup": "फ्री सेटअप",
-  "free support": "फ्री सपोर्ट",
-  "free update": "फ्री अपडेट",
-  "free updates": "फ्री अपडेट्स",
-  "free maintenance": "फ्री मेंटेनेंस",
-  "free hosting": "फ्री होस्टिंग",
-  "free consultation": "फ्री कंसल्टेशन",
-  "free migration": "फ्री माइग्रेशन",
-  "play store, app store application available": "प्ले स्टोर और ऐप स्टोर पर एप्लीकेशन उपलब्ध",
-  "play store and app store available": "प्ले स्टोर और ऐप स्टोर उपलब्ध",
-  "whatsapp automation": "व्हाट्सएप ऑटोमेशन",
-  "whatsapp integration": "व्हाट्सएप इंटीग्रेशन",
-  "member management": "सदस्य प्रबंधन",
-  "event management": "इवेंट प्रबंधन",
-  "donation management": "डोनेशन प्रबंधन",
-  "expense management": "खर्च प्रबंधन",
-  "gallery management": "गैलरी प्रबंधन",
-  "committee management": "समिति प्रबंधन",
-  "business directory": "बिजनेस डायरेक्टरी",
-  "matrimonial module": "मैट्रिमोनियल मॉड्यूल",
-  "job vacancy module": "जॉब वैकेंसी मॉड्यूल",
-  "student module": "स्टूडेंट मॉड्यूल",
-  "news module": "न्यूज मॉड्यूल",
-  "post module": "पोस्ट मॉड्यूल",
-  "push notifications": "पुश नोटिफिकेशन",
-  "custom branding": "कस्टम ब्रांडिंग",
-  "custom domain": "कस्टम डोमेन",
-  "data backup": "डेटा बैकअप",
-  "cloud storage": "क्लाउड स्टोरेज",
-  "admin panel": "एडमिन पैनल",
-  "super admin": "सुपर एडमिन",
-  "role management": "रोल प्रबंधन",
-  "annual plan": "वार्षिक प्लान",
-  "monthly plan": "मासिक प्लान",
-  "lifetime access": "लाइफटाइम एक्सेस",
-  "unlimited members": "असीमित सदस्य",
-  "unlimited storage": "असीमित स्टोरेज",
-  "priority support": "प्राथमिकता सपोर्ट",
-  "24/7 support": "24/7 सपोर्ट",
-  "dedicated support": "डेडिकेटेड सपोर्ट",
-  "technical support": "टेक्निकल सपोर्ट",
-  "mobile app": "मोबाइल ऐप",
-  "web panel": "वेब पैनल",
-  "festival greetings": "त्योहार शुभकामनाएं",
-  "birthday greetings": "जन्मदिन शुभकामनाएं",
-  "bulk sms": "बल्क एसएमएस",
-  "bulk notification": "बल्क नोटिफिकेशन",
-  "auto notification": "ऑटो नोटिफिकेशन",
-  "auto reminder": "ऑटो रिमाइंडर",
+  "website and app customization": "वेबसाइट और ऐप कस्टमाइज़ेशन",
+  "customization on website and app": "वेबसाइट और ऐप कस्टमाइज़ेशन",
+  "free technical support": "फ्री टेक्निकल सपोर्ट",
+  "official whatsapp support - ₹6,000": "ऑफिशियल व्हाट्सएप सपोर्ट – ₹6,000",
+  "official whatsapp support": "ऑफिशियल व्हाट्सएप सपोर्ट – ₹6,000",
+  "contact on whatsapp": "व्हाट्सएप पर संपर्क करें",
+  "whatsapp contact": "व्हाट्सएप पर संपर्क करें",
+  "our experts will guide you.": "हमारे विशेषज्ञ आपका मार्गदर्शन करेंगे।",
 };
 
-// ─── WORD-LEVEL DICTIONARY (fallback for any remaining English words) ───
+// ─── WORD-LEVEL DICTIONARY ───
 const guWords: Record<string, string> = {
-  "free": "ફ્રી", "domain": "ડોમેન", "server": "સર્વર", "sms": "એસએમએસ",
-  "ads": "એડ્સ", "ad": "એડ", "app": "એપ", "api": "API",
-  "smart": "સ્માર્ટ", "automation": "ઓટોમેશન", "digital": "ડિજિટલ",
-  "heritage": "વારસો", "instant": "ઇન્સ્ટન્ટ", "notifications": "નોટિફિકેશન",
-  "notification": "નોટિફિકેશન", "whatsapp": "વોટ્સએપ", "official": "ઓફિશિયલ",
-  "number": "નંબર", "additional": "વધારાનો", "special": "સ્પેશિયલ",
-  "renewal": "રીન્યુઅલ", "deal": "ડીલ", "exclusive": "એક્સક્લુસિવ",
-  "offer": "ઓફર", "new": "નવી", "get": "મેળવો", "demo": "ડેમો",
-  "training": "ટ્રેનિંગ", "setup": "સેટઅપ", "support": "સપોર્ટ",
-  "update": "અપડેટ", "updates": "અપડેટ્સ", "maintenance": "મેઇન્ટેનન્સ",
-  "hosting": "હોસ્ટિંગ", "play": "પ્લે", "store": "સ્ટોર",
-  "application": "એપ્લિકેશન", "available": "ઉપલબ્ધ", "integration": "ઇન્ટીગ્રેશન",
-  "member": "સભ્ય", "members": "સભ્યો", "management": "મેનેજમેન્ટ",
-  "event": "ઇવેન્ટ", "events": "ઇવેન્ટ્સ", "donation": "ડોનેશન",
-  "expense": "ખર્ચ", "gallery": "ગેલેરી", "committee": "સમિતિ",
-  "business": "બિઝનેસ", "directory": "ડિરેક્ટરી", "matrimonial": "મેટ્રિમોનિયલ",
-  "module": "મોડ્યુલ", "job": "જોબ", "vacancy": "વેકેન્સી",
-  "student": "સ્ટુડન્ટ", "news": "ન્યૂઝ", "post": "પોસ્ટ",
-  "push": "પુશ", "custom": "કસ્ટમ", "branding": "બ્રાન્ડિંગ",
-  "data": "ડેટા", "backup": "બેકઅપ", "cloud": "ક્લાઉડ",
-  "storage": "સ્ટોરેજ", "admin": "એડમિન", "panel": "પેનલ",
-  "super": "સુપર", "role": "રોલ", "annual": "વાર્ષિક",
-  "monthly": "માસિક", "plan": "પ્લાન", "lifetime": "લાઇફટાઇમ",
-  "access": "એક્સેસ", "unlimited": "અનલિમિટેડ", "priority": "પ્રાયોરિટી",
-  "dedicated": "ડેડિકેટેડ", "technical": "ટેકનિકલ", "mobile": "મોબાઇલ",
-  "web": "વેબ", "festival": "તહેવાર", "birthday": "જન્મદિવસ",
-  "greetings": "શુભેચ્છાઓ", "bulk": "બલ્ક", "auto": "ઓટો",
-  "reminder": "રિમાઇન્ડર", "package": "પેકેજ", "complete": "સંપૂર્ણ",
-  "renew": "રીન્યુ", "only": "માત્ર", "just": "માત્ર",
-  "continued": "સતત", "preserved": "સુરક્ષિત", "connected": "જોડાયેલ",
-  "secure": "સુરક્ષિત", "premium": "પ્રીમિયમ", "basic": "બેસિક",
-  "standard": "સ્ટાન્ડર્ડ", "advanced": "એડવાન્સ્ડ", "pro": "પ્રો",
-  "plus": "પ્લસ", "enterprise": "એન્ટરપ્રાઇઝ", "starter": "સ્ટાર્ટર",
-  "full": "સંપૂર્ણ", "all": "બધું", "service": "સેવા",
-  "services": "સેવાઓ", "feature": "ફીચર", "features": "ફીચર્સ",
-  "report": "રિપોર્ટ", "reports": "રિપોર્ટ્સ", "analytics": "એનાલિટિક્સ",
-  "dashboard": "ડેશબોર્ડ", "website": "વેબસાઇટ", "online": "ઓનલાઇન",
-  "offline": "ઓફલાઇન", "payment": "પેમેન્ટ", "payments": "પેમેન્ટ્સ",
-  "invoice": "ઇન્વોઇસ", "billing": "બિલિંગ", "receipt": "રસીદ",
-  "security": "સિક્યુરિટી", "verified": "વેરિફાઇડ", "certified": "સર્ટિફાઇડ",
-  "consultation": "કન્સલ્ટેશન", "migration": "માઇગ્રેશન",
-  "download": "ડાઉનલોડ", "upload": "અપલોડ", "import": "ઇમ્પોર્ટ",
-  "export": "એક્સપોર્ટ", "email": "ઇમેઇલ", "call": "કોલ",
-  "message": "મેસેજ", "chat": "ચેટ", "video": "વિડીયો",
-  "photo": "ફોટો", "image": "ઇમેજ", "logo": "લોગો",
-  "banner": "બેનર", "template": "ટેમ્પલેટ", "design": "ડિઝાઇન",
-  "theme": "થીમ", "color": "કલર", "font": "ફોન્ટ",
-  "page": "પેજ", "pages": "પેજ", "link": "લિંક",
-  "share": "શેર", "print": "પ્રિન્ટ", "scan": "સ્કેન",
-  "copy": "કોપી", "delete": "ડિલીટ", "edit": "એડિટ",
-  "add": "ઍડ", "remove": "રિમૂવ", "save": "સેવ",
-  "cancel": "કેન્સલ", "confirm": "કન્ફર્મ", "submit": "સબમિટ",
-  "register": "રજિસ્ટર", "login": "લોગિન", "logout": "લોગઆઉટ",
-  "profile": "પ્રોફાઇલ", "account": "એકાઉન્ટ", "password": "પાસવર્ડ",
-  "user": "યૂઝર", "users": "યૂઝર્સ", "family": "ફેમિલી",
-  "community": "સમુદાય", "society": "સમાજ", "group": "ગ્રુપ",
-  "list": "લિસ્ટ", "search": "સર્ચ", "filter": "ફિલ્ટર",
-  "sort": "સોર્ટ", "status": "સ્ટેટસ", "active": "એક્ટિવ",
-  "inactive": "ઇનએક્ટિવ", "pending": "પેન્ડિંગ", "approved": "એપ્રૂવ્ડ",
-  "rejected": "રિજેક્ટેડ", "and": "અને", "or": "અથવા",
-  "with": "સાથે", "without": "વિના", "for": "માટે",
-  "the": "", "a": "", "an": "", "is": "", "are": "", "was": "", "at": "",
-  "your": "તમારું", "our": "અમારું", "my": "મારું",
+  "whatsapp": "વોટ્સએપ", "free": "ફ્રી", "domain": "ડોમેન", "server": "સર્વર", "smart": "સ્માર્ટ", 
+  "app": "એપ", "solution": "સોલ્યુશન", "backup": "બેકઅપ", "instant": "ઇન્સ્ટન્ટ",
+  "technical": "ટેકનિકલ", "support": "સપોર્ટ", "renewal": "રિન્યુઅલ", "plan": "પ્લાન",
+  "new": "નવી", "offer": "ઓફર", "special": "ખાસ", "deal": "ડીલ", "exclusive": "ખાસ",
+  "continued": "નિરંતર", "automation": "ઓટોમેશન", "preserved": "સુરક્ષિત", "digital": "ડિજિટલ",
+  "heritage": "વારસો", "play": "પ્લે", "store": "સ્ટોર", "application": "એપ્લિકેશન",
+  "available": "ઉપલબ્ધ", "sms": "એસએમએસ", "additional": "વધારાનો", "number": "નંબર",
+  "get": "મેળવો", "demo": "ડેમો"
 };
 
 const hiWords: Record<string, string> = {
-  "free": "फ्री", "domain": "डोमेन", "server": "सर्वर", "sms": "एसएमएस",
-  "ads": "एड्स", "ad": "एड", "app": "ऐप", "api": "API",
-  "smart": "स्मार्ट", "automation": "ऑटोमेशन", "digital": "डिजिटल",
-  "heritage": "विरासत", "instant": "इंस्टेंट", "notifications": "नोटिफिकेशन",
-  "notification": "नोटिफिकेशन", "whatsapp": "व्हाट्सएप", "official": "आधिकारिक",
-  "number": "नंबर", "additional": "अतिरिक्त", "special": "स्पेशल",
-  "renewal": "रिन्यूअल", "deal": "डील", "exclusive": "एक्सक्लूसिव",
-  "offer": "ऑफर", "new": "नया", "get": "प्राप्त करें", "demo": "डेमो",
-  "training": "ट्रेनिंग", "setup": "सेटअप", "support": "सपोर्ट",
-  "update": "अपडेट", "updates": "अपडेट्स", "maintenance": "मेंटेनेंस",
-  "hosting": "होस्टिंग", "play": "प्ले", "store": "स्टोर",
-  "application": "एप्लीकेशन", "available": "उपलब्ध", "integration": "इंटीग्रेशन",
-  "member": "सदस्य", "members": "सदस्य", "management": "प्रबंधन",
-  "event": "इवेंट", "events": "इवेंट्स", "donation": "डोनेशन",
-  "expense": "खर्च", "gallery": "गैलरी", "committee": "समिति",
-  "business": "बिजनेस", "directory": "डायरेक्टरी", "matrimonial": "मैट्रिमोनियल",
-  "module": "मॉड्यूल", "job": "जॉब", "vacancy": "वैकेंसी",
-  "student": "स्टूडेंट", "news": "न्यूज", "post": "पोस्ट",
-  "push": "पुश", "custom": "कस्टम", "branding": "ब्रांडिंग",
-  "data": "डेटा", "backup": "बैकअप", "cloud": "क्लाउड",
-  "storage": "स्टोरेज", "admin": "एडमिन", "panel": "पैनल",
-  "super": "सुपर", "role": "रोल", "annual": "वार्षिक",
-  "monthly": "मासिक", "plan": "प्लान", "lifetime": "लाइफटाइम",
-  "access": "एक्सेस", "unlimited": "असीमित", "priority": "प्राथमिकता",
-  "dedicated": "डेडिकेटेड", "technical": "टेक्निकल", "mobile": "मोबाइल",
-  "web": "वेब", "festival": "त्योहार", "birthday": "जन्मदिन",
-  "greetings": "शुभकामनाएं", "bulk": "बल्क", "auto": "ऑटो",
-  "reminder": "रिमाइंडर", "package": "पैकेज", "complete": "पूरा",
-  "renew": "रिन्यू", "only": "मात्र", "just": "मात्र",
-  "continued": "निरंतर", "preserved": "संरक्षित", "connected": "जुड़ा",
-  "secure": "सुरक्षित", "premium": "प्रीमियम", "basic": "बेसिक",
-  "standard": "स्टैंडर्ड", "advanced": "एडवांस्ड", "pro": "प्रो",
-  "plus": "प्लस", "enterprise": "एंटरप्राइज", "starter": "स्टार्टर",
-  "full": "पूर्ण", "all": "सभी", "service": "सेवा",
-  "services": "सेवाएं", "feature": "फीचर", "features": "फीचर्स",
-  "report": "रिपोर्ट", "reports": "रिपोर्ट्स", "analytics": "एनालिटिक्स",
-  "dashboard": "डैशबोर्ड", "website": "वेबसाइट", "online": "ऑनलाइन",
-  "offline": "ऑफलाइन", "payment": "पेमेंट", "payments": "पेमेंट्स",
-  "invoice": "इनवॉइस", "billing": "बिलिंग", "receipt": "रसीद",
-  "security": "सिक्योरिटी", "verified": "वेरिफाइड", "certified": "सर्टिफाइड",
-  "consultation": "कंसल्टेशन", "migration": "माइग्रेशन",
-  "download": "डाउनलोड", "upload": "अपलोड", "import": "इंपोर्ट",
-  "export": "एक्सपोर्ट", "email": "ईमेल", "call": "कॉल",
-  "message": "मैसेज", "chat": "चैट", "video": "वीडियो",
-  "photo": "फोटो", "image": "इमेज", "logo": "लोगो",
-  "banner": "बैनर", "template": "टेम्पलेट", "design": "डिजाइन",
-  "theme": "थीम", "color": "कलर", "font": "फॉन्ट",
-  "page": "पेज", "pages": "पेज", "link": "लिंक",
-  "share": "शेयर", "print": "प्रिंट", "scan": "स्कैन",
-  "copy": "कॉपी", "delete": "डिलीट", "edit": "एडिट",
-  "add": "जोड़ें", "remove": "हटाएं", "save": "सेव",
-  "cancel": "कैंसल", "confirm": "कन्फर्म", "submit": "सबमिट",
-  "register": "रजिस्टर", "login": "लॉगिन", "logout": "लॉगआउट",
-  "profile": "प्रोफाइल", "account": "अकाउंट", "password": "पासवर्ड",
-  "user": "यूजर", "users": "यूजर्स", "family": "परिवार",
-  "community": "समुदाय", "society": "समाज", "group": "ग्रुप",
-  "list": "सूची", "search": "खोजें", "filter": "फ़िल्टर",
-  "sort": "सॉर्ट", "status": "स्टेटस", "active": "एक्टिव",
-  "inactive": "इनएक्टिव", "pending": "पेंडिंग", "approved": "अप्रूव्ड",
-  "rejected": "रिजेक्टेड", "and": "और", "or": "या",
-  "with": "के साथ", "without": "के बिना", "for": "के लिए",
-  "the": "", "a": "", "an": "", "is": "", "are": "", "was": "", "at": "",
-  "your": "आपका", "our": "हमारा", "my": "मेरा",
+  "whatsapp": "व्हाट्सएप", "free": "फ्री", "domain": "डोमेन", "server": "सर्वर", "smart": "स्मार्ट",
+  "app": "ऐप", "solution": "सॉल्यूशन", "backup": "बैकअप", "instant": "इंस्टेंट",
+  "technical": "टेक्निकल", "support": "सपोर्ट", "renewal": "रिन्यूअल", "plan": "प्लान",
+  "new": "नया", "offer": "ऑफर", "special": "खास", "deal": "डील", "exclusive": "खास",
+  "continued": "निरंतर", "automation": "ऑटोमेशन", "preserved": "सुरक्षित", "digital": "डिजिटल",
+  "heritage": "विरासत", "play": "प्ले", "store": "स्टोर", "application": "एप्लिकेशन",
+  "available": "उपलब्ध", "sms": "एसएमएस", "additional": "अतिरिक्त", "number": "नंबर",
+  "get": "प्राप्त करें", "demo": "डेमो"
 };
 
-// ─── Dynamic price pattern regexes ───
 const pricePatterns: Array<{ pattern: RegExp; gu: string; hi: string }> = [
-  { pattern: /Renew your package at just ₹([0-9,]+)/gi, gu: "માત્ર ₹$1 માં તમારું પેકેજ રીન્યુ કરો", hi: "मात्र ₹$1 में अपना पैकेज रिन्यू करें" },
+  { pattern: /Renew your package at just ₹([0-9,]+)/gi, gu: "માત્ર ₹$1 માં તમારું પેકેજ રિન્યુ કરો", hi: "मात्र ₹$1 में अपना पैकेज रिन्यू करें" },
   { pattern: /Get the Complete Package at Just ₹([0-9,]+)/gi, gu: "માત્ર ₹$1 માં સંપૂર્ણ પેકેજ મેળવો", hi: "मात्र ₹$1 में पूरा पैकेज प्राप्त करें" },
   { pattern: /Only ₹([0-9,]+)/gi, gu: "માત્ર ₹$1", hi: "मात्र ₹$1" },
 ];
@@ -293,37 +122,81 @@ function translateText(text: string, lang: string): string {
 
   let result = text;
 
-  // Step 1: Apply dynamic price patterns
+  // Replace WhatsApp / whatsapp / WHATSAPP explicitly for Gujarati/Hindi
+  if (lang === "gu") {
+    result = result.replace(/whatsapp/gi, "વોટ્સએપ");
+  } else if (lang === "hi") {
+    result = result.replace(/whatsapp/gi, "व्हाट्सएप");
+  }
+
   for (const pp of pricePatterns) {
     result = result.replace(pp.pattern, lang === "gu" ? pp.gu : pp.hi);
   }
 
-  // Step 2: Try phrase-level replacements (longest phrases first)
   const sortedPhrases = Object.keys(phrases).sort((a, b) => b.length - a.length);
   for (const phrase of sortedPhrases) {
     const regex = new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi");
     result = result.replace(regex, phrases[phrase]);
   }
 
-  // Step 3: Word-by-word fallback for any remaining English words
   result = result.replace(/[a-zA-Z]+/g, (word) => {
     const lower = word.toLowerCase();
     if (words[lower] !== undefined) {
-      // Preserve casing style
       return words[lower];
     }
-    return word; // Keep original if not found
+    return word;
   });
 
-  // Clean up any double spaces
-  result = result.replace(/\s{2,}/g, " ").trim();
-
-  return result;
+  return result.replace(/\s{2,}/g, " ").trim();
 }
 
+const DEFAULT_PLANS = [
+  {
+    _id: "plan-new-1st-year",
+    title: "પ્રથમ વર્ષનો પ્લાન",
+    subtitle: "નવું પ્લાન",
+    badgeType: "new",
+    originalPrice: 35000,
+    discountedPrice: 25000,
+    description: "માત્ર ₹25,000 માં સંપૂર્ણ પેકેજ મેળવો",
+    features: [
+      "સ્માર્ટ એપ સોલ્યુશન",
+      "ઇન્સ્ટન્ટ નોટિફિકેશન",
+      "સુરક્ષિત ડેટા બેકઅપ",
+      "ફ્રી ડોમેન",
+      "ફ્રી સર્વર",
+      "વેબસાઇટ અને એપ પર કસ્ટમાઇઝેશન",
+      "ફ્રી ટેકનિકલ સપોર્ટ"
+    ],
+    badgeText: "ઓફિશિયલ વોટ્સએપ સપોર્ટ – ₹6,000",
+    buttonText: "વોટ્સએપ પર સંપર્ક કરો",
+    whatsappMessage: "Hello, I want to inquire about the 1st Year Plan (₹25,000) for Parivar.me"
+  },
+  {
+    _id: "plan-annual-renewal",
+    title: "વાર્ષિક રિન્યુઅલ પ્લાન",
+    subtitle: "રિન્યુઅલ પ્લાન",
+    badgeType: "renewal",
+    originalPrice: 15000,
+    discountedPrice: 10000,
+    description: "માત્ર ₹10,000 માં તમારું પેકેજ રિન્યુ કરો",
+    features: [
+      "સંપૂર્ણ સ્માર્ટ એપ સોલ્યુશન",
+      "ફ્રી ડોમેન",
+      "સુરક્ષિત ડેટા બેકઅપ",
+      "ઇન્સ્ટન્ટ નોટિફિકેશન",
+      "ફ્રી સર્વર",
+      "વેબસાઇટ અને એપ પર કસ્ટમાઇઝેશન",
+      "ફ્રી ટેકનિકલ સપોર્ટ"
+    ],
+    badgeText: "ઓફિશિયલ વોટ્સએપ સપોર્ટ – ₹6,000",
+    buttonText: "વોટ્સએપ પર સંપર્ક કરો",
+    whatsappMessage: "Hello, I want to inquire about the Annual Renewal Plan (₹10,000) for Parivar.me"
+  }
+];
+
 export default function PricingSection() {
-  const [plans, setPlans] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [plans, setPlans] = useState<any[]>(DEFAULT_PLANS);
   const [expandedPlans, setExpandedPlans] = useState<Record<string, boolean>>({});
   const { t, language } = useLanguage();
   
@@ -331,16 +204,21 @@ export default function PricingSection() {
 
   useEffect(() => {
     const fetchPlans = async () => {
-      setLoading(true);
       try {
         const res = await axiosInstance.get(ENDPOINTS.PRICING);
-        if (res.status === 200) {
-          setPlans(Array.isArray(res.data.data) ? res.data.data : []);
+        if (res.status === 200 && Array.isArray(res.data.data) && res.data.data.length > 0) {
+          const fetchedPlans = res.data.data;
+          const sortedPlans = [...fetchedPlans].sort((a: any, b: any) => {
+            const isNewA = (a.title || "").toLowerCase().includes("new") || (a.title || "").includes("પ્રથમ") || (a.discountedPrice || 0) > 15000;
+            const isNewB = (b.title || "").toLowerCase().includes("new") || (b.title || "").includes("પ્રથમ") || (b.discountedPrice || 0) > 15000;
+            if (isNewA && !isNewB) return -1;
+            if (!isNewA && isNewB) return 1;
+            return (a.order || 0) - (b.order || 0);
+          });
+          setPlans(sortedPlans);
         }
       } catch (err) {
-        console.error("Failed to load pricing plans", err);
-      } finally {
-        setLoading(false);
+        console.error("Using default pricing plans");
       }
     };
     fetchPlans();
@@ -349,10 +227,6 @@ export default function PricingSection() {
   const togglePlanExpand = (planId: string) => {
     setExpandedPlans((prev) => ({ ...prev, [planId]: !prev[planId] }));
   };
-
-  if (loading || plans.length === 0) {
-    return null;
-  }
 
   return (
     <section className="relative overflow-hidden bg-[#fafcff] py-16 md:py-24 border-t border-slate-100">
@@ -367,7 +241,7 @@ export default function PricingSection() {
         
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16 space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 border border-blue-100 shadow-sm text-xs font-bold text-blue-900 tracking-wide">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 border border-blue-100 shadow-2xs text-xs font-bold text-blue-900 tracking-wide">
             <span className="flex h-2 w-2 relative">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
@@ -388,103 +262,85 @@ export default function PricingSection() {
 
         {/* Pricing Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
-          {plans.map((plan) => {
+          {plans.map((plan, index) => {
             const defaultMsg = `Hello, I want to book a free demo of Parivar for the "${plan.title}" package.`;
             const waMsg = plan.whatsappMessage || defaultMsg;
             const waLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(waMsg)}`;
             
-            const isExpanded = !!expandedPlans[plan._id];
+            const planId = plan._id || `plan-${index}`;
+            const isExpanded = !!expandedPlans[planId];
             const allFeatures = plan.features || [];
-            const remainingCount = allFeatures.length - 3;
-            const visibleFeatures = isExpanded ? allFeatures : allFeatures.slice(0, 3);
+            const isNewPlan = (plan.title || "").includes("પ્રથમ") || (plan.title || "").toLowerCase().includes("new") || (plan.discountedPrice || 0) > 15000 || plan.badgeType === "new";
 
             return (
               <div
-                key={plan._id}
-                className="bg-white/80 backdrop-blur-md border-2 border-indigo-100/50 hover:border-indigo-600 rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-[0_4px_25px_-4px_rgba(59,130,246,0.06)] hover:shadow-[0_10px_35px_-4px_rgba(59,130,246,0.12)] transition-all duration-300 relative group overflow-hidden"
+                key={planId}
+                className={`bg-white/90 backdrop-blur-md border-2 ${isNewPlan ? 'border-emerald-200 hover:border-emerald-500 shadow-[0_4px_25px_-4px_rgba(16,185,129,0.12)]' : 'border-blue-100 hover:border-blue-500 shadow-[0_4px_25px_-4px_rgba(59,130,246,0.12)]'} rounded-3xl p-6 md:p-8 flex flex-col justify-between transition-all duration-300 relative group overflow-hidden`}
               >
                 {/* Top highlight bar */}
-                <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className={`absolute top-0 inset-x-0 h-1.5 ${isNewPlan ? 'bg-gradient-to-r from-emerald-500 to-teal-500' : 'bg-gradient-to-r from-blue-600 to-indigo-600'}`} />
                 
                 <div className="space-y-6 relative z-10">
                   {/* Badges / Header */}
                   <div className="text-center space-y-2.5">
-                    <span className="inline-flex items-center gap-1.5 bg-blue-50 border border-blue-100/50 text-blue-700 text-[10px] md:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                      🎯 {translateText(plan.subtitle || "Exclusive Deal", language)}
+                    <span className={`inline-flex items-center gap-1.5 ${isNewPlan ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-blue-50 text-blue-700 border-blue-200'} border text-[11px] md:text-xs font-bold px-3.5 py-1 rounded-full uppercase tracking-wider`}>
+                      {isNewPlan ? '👑' : '⭐'} {translateText(plan.subtitle || (isNewPlan ? "નવું પ્લાન" : "રિન્યુઅલ પ્લાન"), language)}
                     </span>
-                    <h3 className="text-xl md:text-2xl font-black text-[#0B1340]">
+                    <h3 className="text-2xl md:text-3xl font-black text-[#0B1340]">
                       {translateText(plan.title, language)}
                     </h3>
                   </div>
 
                   {/* Pricing Display */}
-                  <div className="text-center space-y-1.5 py-5 bg-[#F8FAFC]/80 rounded-2xl border border-slate-100/80">
+                  <div className={`text-center space-y-1.5 py-5 rounded-2xl border ${isNewPlan ? 'bg-emerald-50/50 border-emerald-100' : 'bg-blue-50/40 border-blue-100'}`}>
                     <div className="flex items-center justify-center gap-3">
-                      <span className="text-slate-400 text-sm md:text-base line-through font-bold">
+                      <span className="text-slate-400 text-base md:text-lg line-through font-bold">
                         ₹{plan.originalPrice.toLocaleString("en-IN")}
                       </span>
-                      <span className="text-3xl md:text-4.5xl font-black text-slate-900 tracking-tight">
+                      <span className={`text-3.5xl md:text-4.5xl font-black ${isNewPlan ? 'text-emerald-700' : 'text-blue-900'} tracking-tight`}>
                         ₹{plan.discountedPrice.toLocaleString("en-IN")}
                       </span>
                     </div>
                     {plan.description && (
-                      <p className="text-slate-500 text-xs md:text-sm font-medium">
+                      <p className="text-slate-600 text-xs md:text-sm font-semibold">
                         {translateText(plan.description, language)}
                       </p>
                     )}
                   </div>
 
                   {/* Features List */}
-                  <div className="space-y-3.5 pt-2">
-                    {visibleFeatures.map((feature: string, idx: number) => (
+                  <div className="space-y-3 pt-2">
+                    {allFeatures.map((feature: string, idx: number) => (
                       <div key={idx} className="flex items-start gap-3">
-                        <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
-                        <span className="text-slate-700 text-sm font-semibold">
+                        <CheckCircle2 className={`w-5 h-5 ${isNewPlan ? 'text-emerald-600' : 'text-blue-600'} shrink-0 mt-0.5`} />
+                        <span className="text-slate-800 text-sm font-semibold">
                           {translateText(feature, language)}
                         </span>
                       </div>
                     ))}
-                    
-                    {allFeatures.length > 3 && (
-                      <div className="flex justify-end pt-1">
-                        <button
-                          onClick={() => togglePlanExpand(plan._id)}
-                          className="text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200/80 px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer inline-flex items-center gap-1 shadow-2xs"
-                        >
-                          {isExpanded ? (
-                            <>
-                              <span>{t("pricing.less")}</span>
-                              <ChevronUp className="w-3.5 h-3.5" />
-                            </>
-                          ) : (
-                            <>
-                              <span>+{remainingCount} {t("pricing.more")}</span>
-                              <ChevronDown className="w-3.5 h-3.5" />
-                            </>
-                          )}
-                        </button>
-                      </div>
-                    )}
                   </div>
                 </div>
 
-                {/* Yellow Highlight Banner & Green WhatsApp Button */}
+                {/* Additional Official WhatsApp support & CTA Button */}
                 <div className="mt-8 pt-6 border-t border-slate-100 space-y-4 relative z-10">
-                  {plan.badgeText && (
-                    <div className="bg-[#FEF9C3] border border-yellow-200/70 text-yellow-900 text-center font-bold text-xs py-2.5 px-3 rounded-xl shadow-3xs flex items-center justify-center gap-2">
-                      💡 {translateText(plan.badgeText, language)}
-                    </div>
-                  )}
+                  <div className={`rounded-xl p-3 border text-center text-xs font-bold flex items-center justify-center gap-2 ${isNewPlan ? 'bg-emerald-50/80 border-emerald-200 text-emerald-900' : 'bg-blue-50/80 border-blue-200 text-blue-900'}`}>
+                    <span>🎧</span>
+                    <span>{translateText(plan.badgeText || "ઓફિશિયલ વોટ્સએપ સપોર્ટ – ₹6,000", language)}</span>
+                  </div>
 
                   <a
                     href={waLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full inline-flex items-center justify-center gap-2.5 bg-green-500 hover:bg-green-600 text-white font-bold text-sm md:text-base py-3.5 rounded-full shadow-[0_4px_15px_rgba(34,197,94,0.25)] hover:shadow-[0_4px_25px_rgba(34,197,94,0.4)] active:scale-98 transition-all duration-300 text-center"
+                    className="w-full inline-flex items-center justify-center gap-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-base py-3.5 rounded-full shadow-lg shadow-emerald-600/30 hover:shadow-xl active:scale-98 transition-all duration-300 text-center"
                   >
                     <MessageCircle className="w-5 h-5 fill-white stroke-none" />
-                    <span>{translateText(plan.buttonText || "Get Free Demo", language)}</span>
+                    <span>{translateText(plan.buttonText || "વોટ્સએપ પર સંપર્ક કરો", language)}</span>
                   </a>
+
+                  <p className="text-center text-xs text-slate-500 font-medium">
+                    {t("pricing.expertNote")}
+                  </p>
                 </div>
 
               </div>
