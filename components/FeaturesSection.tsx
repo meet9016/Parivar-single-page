@@ -160,19 +160,19 @@ export default function FeaturesSection() {
       </div>
 
       {/* Mockups Carousel Section (Premium Coverflow Showcase) */}
-      <div className="pb-12 md:pb-16 pt-6 md:pt-8">
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-          <div className="bg-white rounded-[2rem] shadow-sm border border-slate-100 p-6 md:p-12 relative overflow-hidden">
+      <div className="pb-12 md:pb-16 pt-6 md:pt-6">
+        <div className="w-full max-w-[1400px] 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 md:px-8">
+          <div className="rounded-[2rem] p-6 md:p-12 relative overflow-hidden">
             
             {/* Title above carousel */}
             <div className="text-center mb-10 relative z-10">
                <h3 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Experience</span> on Mobile
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">{t("features.experienceTitle1")}</span> {t("features.experienceTitle2")}
                </h3>
-               <p className="text-slate-500 font-medium mt-3">Swipe to explore the community application</p>
+               <p className="text-slate-500 font-medium mt-3">{t("features.experienceSubtitle")}</p>
             </div>
 
-            <div className="flex items-center justify-center min-h-[500px] sm:min-h-[700px] relative z-10 [perspective:1000px]">
+            <div className="flex items-center justify-center min-h-[650px] sm:min-h-[800px] relative z-10">
               
               {mockups.map((mockup, index) => {
                 let diff = index - currentMockupIndex;
@@ -186,16 +186,16 @@ export default function FeaturesSection() {
                   styles = "opacity-100 scale-100 translate-x-0 drop-shadow-[0_20px_40px_rgba(0,0,0,0.4)] z-30";
                   zIndex = 30;
                 } else if (diff === -1) {
-                  styles = "opacity-70 scale-[0.8] -translate-x-[75%] sm:-translate-x-[100%] drop-shadow-lg cursor-pointer z-20 hover:opacity-90";
+                  styles = "opacity-70 scale-[0.8] -translate-x-[85%] sm:-translate-x-[115%] drop-shadow-lg cursor-pointer z-20 hover:opacity-90";
                   zIndex = 20;
                 } else if (diff === 1) {
-                  styles = "opacity-70 scale-[0.8] translate-x-[75%] sm:translate-x-[100%] drop-shadow-lg cursor-pointer z-20 hover:opacity-90";
+                  styles = "opacity-70 scale-[0.8] translate-x-[85%] sm:translate-x-[115%] drop-shadow-lg cursor-pointer z-20 hover:opacity-90";
                   zIndex = 20;
                 } else if (diff < -1) {
-                  styles = "opacity-0 scale-[0.6] -translate-x-[150%] sm:-translate-x-[200%] pointer-events-none";
+                  styles = "opacity-0 scale-[0.6] -translate-x-[170%] sm:-translate-x-[230%] pointer-events-none";
                   zIndex = 0;
                 } else {
-                  styles = "opacity-0 scale-[0.6] translate-x-[150%] sm:translate-x-[200%] pointer-events-none";
+                  styles = "opacity-0 scale-[0.6] translate-x-[170%] sm:translate-x-[230%] pointer-events-none";
                   zIndex = 0;
                 }
 
@@ -209,7 +209,7 @@ export default function FeaturesSection() {
                         setTimeout(() => setIsTransitioning(false), 500);
                       }
                     }}
-                    className={`absolute transition-all duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)] w-[240px] sm:w-[320px] ${styles}`}
+                    className={`absolute transition-[transform,opacity,filter] duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)] w-[320px] sm:w-[400px] transform-gpu will-change-transform [backface-visibility:hidden] ${styles}`}
                     style={{ zIndex }}
                   >
                     <img 

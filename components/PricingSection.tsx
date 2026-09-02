@@ -263,7 +263,7 @@ export default function PricingSection() {
           setPlans(sortedPlans);
         }
       } catch (err) {
-        console.error("Using default pricing plans");
+        // Fallback to default pricing plans quietly
       }
     };
     fetchPlans();
@@ -392,12 +392,14 @@ export default function PricingSection() {
                 </div>
 
                 {/* Pricing Display */}
-                <div className={`text-center md:text-left space-y-1.5 py-5 px-4 rounded-2xl border ${isNewPlan ? 'bg-emerald-50/50 border-emerald-100' : 'bg-blue-50/40 border-blue-100'}`}>
-                  <div className="flex items-center justify-center md:justify-start gap-3">
-                    <span className="text-slate-400 text-base md:text-lg line-through font-bold">
+                <div className={`text-center md:text-left space-y-2 py-6 px-6 rounded-3xl border-2 ${isNewPlan ? 'bg-gradient-to-br from-emerald-50 to-white border-emerald-300 shadow-md shadow-emerald-100/50' : 'bg-gradient-to-br from-blue-50 to-white border-blue-300 shadow-md shadow-blue-100/50'} relative overflow-hidden`}>
+                  {/* Subtle shine effect */}
+                  <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-tr from-white/0 via-white/50 to-white/0 transform -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+                  <div className="flex items-center justify-center md:justify-start gap-4 relative z-10">
+                    <span className="text-slate-400 text-lg md:text-xl line-through font-extrabold">
                       ₹{activePlan.originalPrice.toLocaleString("en-IN")}
                     </span>
-                    <span className={`text-3.5xl md:text-4.5xl font-black ${isNewPlan ? 'text-emerald-700' : 'text-blue-900'} tracking-tight`}>
+                    <span className={`text-4xl md:text-5xl font-black ${isNewPlan ? 'text-emerald-700' : 'text-blue-700'} tracking-tight`}>
                       ₹{activePlan.discountedPrice.toLocaleString("en-IN")}
                     </span>
                   </div>

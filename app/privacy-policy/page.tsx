@@ -228,8 +228,7 @@ export default function PrivacyPolicyPage() {
             <ul className="list-none space-y-1">
               <li><strong>Platform:</strong> Parivar</li>
               <li><strong>Website:</strong> chovatiya.parivar.me</li>
-              <li><strong>Privacy/Support Contact:</strong> [Add official email address]</li>
-              <li><strong>Grievance Contact:</strong> [Add official grievance email/address]</li>
+              <li><strong>Privacy/Support Contact:</strong> info@Parivar.me</li>
             </ul>
           </section>
         </div>

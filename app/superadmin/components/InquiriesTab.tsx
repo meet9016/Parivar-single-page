@@ -10,11 +10,10 @@ export default function InquiriesTab() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  // Debounce search
   useEffect(() => {
     const timeout = setTimeout(() => {
       fetchInquiries();
-      setCurrentPage(1); // Reset on search
+      setCurrentPage(1);
     }, 800);
     return () => clearTimeout(timeout);
   }, [inquirySearch]);

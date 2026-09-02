@@ -61,7 +61,9 @@ export default function Navbar() {
         <div className="flex justify-between items-center">
           
           <div className="flex items-center gap-2">
-            <img src="/logo.png" alt="Parivar.me Logo" className="h-10 w-auto object-contain" />
+            <a href="#home" onClick={(e) => handleNavClick(e, "home")} className="cursor-pointer">
+              <img src="/logo.png" alt="Parivar.me Logo" className="h-10 w-auto object-contain" />
+            </a>
           </div>
 
           <div className="hidden md:flex items-center space-x-1 lg:space-x-2">

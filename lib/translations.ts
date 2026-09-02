@@ -44,8 +44,11 @@ export const translations = {
       f8: { title: "Admin Activity Control", desc: "Monitor admin work from the master app" },
       f9: { title: "Secure Cloud Data", desc: "All data safely stored and synced" },
       f10: { title: "Role Based Access", desc: "Different permissions for members & admins" },
-      f11: { title: "Real-Time Sync", desc: "Instant data sync between app & software" },
-      f12: { title: "Support & Help Desk", desc: "Get quick help directly from the app" }
+      f11: { title: "Real-time Sync", desc: "Instant data synchronization across devices" },
+      f12: { title: "Support Helpdesk", desc: "Get quick assistance directly from the app" },
+      experienceTitle1: "Experience",
+      experienceTitle2: "on Mobile",
+      experienceSubtitle: "Swipe to explore the community application"
     },
     comparison: {
       without: "Without Parivar.me",
@@ -98,7 +101,8 @@ export const translations = {
       renewal: "Renewal Offer",
       more: "More",
       less: "Show Less",
-      demo: "Get Free Demo"
+      demo: "Get Free Demo",
+      expertNote: "Our expert team will guide you."
     }
   },
   gu: {
@@ -145,7 +149,10 @@ export const translations = {
       f9: { title: "સુરક્ષિત ક્લાઉડ ડેટા", desc: "તમામ ડેટા સુરક્ષિત રીતે સ્ટોર અને સિંક થાય છે" },
       f10: { title: "રોલ આધારિત એક્સેસ", desc: "સભ્યો અને એડમિન માટે અલગ પરવાનગીઓ" },
       f11: { title: "રિયલ-ટાઇમ સિંક", desc: "એપ અને સોફ્ટવેર વચ્ચે ઇન્સ્ટન્ટ ડેટા સિંક" },
-      f12: { title: "સપોર્ટ અને હેલ્પ ડેસ્ક", desc: "એપમાંથી સીધી ઝડપી મદદ મેળવો" }
+      f12: { title: "સપોર્ટ અને હેલ્પ ડેસ્ક", desc: "એપમાંથી સીધી ઝડપી મદદ મેળવો" },
+      experienceTitle1: "મોબાઈલ પર",
+      experienceTitle2: "અનુભવ",
+      experienceSubtitle: "કોમ્યુનિટી એપ્લિકેશન અન્વેષણ કરવા માટે સ્વાઇપ કરો"
     },
     comparison: {
       without: "Parivar.me વિના",
@@ -251,7 +258,10 @@ export const translations = {
       f9: { title: "सुरक्षित क्लाउड डेटा", desc: "सभी डेटा सुरक्षित रूप से संग्रहीत और समन्वयित" },
       f10: { title: "भूमिका आधारित एक्सेस", desc: "सदस्यों और एडमिन के लिए अलग-अलग अनुमतियां" },
       f11: { title: "रीयल-टाइम सिंक", desc: "ऐप और सॉफ़्टवेयर के बीच इंस्टेंट डेटा सिंक" },
-      f12: { title: "सपोर्ट और हेल्प डेस्क", desc: "ऐप से सीधे त्वरित सहायता प्राप्त करें" }
+      f12: { title: "सपोर्ट और हेल्पडेस्क", desc: "ऐप से सीधे त्वरित सहायता प्राप्त करें" },
+      experienceTitle1: "मोबाइल पर",
+      experienceTitle2: "अनुभव",
+      experienceSubtitle: "कम्युनिटी एप्लिकेशन देखने के लिए स्वाइप करें"
     },
     comparison: {
       without: "Parivar.me के बिना",

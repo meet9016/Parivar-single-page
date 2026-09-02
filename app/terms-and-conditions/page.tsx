@@ -196,8 +196,7 @@ export default function TermsAndConditionsPage() {
             <ul className="list-none space-y-1">
               <li><strong>Platform:</strong> Parivar</li>
               <li><strong>Website:</strong> chovatiya.parivar.me</li>
-              <li><strong>Support Email:</strong> [Add official email address]</li>
-              <li><strong>Grievance Email:</strong> [Add official grievance email/address]</li>
+              <li><strong>Support Email:</strong> info@Parivar.me</li>
             </ul>
           </section>
         </div>
