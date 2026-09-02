@@ -86,44 +86,53 @@ export default function FeaturesSection() {
   const features = gridFeaturesTranslations[language] || gridFeaturesTranslations["en"];
 
   const mockups = [
-    "/members.png",
-    "/events.png",
-    "/photos.png",
-    "/bussiness.png",
-    "/news.png"
+    "/application/Device.png",
+    "/application/Device-1.png",
+    "/application/Device-2.png",
+    "/application/Device-3.png",
+    "/application/Device-4.png",
+    "/application/Device-5.png",
+    "/application/Device-6.png",
+    "/application/Device-7.png",
+    "/application/Device-8.png",
+    "/application/Device-9.png",
+    "/application/Group 12.png",
+    "/application/Group 12-1.png",
+    "/application/Group 12-2.png",
+    "/application/Group 12-3.png",
+    "/application/Group 12-4.png",
+    "/application/Group 13.png",
+    "/application/Group 16.png",
+    "/application/Group 17.png"
   ];
 
   const handleNext = () => {
     if (isTransitioning) return;
     setIsTransitioning(true);
-    setTimeout(() => {
-      setCurrentMockupIndex((prev) => (prev + 1 >= mockups.length ? 0 : prev + 1));
-      setIsTransitioning(false);
-    }, 300);
+    setCurrentMockupIndex((prev) => (prev + 1 >= mockups.length ? 0 : prev + 1));
+    setTimeout(() => setIsTransitioning(false), 500);
   };
 
   const handlePrev = () => {
     if (isTransitioning) return;
     setIsTransitioning(true);
-    setTimeout(() => {
-      setCurrentMockupIndex((prev) => (prev - 1 < 0 ? mockups.length - 1 : prev - 1));
-      setIsTransitioning(false);
-    }, 300);
+    setCurrentMockupIndex((prev) => (prev - 1 < 0 ? mockups.length - 1 : prev - 1));
+    setTimeout(() => setIsTransitioning(false), 500);
   };
 
   return (
-    <section id="features" className="py-16 md:py-24 bg-[#f8fafc] relative overflow-hidden">
+    <section id="features" className="relative overflow-x-hidden">
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 relative z-10">
-        
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+      {/* Grid Section */}
+      <div className="py-16 md:py-24 bg-[#f8fafc]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 relative z-10">
+          
+          <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0B1340] tracking-tight">
             {t("features.title")}
           </h2>
         </div>
  
-        {/* 4x3 Features Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mb-16">
           {features.map((feature, index) => {
             const Icon = iconMap[feature.icon] || Users;
@@ -147,43 +156,105 @@ export default function FeaturesSection() {
             );
           })}
         </div>
+        </div>
+      </div>
 
-        {/* Mockups Carousel Section (Restored Carousel) */}
-        <div className="relative bg-white rounded-[2rem] p-8 md:p-12 border border-slate-200/60 shadow-xl shadow-slate-200/40 max-w-5xl mx-auto">
-          
-          <div className="flex items-center justify-center min-h-[500px]">
-            
-            {/* Single Mockup Display */}
-            <div className={`w-full flex justify-center transition-all duration-300 transform ${isTransitioning ? "opacity-0 scale-95" : "opacity-100 scale-100"}`}>
-              <img 
-                src={mockups[currentMockupIndex]} 
-                alt={`App Screenshot ${currentMockupIndex + 1}`} 
-                className="max-h-[500px] w-auto object-contain drop-shadow-2xl rounded-2xl border-[6px] border-slate-50"
-                onError={(e) => { e.currentTarget.style.display = 'none'; }}
-              />
+      {/* Mockups Carousel Section (Premium Coverflow Showcase) */}
+      <div className="py-16 md:py-24 bg-white">
+        <div className="relative w-full max-w-7xl mx-auto">
+          <div className="relative group">
+
+            {/* Title above carousel */}
+            <div className="text-center mb-12 relative z-10 px-4">
+               <h3 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Experience</span> on Mobile
+               </h3>
+               <p className="text-slate-500 font-medium mt-3">Swipe to explore the community application</p>
+            </div>
+
+            <div className="flex items-center justify-center min-h-[550px] sm:min-h-[750px] relative z-10 [perspective:1000px]">
+              
+              {mockups.map((mockup, index) => {
+                let diff = index - currentMockupIndex;
+                if (diff > mockups.length / 2) diff -= mockups.length;
+                if (diff < -mockups.length / 2) diff += mockups.length;
+
+                let styles = "";
+                let zIndex = 0;
+
+                if (diff === 0) {
+                  styles = "opacity-100 scale-100 translate-x-0 blur-0 drop-shadow-[0_20px_40px_rgba(0,0,0,0.4)] z-30";
+                  zIndex = 30;
+                } else if (diff === -1) {
+                  styles = "opacity-70 scale-[0.8] -translate-x-[75%] sm:-translate-x-[100%] blur-[2px] drop-shadow-lg cursor-pointer z-20 hover:opacity-90";
+                  zIndex = 20;
+                } else if (diff === 1) {
+                  styles = "opacity-70 scale-[0.8] translate-x-[75%] sm:translate-x-[100%] blur-[2px] drop-shadow-lg cursor-pointer z-20 hover:opacity-90";
+                  zIndex = 20;
+                } else {
+                  styles = "opacity-0 scale-50 translate-x-0 blur-md pointer-events-none hidden";
+                  zIndex = 0;
+                }
+
+                return (
+                  <div 
+                    key={index} 
+                    onClick={() => {
+                      if (diff !== 0 && !isTransitioning) {
+                        setIsTransitioning(true);
+                        setCurrentMockupIndex(index);
+                        setTimeout(() => setIsTransitioning(false), 500);
+                      }
+                    }}
+                    className={`absolute transition-all duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)] transform-gpu w-[260px] sm:w-[320px] ${styles}`}
+                    style={{ zIndex }}
+                  >
+                    <img 
+                      src={mockup} 
+                      alt={`App Screenshot ${index + 1}`} 
+                      className="w-full h-auto object-contain pointer-events-none"
+                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                    />
+                  </div>
+                );
+              })}
+
+              {/* Carousel Controls */}
+              <button 
+                onClick={handlePrev}
+                className="absolute left-4 sm:left-12 top-1/2 -translate-y-1/2 w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-white/90 backdrop-blur-md text-slate-700 flex items-center justify-center shadow-lg hover:bg-blue-600 hover:text-white hover:scale-110 hover:shadow-blue-500/30 transition-all z-40 border border-white cursor-pointer opacity-50 hover:opacity-100"
+                aria-label="Previous screenshot"
+              >
+                <ChevronLeft className="w-6 h-6 sm:w-8 sm:h-8" />
+              </button>
+              
+              <button 
+                onClick={handleNext}
+                className="absolute right-4 sm:right-12 top-1/2 -translate-y-1/2 w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-white/90 backdrop-blur-md text-slate-700 flex items-center justify-center shadow-lg hover:bg-blue-600 hover:text-white hover:scale-110 hover:shadow-blue-500/30 transition-all z-40 border border-white cursor-pointer opacity-50 hover:opacity-100"
+                aria-label="Next screenshot"
+              >
+                <ChevronRight className="w-6 h-6 sm:w-8 sm:h-8" />
+              </button>
             </div>
             
+            {/* Pagination Dots */}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-40 flex-wrap justify-center w-full px-8">
+              {mockups.map((_, idx) => (
+                <div 
+                  key={idx} 
+                  className={`h-2 rounded-full transition-all duration-300 ${currentMockupIndex === idx ? 'w-6 bg-blue-600' : 'w-2 bg-slate-300 hover:bg-blue-400 cursor-pointer'}`}
+                  onClick={() => {
+                    if (isTransitioning) return;
+                    setIsTransitioning(true);
+                    setCurrentMockupIndex(idx);
+                    setTimeout(() => setIsTransitioning(false), 500);
+                  }}
+                />
+              ))}
+            </div>
+
           </div>
-
-          {/* Carousel Controls */}
-          <button 
-            onClick={handlePrev}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 w-14 h-14 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:bg-blue-700 hover:scale-110 transition-all z-20 border-4 border-white cursor-pointer animate-pulse"
-            aria-label="Previous screenshot"
-          >
-            <ChevronLeft className="w-8 h-8" />
-          </button>
-          
-          <button 
-            onClick={handleNext}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-14 h-14 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:bg-blue-700 hover:scale-110 transition-all z-20 border-4 border-white cursor-pointer animate-pulse"
-            aria-label="Next screenshot"
-          >
-            <ChevronRight className="w-8 h-8" />
-          </button>
-
         </div>
-
       </div>
     </section>
   );
