@@ -121,19 +121,19 @@ export default function FeaturesSection() {
   };
 
   return (
-    <section id="features" className="relative overflow-x-hidden">
+    <section id="features" className="relative overflow-x-hidden bg-[#F8FAFC]">
       
       {/* Grid Section */}
-      <div className="py-16 md:py-24 bg-[#f8fafc]">
+      <div className="pt-12 pb-6 md:pt-16 md:pb-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 relative z-10">
           
-          <div className="text-center max-w-3xl mx-auto mb-16">
+          <div className="text-center max-w-3xl mx-auto mb-10">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0B1340] tracking-tight">
             {t("features.title")}
           </h2>
         </div>
  
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mb-6">
           {features.map((feature, index) => {
             const Icon = iconMap[feature.icon] || Users;
             return (
@@ -160,19 +160,19 @@ export default function FeaturesSection() {
       </div>
 
       {/* Mockups Carousel Section (Premium Coverflow Showcase) */}
-      <div className="py-16 md:py-24 bg-white">
-        <div className="relative w-full max-w-7xl mx-auto">
-          <div className="relative group">
-
+      <div className="pb-12 md:pb-16 pt-6 md:pt-8">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+          <div className="bg-white rounded-[2rem] shadow-sm border border-slate-100 p-6 md:p-12 relative overflow-hidden">
+            
             {/* Title above carousel */}
-            <div className="text-center mb-12 relative z-10 px-4">
+            <div className="text-center mb-10 relative z-10">
                <h3 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Experience</span> on Mobile
                </h3>
                <p className="text-slate-500 font-medium mt-3">Swipe to explore the community application</p>
             </div>
 
-            <div className="flex items-center justify-center min-h-[550px] sm:min-h-[750px] relative z-10 [perspective:1000px]">
+            <div className="flex items-center justify-center min-h-[500px] sm:min-h-[700px] relative z-10 [perspective:1000px]">
               
               {mockups.map((mockup, index) => {
                 let diff = index - currentMockupIndex;
@@ -183,16 +183,19 @@ export default function FeaturesSection() {
                 let zIndex = 0;
 
                 if (diff === 0) {
-                  styles = "opacity-100 scale-100 translate-x-0 blur-0 drop-shadow-[0_20px_40px_rgba(0,0,0,0.4)] z-30";
+                  styles = "opacity-100 scale-100 translate-x-0 drop-shadow-[0_20px_40px_rgba(0,0,0,0.4)] z-30";
                   zIndex = 30;
                 } else if (diff === -1) {
-                  styles = "opacity-70 scale-[0.8] -translate-x-[75%] sm:-translate-x-[100%] blur-[2px] drop-shadow-lg cursor-pointer z-20 hover:opacity-90";
+                  styles = "opacity-70 scale-[0.8] -translate-x-[75%] sm:-translate-x-[100%] drop-shadow-lg cursor-pointer z-20 hover:opacity-90";
                   zIndex = 20;
                 } else if (diff === 1) {
-                  styles = "opacity-70 scale-[0.8] translate-x-[75%] sm:translate-x-[100%] blur-[2px] drop-shadow-lg cursor-pointer z-20 hover:opacity-90";
+                  styles = "opacity-70 scale-[0.8] translate-x-[75%] sm:translate-x-[100%] drop-shadow-lg cursor-pointer z-20 hover:opacity-90";
                   zIndex = 20;
+                } else if (diff < -1) {
+                  styles = "opacity-0 scale-[0.6] -translate-x-[150%] sm:-translate-x-[200%] pointer-events-none";
+                  zIndex = 0;
                 } else {
-                  styles = "opacity-0 scale-50 translate-x-0 blur-md pointer-events-none hidden";
+                  styles = "opacity-0 scale-[0.6] translate-x-[150%] sm:translate-x-[200%] pointer-events-none";
                   zIndex = 0;
                 }
 
@@ -206,7 +209,7 @@ export default function FeaturesSection() {
                         setTimeout(() => setIsTransitioning(false), 500);
                       }
                     }}
-                    className={`absolute transition-all duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)] transform-gpu w-[260px] sm:w-[320px] ${styles}`}
+                    className={`absolute transition-all duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)] w-[240px] sm:w-[320px] ${styles}`}
                     style={{ zIndex }}
                   >
                     <img 
@@ -222,18 +225,18 @@ export default function FeaturesSection() {
               {/* Carousel Controls */}
               <button 
                 onClick={handlePrev}
-                className="absolute left-4 sm:left-12 top-1/2 -translate-y-1/2 w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-white/90 backdrop-blur-md text-slate-700 flex items-center justify-center shadow-lg hover:bg-blue-600 hover:text-white hover:scale-110 hover:shadow-blue-500/30 transition-all z-40 border border-white cursor-pointer opacity-50 hover:opacity-100"
+                className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-white text-slate-700 flex items-center justify-center shadow-lg hover:bg-blue-600 hover:text-white hover:scale-110 hover:shadow-blue-500/30 transition-all z-40 border border-slate-100 cursor-pointer opacity-80 hover:opacity-100"
                 aria-label="Previous screenshot"
               >
-                <ChevronLeft className="w-6 h-6 sm:w-8 sm:h-8" />
+                <ChevronLeft className="w-5 h-5 sm:w-7 sm:h-7" />
               </button>
               
               <button 
                 onClick={handleNext}
-                className="absolute right-4 sm:right-12 top-1/2 -translate-y-1/2 w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-white/90 backdrop-blur-md text-slate-700 flex items-center justify-center shadow-lg hover:bg-blue-600 hover:text-white hover:scale-110 hover:shadow-blue-500/30 transition-all z-40 border border-white cursor-pointer opacity-50 hover:opacity-100"
+                className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-white text-slate-700 flex items-center justify-center shadow-lg hover:bg-blue-600 hover:text-white hover:scale-110 hover:shadow-blue-500/30 transition-all z-40 border border-slate-100 cursor-pointer opacity-80 hover:opacity-100"
                 aria-label="Next screenshot"
               >
-                <ChevronRight className="w-6 h-6 sm:w-8 sm:h-8" />
+                <ChevronRight className="w-5 h-5 sm:w-7 sm:h-7" />
               </button>
             </div>
             

@@ -122,7 +122,7 @@ export default function ComparisonSection() {
   ];
 
   return (
-    <section className="py-16 md:py-24 bg-[#fafcff] relative overflow-hidden">
+    <section className="py-12 md:py-16 bg-[#fafcff] relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative z-10">
         
         {/* Section Header */}

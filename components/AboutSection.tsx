@@ -7,7 +7,7 @@ export default function AboutSection() {
   const { t } = useLanguage();
 
   return (
-    <section id="about" className="py-20 bg-slate-50 relative overflow-hidden">
+    <section id="about" className="py-12 md:py-16 bg-slate-50 relative overflow-hidden">
       
       {/* Decorative background elements */}
       <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-blue-100 rounded-full blur-3xl opacity-50" />

@@ -197,44 +197,44 @@ const isNewDealPlan = (plan: any) => {
 const DEFAULT_PLANS = [
   {
     _id: "plan-new-1st-year",
-    title: "પ્રથમ વર્ષનો પ્લાન",
-    subtitle: "નવું પ્લાન",
+    title: "1st year plan",
+    subtitle: "New plan",
     badgeType: "new",
     originalPrice: 35000,
     discountedPrice: 25000,
-    description: "માત્ર ₹25,000 માં સંપૂર્ણ પેકેજ મેળવો",
+    description: "Get the Complete Package at Just ₹25,000",
     features: [
-      "સ્માર્ટ એપ સોલ્યુશન",
-      "ઇન્સ્ટન્ટ નોટિફિકેશન",
-      "સુરક્ષિત ડેટા બેકઅપ",
-      "ફ્રી ડોમેન",
-      "ફ્રી સર્વર",
-      "વેબસાઇટ અને એપ પર કસ્ટમાઇઝેશન",
-      "ફ્રી ટેકનિકલ સપોર્ટ"
+      "Smart app solution",
+      "Instant notifications",
+      "Secure data backup",
+      "Free domain",
+      "Free server",
+      "Website and app customization",
+      "Free technical support"
     ],
-    badgeText: "ઓફિશિયલ વોટ્સએપ સપોર્ટ – ₹6,000",
-    buttonText: "વોટ્સએપ પર સંપર્ક કરો",
+    badgeText: "Official WhatsApp support - ₹6,000",
+    buttonText: "Contact on WhatsApp",
     whatsappMessage: "Hello, I want to inquire about the 1st Year Plan (₹25,000) for Parivar.me"
   },
   {
     _id: "plan-annual-renewal",
-    title: "વાર્ષિક રિન્યુઅલ પ્લાન",
-    subtitle: "રિન્યુઅલ પ્લાન",
+    title: "Annual renewal plan",
+    subtitle: "Renewal plan",
     badgeType: "renewal",
     originalPrice: 15000,
     discountedPrice: 10000,
-    description: "માત્ર ₹10,000 માં તમારું પેકેજ રિન્યુ કરો",
+    description: "Renew your package at just ₹10,000",
     features: [
-      "સંપૂર્ણ સ્માર્ટ એપ સોલ્યુશન",
-      "ફ્રી ડોમેન",
-      "સુરક્ષિત ડેટા બેકઅપ",
-      "ઇન્સ્ટન્ટ નોટિફિકેશન",
-      "ફ્રી સર્વર",
-      "વેબસાઇટ અને એપ પર કસ્ટમાઇઝેશન",
-      "ફ્રી ટેકનિકલ સપોર્ટ"
+      "Complete smart app solution",
+      "Free domain",
+      "Secure data backup",
+      "Instant notifications",
+      "Free server",
+      "Website and app customization",
+      "Free technical support"
     ],
-    badgeText: "ઓફિશિયલ વોટ્સએપ સપોર્ટ – ₹6,000",
-    buttonText: "વોટ્સએપ પર સંપર્ક કરો",
+    badgeText: "Official WhatsApp support - ₹6,000",
+    buttonText: "Contact on WhatsApp",
     whatsappMessage: "Hello, I want to inquire about the Annual Renewal Plan (₹10,000) for Parivar.me"
   }
 ];
@@ -242,6 +242,7 @@ const DEFAULT_PLANS = [
 export default function PricingSection() {
   const [plans, setPlans] = useState<any[]>(DEFAULT_PLANS);
   const [expandedPlans, setExpandedPlans] = useState<Record<string, boolean>>({});
+  const [activePlanType, setActivePlanType] = useState<'new' | 'renewal'>('new');
   const { t, language } = useLanguage();
   
   const whatsappNumber = "918866779008"; 
@@ -252,7 +253,6 @@ export default function PricingSection() {
         const res = await axiosInstance.get(ENDPOINTS.PRICING);
         if (res.status === 200 && Array.isArray(res.data.data) && res.data.data.length > 0) {
           const fetchedPlans = res.data.data;
-          // Sort to ensure New Deal/Exclusive plan is always 1st (on the left) and Renewal is 2nd
           const sortedPlans = [...fetchedPlans].sort((a: any, b: any) => {
             const isA_New = isNewDealPlan(a);
             const isB_New = isNewDealPlan(b);
@@ -284,8 +284,59 @@ export default function PricingSection() {
     });
   };
 
+  const activePlan = plans.find(p => activePlanType === 'new' ? isNewDealPlan(p) : isRenewalPlan(p)) || plans[0];
+  const otherPlan = plans.find(p => activePlanType === 'new' ? isRenewalPlan(p) : isNewDealPlan(p)) || plans.find(p => p._id !== activePlan?._id);
+  const hasMultiplePlans = !!otherPlan;
+
+  if (!activePlan) return null;
+
+  const planId = activePlan._id || `plan-active`;
+  const isNewPlan = isNewDealPlan(activePlan);
+
+  const defaultMsg = `Hello, I want to book a free demo of Parivar for the "${activePlan.title}" package.`;
+  const waMsg = activePlan.whatsappMessage || defaultMsg;
+  const waLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(waMsg)}`;
+
+  const FIXED_FEATURES_TRANSLATIONS: Record<string, string[]> = {
+    en: [
+      "Your own Community App",
+      "Your App on Play Store and App Store",
+      "Your Free Domain",
+      "Free Server",
+      "Members and Family Data Management",
+      "Events, News, Business, Jobs, etc.",
+      "Notifications and Updates",
+      "Secure Data Backup",
+      "Free SMS"
+    ],
+    gu: [
+      "તમારી પોતાની Community App",
+      "Play Store અને App Store પર તમારી App",
+      "તમારું Free Domain",
+      "Free Server",
+      "Members અને પરિવારની માહિતી મેનેજમેન્ટ",
+      "Events, News, Business, Jobs વગેરે",
+      "Notifications અને Updates",
+      "સુરક્ષિત Data Backup",
+      "Free SMS"
+    ],
+    hi: [
+      "आपका अपना कम्युनिटी ऐप",
+      "प्ले स्टोर और ऐप स्टोर पर आपका ऐप",
+      "आपका फ्री डोमेन",
+      "फ्री सर्वर",
+      "सदस्य और परिवार डेटा प्रबंधन",
+      "इवेंट्स, समाचार, बिजनेस, जॉब्स आदि",
+      "सूचनाएं और अपडेट",
+      "सुरक्षित डेटा बैकअप",
+      "फ्री एसएमएस"
+    ]
+  };
+
+  const currentFeatures = FIXED_FEATURES_TRANSLATIONS[language] || FIXED_FEATURES_TRANSLATIONS["en"];
+
   return (
-    <section id="pricing" className="relative overflow-hidden bg-[#fafcff] py-16 md:py-24 border-t border-slate-100">
+    <section id="pricing" className="relative overflow-hidden bg-[#fafcff] py-12 md:py-16 border-t border-slate-100">
       {/* Background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
@@ -316,126 +367,128 @@ export default function PricingSection() {
           </p>
         </div>
 
-        {/* Pricing Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
-          {plans.map((plan, index) => {
-            const defaultMsg = `Hello, I want to book a free demo of Parivar for the "${plan.title}" package.`;
-            const waMsg = plan.whatsappMessage || defaultMsg;
-            const waLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(waMsg)}`;
+        {/* Pricing Card */}
+        <div className="max-w-4xl mx-auto relative">
+          <div
+            id={planId}
+            className={`bg-white/90 backdrop-blur-md border-2 ${isNewPlan ? 'border-emerald-200 shadow-[0_8px_30px_-4px_rgba(16,185,129,0.15)]' : 'border-blue-200 shadow-[0_8px_30px_-4px_rgba(59,130,246,0.15)]'} rounded-3xl flex flex-col transition-all duration-500 relative group overflow-hidden`}
+          >
+            {/* Top highlight bar */}
+            <div className={`absolute top-0 inset-x-0 h-1.5 ${isNewPlan ? 'bg-gradient-to-r from-emerald-500 to-teal-500' : 'bg-gradient-to-r from-blue-600 to-indigo-600'} z-20`} />
             
-            const planId = plan._id || `plan-${index}`;
-            const isExpanded = !!expandedPlans[planId];
-            const allFeatures = plan.features || [];
-            const displayedFeatures = isExpanded ? allFeatures : allFeatures.slice(0, 4);
-            const isNewPlan = isNewDealPlan(plan);
+            {/* Card Main Content */}
+            <div className="p-6 md:p-10 flex flex-col md:flex-row gap-8 md:gap-12 relative z-10">
+              
+              {/* Left Side: Pricing & Details */}
+              <div className="w-full md:w-1/2 flex flex-col justify-center space-y-6 md:space-y-8">
+                {/* Badges / Header */}
+                <div className="text-center md:text-left space-y-2.5">
+                  <span className={`inline-flex items-center gap-1.5 ${isNewPlan ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-blue-50 text-blue-700 border-blue-200'} border text-[11px] md:text-xs font-bold px-3.5 py-1 rounded-full uppercase tracking-wider`}>
+                    {isNewPlan ? '👑' : '⭐'} {translateText(activePlan.subtitle || (isNewPlan ? "new plan" : "renewal plan"), language)}
+                  </span>
+                  <h3 className="text-2xl md:text-3xl font-black text-[#0B1340]">
+                    {translateText(activePlan.title, language)}
+                  </h3>
+                </div>
 
-            return (
-              <div
-                key={planId}
-                id={planId}
-                className={`bg-white/90 backdrop-blur-md border-2 ${isNewPlan ? 'border-emerald-200 hover:border-emerald-500 shadow-[0_4px_25px_-4px_rgba(16,185,129,0.12)]' : 'border-blue-100 hover:border-blue-500 shadow-[0_4px_25px_-4px_rgba(59,130,246,0.12)]'} rounded-3xl p-6 md:p-8 flex flex-col justify-between transition-all duration-300 relative group overflow-hidden`}
-              >
-                {/* Top highlight bar */}
-                <div className={`absolute top-0 inset-x-0 h-1.5 ${isNewPlan ? 'bg-gradient-to-r from-emerald-500 to-teal-500' : 'bg-gradient-to-r from-blue-600 to-indigo-600'}`} />
-                
-                <div className="space-y-6 relative z-10">
-                  {/* Badges / Header */}
-                  <div className="text-center space-y-2.5">
-                    <span className={`inline-flex items-center gap-1.5 ${isNewPlan ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-blue-50 text-blue-700 border-blue-200'} border text-[11px] md:text-xs font-bold px-3.5 py-1 rounded-full uppercase tracking-wider`}>
-                      {isNewPlan ? '👑' : '⭐'} {translateText(plan.subtitle || (isNewPlan ? "નવું પ્લાન" : "રિન્યુઅલ પ્લાન"), language)}
+                {/* Pricing Display */}
+                <div className={`text-center md:text-left space-y-1.5 py-5 px-4 rounded-2xl border ${isNewPlan ? 'bg-emerald-50/50 border-emerald-100' : 'bg-blue-50/40 border-blue-100'}`}>
+                  <div className="flex items-center justify-center md:justify-start gap-3">
+                    <span className="text-slate-400 text-base md:text-lg line-through font-bold">
+                      ₹{activePlan.originalPrice.toLocaleString("en-IN")}
                     </span>
-                    <h3 className="text-2xl md:text-3xl font-black text-[#0B1340]">
-                      {translateText(plan.title, language)}
-                    </h3>
+                    <span className={`text-3.5xl md:text-4.5xl font-black ${isNewPlan ? 'text-emerald-700' : 'text-blue-900'} tracking-tight`}>
+                      ₹{activePlan.discountedPrice.toLocaleString("en-IN")}
+                    </span>
                   </div>
-
-                  {/* Pricing Display */}
-                  <div className={`text-center space-y-1.5 py-5 rounded-2xl border ${isNewPlan ? 'bg-emerald-50/50 border-emerald-100' : 'bg-blue-50/40 border-blue-100'}`}>
-                    <div className="flex items-center justify-center gap-3">
-                      <span className="text-slate-400 text-base md:text-lg line-through font-bold">
-                        ₹{plan.originalPrice.toLocaleString("en-IN")}
-                      </span>
-                      <span className={`text-3.5xl md:text-4.5xl font-black ${isNewPlan ? 'text-emerald-700' : 'text-blue-900'} tracking-tight`}>
-                        ₹{plan.discountedPrice.toLocaleString("en-IN")}
-                      </span>
-                    </div>
-                    {plan.description && (
-                      <p className="text-slate-600 text-xs md:text-sm font-semibold">
-                        {translateText(plan.description, language)}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Features List (Max 4 by default, with right-aligned toggle) */}
-                  <div className="space-y-3 pt-2">
-                    {displayedFeatures.map((feature: string, idx: number) => (
-                      <div key={idx} className="flex items-start gap-3 transition-all duration-200">
-                        <CheckCircle2 className={`w-5 h-5 ${isNewPlan ? 'text-emerald-600' : 'text-blue-600'} shrink-0 mt-0.5`} />
-                        <span className="text-slate-800 text-sm font-semibold">
-                          {translateText(feature, language)}
-                        </span>
-                      </div>
-                    ))}
-
-                    {allFeatures.length > 4 && (
-                      <div className="flex justify-end pt-1">
-                        <button
-                          type="button"
-                          onClick={() => togglePlanExpand(planId)}
-                          className={`inline-flex items-center gap-1.5 text-xs font-bold px-3.5 py-1.5 rounded-xl border transition-all duration-200 cursor-pointer shadow-2xs hover:shadow-xs active:scale-95 ${
-                            isNewPlan
-                              ? "bg-emerald-50 hover:bg-emerald-100/80 text-emerald-800 border-emerald-200"
-                              : "bg-blue-50 hover:bg-blue-100/80 text-blue-800 border-blue-200"
-                          }`}
-                        >
-                          <span>
-                            {isExpanded
-                              ? (language === "gu" ? "ઓછું દર્શાવો" : language === "hi" ? "कम दिखाएं" : "Show Less")
-                              : (language === "gu"
-                                  ? `+${allFeatures.length - 4} વધુ જુઓ`
-                                  : language === "hi"
-                                  ? `+${allFeatures.length - 4} और देखें`
-                                  : `+${allFeatures.length - 4} More Points`)}
-                          </span>
-                          {isExpanded ? (
-                            <ChevronUp className="w-3.5 h-3.5" />
-                          ) : (
-                            <ChevronDown className="w-3.5 h-3.5" />
-                          )}
-                        </button>
-                      </div>
-                    )}
-                  </div>
+                  {activePlan.description && (
+                    <p className="text-slate-600 text-xs md:text-sm font-semibold">
+                      {translateText(activePlan.description, language)}
+                    </p>
+                  )}
                 </div>
 
                 {/* Additional Official WhatsApp support & CTA Button */}
-                <div className="mt-8 pt-6 border-t border-slate-100 space-y-4 relative z-10">
+                <div className="space-y-4">
                   <div className={`rounded-xl p-3 border text-center text-xs font-bold flex items-center justify-center gap-2 ${isNewPlan ? 'bg-emerald-50/80 border-emerald-200 text-emerald-900' : 'bg-blue-50/80 border-blue-200 text-blue-900'}`}>
                     <span>🎧</span>
-                    <span>{translateText(plan.badgeText || "ઓફિશિયલ વોટ્સએપ સપોર્ટ – ₹6,000", language)}</span>
+                    <span>{translateText(activePlan.badgeText || "official whatsapp support - ₹6,000", language)}</span>
                   </div>
 
                   <a
                     href={waLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full inline-flex items-center justify-center gap-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-base py-3.5 rounded-full shadow-lg shadow-emerald-600/30 hover:shadow-xl active:scale-98 transition-all duration-300 text-center"
+                    className={`w-full inline-flex items-center justify-center gap-2.5 ${isNewPlan ? 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/30' : 'bg-blue-600 hover:bg-blue-700 shadow-blue-600/30'} text-white font-bold text-base py-3.5 rounded-full shadow-lg hover:shadow-xl active:scale-98 transition-all duration-300 text-center`}
                   >
                     <MessageCircle className="w-5 h-5 fill-white stroke-none" />
-                    <span>{translateText(plan.buttonText || "વોટ્સએપ પર સંપર્ક કરો", language)}</span>
+                    <span>{translateText(activePlan.buttonText || "contact on whatsapp", language)}</span>
                   </a>
 
-                  <p className="text-center text-xs text-slate-500 font-medium">
+                  <p className="text-center md:text-left text-xs text-slate-500 font-medium">
                     {t("pricing.expertNote")}
                   </p>
                 </div>
-
               </div>
-            );
-          })}
+
+              {/* Divider for Desktop */}
+              <div className="hidden md:block w-px bg-slate-200 self-stretch my-4"></div>
+              {/* Divider for Mobile */}
+              <div className="block md:hidden h-px bg-slate-200 w-full my-2"></div>
+
+              {/* Right Side: Features */}
+              <div className="w-full md:w-1/2 flex flex-col justify-start space-y-4 pt-2 md:pt-0">
+                <h4 className="text-lg font-bold text-slate-800 mb-2">
+                  {language === "gu" ? "પેકેજમાં શું શામેલ છે?" : language === "hi" ? "पैकेज में क्या शामिल है?" : "What's included in the package?"}
+                </h4>
+                <div className="space-y-3.5 flex-grow">
+                  {currentFeatures.map((feature: string, idx: number) => (
+                    <div key={idx} className="flex items-start gap-3 transition-all duration-200">
+                      <CheckCircle2 className={`w-5 h-5 ${isNewPlan ? 'text-emerald-600' : 'text-blue-600'} shrink-0 mt-0.5`} />
+                      <span className="text-slate-700 text-sm font-semibold">
+                        {feature}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+            
+            {/* Bottom Toggle Area */}
+            {hasMultiplePlans && otherPlan && (
+              <button
+                onClick={() => setActivePlanType(activePlanType === 'new' ? 'renewal' : 'new')}
+                className={`w-full text-left flex items-center justify-between p-5 md:px-10 md:py-6 border-t cursor-pointer transition-all duration-300 group ${
+                  activePlanType === 'new' 
+                    ? 'bg-blue-50/60 hover:bg-blue-100/60 border-blue-100' 
+                    : 'bg-emerald-50/60 hover:bg-emerald-100/60 border-emerald-100'
+                }`}
+              >
+                <div className="flex items-center gap-4">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center shadow-sm ${activePlanType === 'new' ? 'bg-blue-100 text-blue-600' : 'bg-emerald-100 text-emerald-600'}`}>
+                    {activePlanType === 'new' ? '⭐' : '👑'}
+                  </div>
+                  <div>
+                    <h5 className={`font-bold text-sm md:text-base ${activePlanType === 'new' ? 'text-blue-900' : 'text-emerald-900'}`}>
+                      {translateText(otherPlan.title, language)} જુઓ
+                    </h5>
+                    <p className={`text-xs md:text-sm font-semibold mt-0.5 ${activePlanType === 'new' ? 'text-blue-600/80' : 'text-emerald-600/80'}`}>
+                      માત્ર ₹{otherPlan.discountedPrice.toLocaleString("en-IN")}
+                    </p>
+                  </div>
+                </div>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-transform duration-300 group-hover:translate-x-1 ${activePlanType === 'new' ? 'bg-blue-600 text-white shadow-blue-600/30' : 'bg-emerald-600 text-white shadow-emerald-600/30'} shadow-md`}>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" /></svg>
+                </div>
+              </button>
+            )}
+
+          </div>
         </div>
 
       </div>
     </section>
   );
 }
+

@@ -9,7 +9,7 @@ export default function WhatsAppBanner() {
   const whatsappMsg = "Hello, I want to book a free demo of Parivar. Please share details.";
 
   return (
-    <section className="py-8 md:py-10 bg-white">
+    <section className="py-12 md:py-16 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="relative overflow-hidden bg-[#eef2ff] border border-indigo-100 rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
           

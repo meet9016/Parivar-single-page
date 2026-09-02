@@ -72,7 +72,7 @@ export default function CompanySection() {
   const t = companyTexts[language] || companyTexts["gu"];
 
   return (
-    <section className="py-16 md:py-24 bg-[#f2f6ff] relative overflow-hidden font-sans">
+    <section className="py-12 md:py-16 bg-[#f2f6ff] relative overflow-hidden font-sans">
       
       {/* Background soft blue ambient lights */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl pointer-events-none" />
