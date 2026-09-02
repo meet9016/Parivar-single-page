@@ -152,7 +152,7 @@ export const translations = {
       f12: { title: "સપોર્ટ અને હેલ્પ ડેસ્ક", desc: "એપમાંથી સીધી ઝડપી મદદ મેળવો" },
       experienceTitle1: "મોબાઈલ પર",
       experienceTitle2: "અનુભવ",
-      experienceSubtitle: "કોમ્યુનિટી એપ્લિકેશન અન્વેષણ કરવા માટે સ્વાઇપ કરો"
+      experienceSubtitle: ""
     },
     comparison: {
       without: "Parivar.me વિના",

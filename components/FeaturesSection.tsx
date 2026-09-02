@@ -165,7 +165,7 @@ export default function FeaturesSection() {
           <div className="rounded-[2rem] p-6 md:p-12 relative overflow-hidden">
             
             {/* Title above carousel */}
-            <div className="text-center mb-10 relative z-10">
+            <div className="text-center mb-3 relative z-10">
                <h3 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">{t("features.experienceTitle1")}</span> {t("features.experienceTitle2")}
                </h3>
