@@ -227,7 +227,7 @@ export default function PrivacyPolicyPage() {
             <p className="leading-relaxed">If you have any questions, concerns, requests or complaints regarding your personal information or this Privacy Policy, please contact Parivar through the contact details provided on the platform.</p>
             <ul className="list-none space-y-1">
               <li><strong>Platform:</strong> Parivar</li>
-              <li><strong>Website:</strong> chovatiya.parivar.me</li>
+              <li><strong>Website:</strong> parivar.me</li>
               <li><strong>Privacy/Support Contact:</strong> info@Parivar.me</li>
             </ul>
           </section>

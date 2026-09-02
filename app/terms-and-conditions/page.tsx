@@ -195,7 +195,7 @@ export default function TermsAndConditionsPage() {
             <p className="leading-relaxed">For questions, complaints, account-related issues or other concerns, please contact Parivar through the contact details provided on the platform.</p>
             <ul className="list-none space-y-1">
               <li><strong>Platform:</strong> Parivar</li>
-              <li><strong>Website:</strong> chovatiya.parivar.me</li>
+              <li><strong>Website:</strong> parivar.me</li>
               <li><strong>Support Email:</strong> info@Parivar.me</li>
             </ul>
           </section>

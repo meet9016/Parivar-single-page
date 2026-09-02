@@ -186,10 +186,10 @@ export default function FeaturesSection() {
                   styles = "opacity-100 scale-100 translate-x-0 drop-shadow-[0_20px_40px_rgba(0,0,0,0.4)] z-30";
                   zIndex = 30;
                 } else if (diff === -1) {
-                  styles = "opacity-70 scale-[0.8] -translate-x-[85%] sm:-translate-x-[115%] drop-shadow-lg cursor-pointer z-20 hover:opacity-90";
+                  styles = "opacity-70 scale-[0.8] -translate-x-[80%] sm:-translate-x-[105%] drop-shadow-lg cursor-pointer z-20 hover:opacity-90";
                   zIndex = 20;
                 } else if (diff === 1) {
-                  styles = "opacity-70 scale-[0.8] translate-x-[85%] sm:translate-x-[115%] drop-shadow-lg cursor-pointer z-20 hover:opacity-90";
+                  styles = "opacity-70 scale-[0.8] translate-x-[80%] sm:translate-x-[105%] drop-shadow-lg cursor-pointer z-20 hover:opacity-90";
                   zIndex = 20;
                 } else if (diff < -1) {
                   styles = "opacity-0 scale-[0.6] -translate-x-[170%] sm:-translate-x-[230%] pointer-events-none";
@@ -209,7 +209,7 @@ export default function FeaturesSection() {
                         setTimeout(() => setIsTransitioning(false), 500);
                       }
                     }}
-                    className={`absolute transition-[transform,opacity,filter] duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)] w-[320px] sm:w-[400px] transform-gpu will-change-transform [backface-visibility:hidden] ${styles}`}
+                    className={`absolute transition-[transform,opacity,filter] duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)] w-[280px] sm:w-[340px] transform-gpu will-change-transform [backface-visibility:hidden] ${styles}`}
                     style={{ zIndex }}
                   >
                     <img 
