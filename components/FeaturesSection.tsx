@@ -113,14 +113,14 @@ export default function FeaturesSection() {
     if (isTransitioning) return;
     setIsTransitioning(true);
     setCurrentMockupIndex((prev) => (prev + 1 >= mockups.length ? 0 : prev + 1));
-    setTimeout(() => setIsTransitioning(false), 500);
+    setTimeout(() => setIsTransitioning(false), 600);
   };
 
   const handlePrev = () => {
     if (isTransitioning) return;
     setIsTransitioning(true);
     setCurrentMockupIndex((prev) => (prev - 1 < 0 ? mockups.length - 1 : prev - 1));
-    setTimeout(() => setIsTransitioning(false), 500);
+    setTimeout(() => setIsTransitioning(false), 600);
   };
 
   const onTouchStart = (e: React.TouchEvent) => {
@@ -184,18 +184,18 @@ export default function FeaturesSection() {
       {/* Mockups Carousel Section (Premium Coverflow Showcase) */}
       <div className="pb-12 md:pb-16 pt-6 md:pt-6">
         <div className="w-full max-w-[1400px] 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 md:px-8">
-          <div className="rounded-[2rem] p-6 md:p-12 relative overflow-hidden">
+          <div className="rounded-[2.5rem] p-4 sm:p-8 md:p-12 relative overflow-hidden bg-gradient-to-b from-white/60 to-slate-50/80 border border-slate-100 shadow-sm">
             
             {/* Title above carousel */}
-            <div className="text-center mb-3 relative z-10">
+            <div className="text-center mb-4 sm:mb-8 relative z-10">
                <h3 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">{t("features.experienceTitle1")}</span> {t("features.experienceTitle2")}
                </h3>
-               <p className="text-slate-500 font-medium mt-3">{t("features.experienceSubtitle")}</p>
+               <p className="text-slate-500 font-medium mt-2 sm:mt-3 text-sm sm:text-base">{t("features.experienceSubtitle")}</p>
             </div>
 
             <div 
-              className="flex items-center justify-center min-h-[650px] sm:min-h-[800px] relative z-10 select-none overflow-hidden"
+              className="flex items-center justify-center min-h-[650px] sm:min-h-[820px] relative z-10 select-none overflow-hidden"
               onTouchStart={onTouchStart}
               onTouchMove={onTouchMove}
               onTouchEnd={onTouchEnd}
@@ -206,32 +206,33 @@ export default function FeaturesSection() {
                 if (diff > mockups.length / 2) diff -= mockups.length;
                 if (diff < -mockups.length / 2) diff += mockups.length;
 
-                // Skip rendering off-screen images completely (prevents ghosting and GPU blinking)
+                // Render only the active 3 plus the entering/exiting items (5 total) for 60fps hardware performance
                 if (Math.abs(diff) > 2) return null;
 
                 let styles = "";
                 let zIndex = 0;
-                let transitionClass = "transition-[transform,opacity,filter] duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)]";
+                // High-end Apple-grade smooth deceleration curve
+                const transitionClass = "transition-all duration-600 ease-[cubic-bezier(0.22,1,0.36,1)]";
 
                 if (diff === 0) {
-                  // Active Center Phone: solid, prominent, full size
-                  styles = "opacity-100 scale-100 translate-x-0 drop-shadow-[0_20px_40px_rgba(0,0,0,0.35)] z-30 pointer-events-auto";
+                  // Active Center Phone: Dominant scale, deep 3D shadow, opaque
+                  styles = "opacity-100 scale-100 translate-x-0 drop-shadow-[0_30px_60px_rgba(15,23,42,0.32)] z-30 pointer-events-auto filter brightness-100";
                   zIndex = 30;
                 } else if (diff === -1) {
-                  // Left Phone: solid opacity (NEVER transparent), exact position, slightly scaled
-                  styles = "opacity-100 scale-[0.82] -translate-x-[80%] sm:-translate-x-[105%] drop-shadow-xl cursor-pointer z-20 brightness-[0.97] hover:brightness-100 pointer-events-auto";
+                  // Left Phone: Scaled down, crisp, placed on left, interactive
+                  styles = "opacity-95 scale-[0.82] -translate-x-[82%] sm:-translate-x-[108%] drop-shadow-[0_16px_36px_rgba(15,23,42,0.18)] cursor-pointer z-20 filter brightness-[0.96] hover:brightness-100 hover:scale-[0.84] pointer-events-auto";
                   zIndex = 20;
                 } else if (diff === 1) {
-                  // Right Phone: solid opacity (NEVER transparent), exact position, slightly scaled
-                  styles = "opacity-100 scale-[0.82] translate-x-[80%] sm:translate-x-[105%] drop-shadow-xl cursor-pointer z-20 brightness-[0.97] hover:brightness-100 pointer-events-auto";
+                  // Right Phone: Scaled down, crisp, placed on right, interactive
+                  styles = "opacity-95 scale-[0.82] translate-x-[82%] sm:translate-x-[108%] drop-shadow-[0_16px_36px_rgba(15,23,42,0.18)] cursor-pointer z-20 filter brightness-[0.96] hover:brightness-100 hover:scale-[0.84] pointer-events-auto";
                   zIndex = 20;
                 } else if (diff === -2) {
-                  // Dissolving/Entering at the EXACT same Left coordinate (never sticks out, 0 opacity)
-                  styles = "opacity-0 scale-[0.82] -translate-x-[80%] sm:-translate-x-[105%] pointer-events-none z-10 brightness-[0.97]";
+                  // Outgoing / Incoming Left: Visibly slides towards/from the left edge with smooth fade
+                  styles = "opacity-0 scale-[0.68] -translate-x-[140%] sm:-translate-x-[185%] pointer-events-none z-10 filter brightness-90";
                   zIndex = 10;
                 } else if (diff === 2) {
-                  // Dissolving/Entering at the EXACT same Right coordinate (never sticks out, 0 opacity)
-                  styles = "opacity-0 scale-[0.82] translate-x-[80%] sm:translate-x-[105%] pointer-events-none z-10 brightness-[0.97]";
+                  // Outgoing / Incoming Right: Visibly slides towards/from the right edge with smooth fade
+                  styles = "opacity-0 scale-[0.68] translate-x-[140%] sm:translate-x-[185%] pointer-events-none z-10 filter brightness-90";
                   zIndex = 10;
                 }
 
@@ -242,7 +243,7 @@ export default function FeaturesSection() {
                       if (diff !== 0 && !isTransitioning) {
                         setIsTransitioning(true);
                         setCurrentMockupIndex(index);
-                        setTimeout(() => setIsTransitioning(false), 500);
+                        setTimeout(() => setIsTransitioning(false), 600);
                       }
                     }}
                     className={`absolute ${transitionClass} w-[280px] sm:w-[340px] transform-gpu will-change-transform [backface-visibility:hidden] ${styles}`}
@@ -251,7 +252,7 @@ export default function FeaturesSection() {
                     <img 
                       src={mockup} 
                       alt={`App Screenshot ${index + 1}`} 
-                      className="w-full h-auto object-contain pointer-events-none select-none"
+                      className="w-full h-auto object-contain pointer-events-none select-none drop-shadow-md"
                       draggable={false}
                       loading="eager"
                       onError={(e) => { e.currentTarget.style.display = 'none'; }}
@@ -260,10 +261,14 @@ export default function FeaturesSection() {
                 );
               })}
 
+              {/* Side Vignette Gradients for Smooth Seamless Edge Disappearance */}
+              <div className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-28 bg-gradient-to-r from-[#F8FAFC] via-[#F8FAFC]/80 to-transparent z-30" />
+              <div className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-28 bg-gradient-to-l from-[#F8FAFC] via-[#F8FAFC]/80 to-transparent z-30" />
+
               {/* Carousel Controls */}
               <button 
                 onClick={handlePrev}
-                className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-white text-slate-700 flex items-center justify-center shadow-lg hover:bg-blue-600 hover:text-white hover:scale-110 hover:shadow-blue-500/30 transition-all z-40 border border-slate-100 cursor-pointer opacity-80 hover:opacity-100"
+                className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-white/95 backdrop-blur-md text-slate-700 flex items-center justify-center shadow-[0_10px_25px_rgba(0,0,0,0.12)] hover:bg-blue-600 hover:text-white hover:scale-110 hover:shadow-[0_15px_30px_rgba(37,99,235,0.35)] transition-all duration-300 z-40 border border-slate-200/80 cursor-pointer"
                 aria-label="Previous screenshot"
               >
                 <ChevronLeft className="w-5 h-5 sm:w-7 sm:h-7" />
@@ -271,25 +276,31 @@ export default function FeaturesSection() {
               
               <button 
                 onClick={handleNext}
-                className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-white text-slate-700 flex items-center justify-center shadow-lg hover:bg-blue-600 hover:text-white hover:scale-110 hover:shadow-blue-500/30 transition-all z-40 border border-slate-100 cursor-pointer opacity-80 hover:opacity-100"
+                className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-white/95 backdrop-blur-md text-slate-700 flex items-center justify-center shadow-[0_10px_25px_rgba(0,0,0,0.12)] hover:bg-blue-600 hover:text-white hover:scale-110 hover:shadow-[0_15px_30px_rgba(37,99,235,0.35)] transition-all duration-300 z-40 border border-slate-200/80 cursor-pointer"
                 aria-label="Next screenshot"
               >
                 <ChevronRight className="w-5 h-5 sm:w-7 sm:h-7" />
               </button>
             </div>
             
-            {/* Pagination Dots */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-40 flex-wrap justify-center w-full px-8">
+            {/* Pagination Dots with Glowing Active Pill */}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-40 flex-wrap justify-center w-full px-8">
               {mockups.map((_, idx) => (
-                <div 
+                <button 
                   key={idx} 
-                  className={`h-2 rounded-full transition-all duration-300 ${currentMockupIndex === idx ? 'w-6 bg-blue-600' : 'w-2 bg-slate-300 hover:bg-blue-400 cursor-pointer'}`}
+                  type="button"
+                  className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                    currentMockupIndex === idx 
+                      ? 'w-8 bg-blue-600 shadow-[0_2px_10px_rgba(37,99,235,0.5)]' 
+                      : 'w-2.5 bg-slate-300 hover:bg-blue-400 hover:w-4'
+                  }`}
                   onClick={() => {
                     if (isTransitioning) return;
                     setIsTransitioning(true);
                     setCurrentMockupIndex(idx);
-                    setTimeout(() => setIsTransitioning(false), 500);
+                    setTimeout(() => setIsTransitioning(false), 600);
                   }}
+                  aria-label={`Go to slide ${idx + 1}`}
                 />
               ))}
             </div>

@@ -21,8 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${notoSans.variable} scroll-smooth`}>
-      <body className="min-h-full flex flex-col antialiased bg-white text-slate-900 font-sans">
+    <html lang="en" className={`${notoSans.variable} scroll-smooth`} suppressHydrationWarning>
+      <body className="min-h-full flex flex-col antialiased bg-white text-slate-900 font-sans" suppressHydrationWarning>
         <LanguageProvider>
           {children}
         </LanguageProvider>
