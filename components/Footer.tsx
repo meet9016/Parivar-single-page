@@ -52,7 +52,7 @@ export default function Footer() {
             </p>
 
             {/* Social Icons */}
-            <div className="flex items-center gap-3 pt-2">
+            {/* <div className="flex items-center gap-3 pt-2">
               <a
                 href="#"
                 className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 hover:bg-blue-600 hover:border-blue-500 text-slate-300 hover:text-white flex items-center justify-center transition-all duration-300 hover:-translate-y-1 shadow-lg shadow-black/20"
@@ -96,7 +96,7 @@ export default function Footer() {
               >
                 <Globe className="w-4 h-4" />
               </a>
-            </div>
+            </div> */}
           </div>
 
           {/* Column 2: Navigation Links (Same as Header) */}
