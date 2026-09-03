@@ -9,7 +9,7 @@ export default function PrivacyPolicyPage() {
       <div className="pt-28 pb-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-slate-100 text-slate-800 space-y-6">
           <h1 className="text-3xl font-bold mb-2">Privacy Policy</h1>
-          <p className="text-sm text-gray-500 mb-8">Effective Date: 2 July 206</p>
+          <p className="text-sm text-gray-500 mb-8">Effective Date: 2 July 2026</p>
 
           <p className="leading-relaxed">
             Welcome to Parivar (“we”, “our”, “us”). Parivar is a digital platform designed to help users create and manage their personal and family profiles and access family, community, matrimonial, event, donation and other related services offered through the platform.

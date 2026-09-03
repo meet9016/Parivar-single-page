@@ -106,6 +106,9 @@ export default function FeaturesSection() {
     "/application/Group 17.png"
   ];
 
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
   const handleNext = () => {
     if (isTransitioning) return;
     setIsTransitioning(true);
@@ -118,6 +121,25 @@ export default function FeaturesSection() {
     setIsTransitioning(true);
     setCurrentMockupIndex((prev) => (prev - 1 < 0 ? mockups.length - 1 : prev - 1));
     setTimeout(() => setIsTransitioning(false), 500);
+  };
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    if (distance > 45) {
+      handleNext();
+    } else if (distance < -45) {
+      handlePrev();
+    }
   };
 
   return (
@@ -172,31 +194,45 @@ export default function FeaturesSection() {
                <p className="text-slate-500 font-medium mt-3">{t("features.experienceSubtitle")}</p>
             </div>
 
-            <div className="flex items-center justify-center min-h-[650px] sm:min-h-[800px] relative z-10">
+            <div 
+              className="flex items-center justify-center min-h-[650px] sm:min-h-[800px] relative z-10 select-none overflow-hidden"
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={onTouchEnd}
+            >
               
               {mockups.map((mockup, index) => {
                 let diff = index - currentMockupIndex;
                 if (diff > mockups.length / 2) diff -= mockups.length;
                 if (diff < -mockups.length / 2) diff += mockups.length;
 
+                // Skip rendering off-screen images completely (prevents ghosting and GPU blinking)
+                if (Math.abs(diff) > 2) return null;
+
                 let styles = "";
                 let zIndex = 0;
+                let transitionClass = "transition-[transform,opacity,filter] duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)]";
 
                 if (diff === 0) {
-                  styles = "opacity-100 scale-100 translate-x-0 drop-shadow-[0_20px_40px_rgba(0,0,0,0.4)] z-30";
+                  // Active Center Phone: solid, prominent, full size
+                  styles = "opacity-100 scale-100 translate-x-0 drop-shadow-[0_20px_40px_rgba(0,0,0,0.35)] z-30 pointer-events-auto";
                   zIndex = 30;
                 } else if (diff === -1) {
-                  styles = "opacity-70 scale-[0.8] -translate-x-[80%] sm:-translate-x-[105%] drop-shadow-lg cursor-pointer z-20 hover:opacity-90";
+                  // Left Phone: solid opacity (NEVER transparent), exact position, slightly scaled
+                  styles = "opacity-100 scale-[0.82] -translate-x-[80%] sm:-translate-x-[105%] drop-shadow-xl cursor-pointer z-20 brightness-[0.97] hover:brightness-100 pointer-events-auto";
                   zIndex = 20;
                 } else if (diff === 1) {
-                  styles = "opacity-70 scale-[0.8] translate-x-[80%] sm:translate-x-[105%] drop-shadow-lg cursor-pointer z-20 hover:opacity-90";
+                  // Right Phone: solid opacity (NEVER transparent), exact position, slightly scaled
+                  styles = "opacity-100 scale-[0.82] translate-x-[80%] sm:translate-x-[105%] drop-shadow-xl cursor-pointer z-20 brightness-[0.97] hover:brightness-100 pointer-events-auto";
                   zIndex = 20;
-                } else if (diff < -1) {
-                  styles = "opacity-0 scale-[0.6] -translate-x-[170%] sm:-translate-x-[230%] pointer-events-none";
-                  zIndex = 0;
-                } else {
-                  styles = "opacity-0 scale-[0.6] translate-x-[170%] sm:translate-x-[230%] pointer-events-none";
-                  zIndex = 0;
+                } else if (diff === -2) {
+                  // Dissolving/Entering at the EXACT same Left coordinate (never sticks out, 0 opacity)
+                  styles = "opacity-0 scale-[0.82] -translate-x-[80%] sm:-translate-x-[105%] pointer-events-none z-10 brightness-[0.97]";
+                  zIndex = 10;
+                } else if (diff === 2) {
+                  // Dissolving/Entering at the EXACT same Right coordinate (never sticks out, 0 opacity)
+                  styles = "opacity-0 scale-[0.82] translate-x-[80%] sm:translate-x-[105%] pointer-events-none z-10 brightness-[0.97]";
+                  zIndex = 10;
                 }
 
                 return (
@@ -209,13 +245,15 @@ export default function FeaturesSection() {
                         setTimeout(() => setIsTransitioning(false), 500);
                       }
                     }}
-                    className={`absolute transition-[transform,opacity,filter] duration-500 ease-[cubic-bezier(0.25,0.8,0.25,1)] w-[280px] sm:w-[340px] transform-gpu will-change-transform [backface-visibility:hidden] ${styles}`}
+                    className={`absolute ${transitionClass} w-[280px] sm:w-[340px] transform-gpu will-change-transform [backface-visibility:hidden] ${styles}`}
                     style={{ zIndex }}
                   >
                     <img 
                       src={mockup} 
                       alt={`App Screenshot ${index + 1}`} 
-                      className="w-full h-auto object-contain pointer-events-none"
+                      className="w-full h-auto object-contain pointer-events-none select-none"
+                      draggable={false}
+                      loading="eager"
                       onError={(e) => { e.currentTarget.style.display = 'none'; }}
                     />
                   </div>
