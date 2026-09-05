@@ -31,12 +31,12 @@ export default function Footer() {
     <footer id="contact" className="bg-gradient-to-br from-[#070D2B] via-[#0B1340] to-[#030617] text-white pt-20 pb-8 border-t border-indigo-900/50 relative overflow-hidden">
       {/* Decorative Blur */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/5 rounded-full blur-[100px] pointer-events-none" />
-      
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
+
         {/* Main Footer Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-6 pb-8 border-b border-white/10">
-          
+
           {/* Column 1: Brand Info */}
           <div className="lg:col-span-5 space-y-6">
             <a href="#" className="flex items-center gap-2.5">
@@ -137,12 +137,12 @@ export default function Footer() {
             <h4 className="text-sm font-bold text-white tracking-widest uppercase">
               {t('footer.contact')}
             </h4>
-            
+
             {/* Language Switcher */}
             <div className="pt-2">
               <label htmlFor="language" className="block text-xs text-slate-400 mb-2 font-medium uppercase tracking-wider">{t('footer.language')}</label>
               <div className="relative inline-block w-48">
-                <select 
+                <select
                   id="language"
                   value={language}
                   onChange={handleLanguageChange}
@@ -160,25 +160,30 @@ export default function Footer() {
 
             {/* Contact details */}
             <div className="pt-4 space-y-4 text-sm text-slate-300 font-medium">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-blue-900/40 text-blue-400 flex items-center justify-center">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-900/40 text-blue-400 flex items-center justify-center shrink-0">
                   <Phone className="w-4 h-4" />
                 </div>
-                <a href="https://wa.me/918866779008" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
-                  +91 88667-79008
-                </a>
+                <div className="flex flex-col gap-1">
+                  <a href="tel:+919876543210" className="hover:text-white transition-colors">
+                    +91 88667 79008
+                  </a>
+                  <a href="https://wa.me/918866779008" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                    +91 98765 43210
+                  </a>
+                </div>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-blue-900/40 text-blue-400 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-lg bg-blue-900/40 text-blue-400 flex items-center justify-center shrink-0">
                   <Mail className="w-4 h-4" />
                 </div>
                 <span>info@Parivar.me</span>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-blue-900/40 text-blue-400 flex items-center justify-center">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-900/40 text-blue-400 flex items-center justify-center shrink-0">
                   <MapPin className="w-4 h-4" />
                 </div>
-                <span>Surat, Gujarat, India</span>
+                <span className="leading-relaxed">2nd floor, C1, above Adarsh Farsan Mart, Baroda Prestige, Ganesh Colony, Varachha, Surat, Gujarat 395010</span>
               </div>
             </div>
           </div>
