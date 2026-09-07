@@ -28,34 +28,34 @@ export default function Footer() {
   };
 
   return (
-    <footer id="contact" className="bg-gradient-to-br from-[#070D2B] via-[#0B1340] to-[#030617] text-white pt-20 pb-8 border-t border-indigo-900/50 relative overflow-hidden">
-      {/* Decorative Blur */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/5 rounded-full blur-[100px] pointer-events-none" />
+    <footer id="contact" className="bg-gradient-to-br from-[#060b24] via-[#091033] to-[#040718] text-white pt-16 pb-8 border-t border-indigo-950 relative overflow-hidden">
+      {/* Decorative Glow */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         {/* Main Footer Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-6 pb-8 border-b border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12 pb-12 border-b border-white/10">
 
           {/* Column 1: Brand Info */}
-          <div className="lg:col-span-5 space-y-6">
-            <a href="#" className="flex items-center gap-2.5">
+          <div className="lg:col-span-4 space-y-5">
+            <a href="#" className="inline-block">
               <img
                 src="/logo.png"
                 alt="Parivar.me Logo"
-                className="h-12 w-auto object-contain brightness-0 invert opacity-90 hover:opacity-100 transition-opacity"
+                className="h-11 w-auto object-contain brightness-0 invert opacity-95 hover:opacity-100 transition-opacity"
               />
             </a>
 
-            <p className="text-slate-400 text-sm leading-relaxed max-w-sm font-medium">
+            <p className="text-slate-400 text-sm leading-relaxed font-normal">
               {t('footer.desc')}
             </p>
 
             {/* Social Icons */}
-            <div className="flex items-center gap-3 pt-2">
+            <div className="flex items-center gap-2.5 pt-2">
               <a
                 href="https://www.facebook.com/DigiTalksTechnoLLP/"
-                className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 hover:bg-blue-600 hover:border-blue-500 text-slate-300 hover:text-white flex items-center justify-center transition-all duration-300 hover:-translate-y-1 shadow-lg shadow-black/20"
+                className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 hover:bg-blue-600 hover:border-blue-500 text-slate-300 hover:text-white flex items-center justify-center transition-all duration-300 hover:-translate-y-0.5 shadow-sm"
                 aria-label="Facebook"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -64,7 +64,7 @@ export default function Footer() {
               </a>
               <a
                 href="https://www.instagram.com/digitalks_techno_llp/"
-                className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 hover:bg-blue-600 hover:border-blue-500 text-slate-300 hover:text-white flex items-center justify-center transition-all duration-300 hover:-translate-y-1 shadow-lg shadow-black/20"
+                className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 hover:bg-pink-600 hover:border-pink-500 text-slate-300 hover:text-white flex items-center justify-center transition-all duration-300 hover:-translate-y-0.5 shadow-sm"
                 aria-label="Instagram"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -73,7 +73,7 @@ export default function Footer() {
               </a>
               <a
                 href="#"
-                className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 hover:bg-blue-600 hover:border-blue-500 text-slate-300 hover:text-white flex items-center justify-center transition-all duration-300 hover:-translate-y-1 shadow-lg shadow-black/20"
+                className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 hover:bg-slate-700 hover:border-slate-600 text-slate-300 hover:text-white flex items-center justify-center transition-all duration-300 hover:-translate-y-0.5 shadow-sm"
                 aria-label="Twitter"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -82,7 +82,7 @@ export default function Footer() {
               </a>
               <a
                 href="#"
-                className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 hover:bg-blue-600 hover:border-blue-500 text-slate-300 hover:text-white flex items-center justify-center transition-all duration-300 hover:-translate-y-1 shadow-lg shadow-black/20"
+                className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 hover:bg-red-600 hover:border-red-500 text-slate-300 hover:text-white flex items-center justify-center transition-all duration-300 hover:-translate-y-0.5 shadow-sm"
                 aria-label="Youtube"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -91,7 +91,7 @@ export default function Footer() {
               </a>
               <a
                 href="https://digitalkstechno.com/"
-                className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 hover:bg-blue-600 hover:border-blue-500 text-slate-300 hover:text-white flex items-center justify-center transition-all duration-300 hover:-translate-y-1 shadow-lg shadow-black/20"
+                className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 hover:bg-indigo-600 hover:border-indigo-500 text-slate-300 hover:text-white flex items-center justify-center transition-all duration-300 hover:-translate-y-0.5 shadow-sm"
                 aria-label="Website"
               >
                 <Globe className="w-4 h-4" />
@@ -99,12 +99,12 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Column 2: Navigation Links (Same as Header) */}
-          <div className="lg:col-span-3 space-y-6">
-            <h4 className="text-sm font-bold text-white tracking-widest uppercase">
+          {/* Column 2: Quick Links */}
+          <div className="lg:col-span-3 space-y-4">
+            <h4 className="text-xs font-bold text-white tracking-widest uppercase pb-1 border-b border-white/10 inline-block">
               {t('footer.quickLinks')}
             </h4>
-            <ul className="space-y-3.5 text-sm text-slate-400 font-medium">
+            <ul className="space-y-3 text-sm text-slate-400 font-medium">
               <li>
                 <a href="#home" onClick={(e) => handleNavClick(e, 'home')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-500/50 group-hover:bg-blue-400 transition-colors" />
@@ -124,6 +124,12 @@ export default function Footer() {
                 </a>
               </li>
               <li>
+                <a href="#pricing" onClick={(e) => handleNavClick(e, 'pricing')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500/50 group-hover:bg-blue-400 transition-colors" />
+                  {t('nav.plans')}
+                </a>
+              </li>
+              <li>
                 <a href="#contact" onClick={(e) => handleNavClick(e, 'contact')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group">
                   <span className="w-1.5 h-1.5 rounded-full bg-blue-500/50 group-hover:bg-blue-400 transition-colors" />
                   {t('nav.contact')}
@@ -132,58 +138,65 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 4: Stay In The Loop & Contact */}
-          <div className="lg:col-span-4 space-y-6">
-            <h4 className="text-sm font-bold text-white tracking-widest uppercase">
+          {/* Column 3: Contact & Language */}
+          <div className="lg:col-span-5 space-y-5">
+            <h4 className="text-xs font-bold text-white tracking-widest uppercase pb-1 border-b border-white/10 inline-block">
               {t('footer.contact')}
             </h4>
 
             {/* Language Switcher */}
-            <div className="pt-2">
-              <label htmlFor="language" className="block text-xs text-slate-400 mb-2 font-medium uppercase tracking-wider">{t('footer.language')}</label>
-              <div className="relative inline-block w-48">
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-slate-400 font-medium whitespace-nowrap">{t('footer.language')}:</span>
+              <div className="relative w-48">
                 <select
                   id="language"
                   value={language}
                   onChange={handleLanguageChange}
-                  className="w-full bg-white/5 border border-white/10 text-white text-sm rounded-xl px-4 py-2.5 outline-none focus:border-blue-500 appearance-none cursor-pointer hover:bg-white/10 transition-colors"
+                  className="w-full bg-white/5 border border-white/10 text-white text-xs rounded-lg px-3 py-2 outline-none focus:border-blue-500 appearance-none cursor-pointer hover:bg-white/10 transition-colors"
                 >
                   <option value="gu" className="bg-slate-900 text-white">ગુજરાતી (Gujarati)</option>
                   <option value="en" className="bg-slate-900 text-white">English</option>
                   <option value="hi" className="bg-slate-900 text-white">हिंदी (Hindi)</option>
                 </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                  <Globe className="w-4 h-4 text-slate-400" />
+                <div className="absolute inset-y-0 right-0 flex items-center pr-2.5 pointer-events-none">
+                  <Globe className="w-3.5 h-3.5 text-slate-400" />
                 </div>
               </div>
             </div>
 
             {/* Contact details */}
-            <div className="pt-4 space-y-4 text-sm text-slate-300 font-medium">
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-blue-900/40 text-blue-400 flex items-center justify-center shrink-0">
-                  <Phone className="w-4 h-4" />
+            <div className="space-y-3 text-xs sm:text-sm text-slate-300 font-normal">
+              <div className="flex items-center gap-3">
+                <div className="w-7 h-7 rounded-lg bg-blue-900/50 text-blue-400 flex items-center justify-center shrink-0 border border-blue-800/30">
+                  <Phone className="w-3.5 h-3.5" />
                 </div>
-                <div className="flex flex-col gap-1">
-                  <a href="tel:+919876543210" className="hover:text-white transition-colors">
+                <div className="flex items-center gap-3 font-medium">
+                  <a href="tel:+918866779008" className="hover:text-blue-400 transition-colors">
                     +91 88667 79008
                   </a>
-                  <a href="https://wa.me/918866779008" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                  <span className="text-slate-600">/</span>
+                  <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition-colors">
                     +91 98765 43210
                   </a>
                 </div>
               </div>
+
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-blue-900/40 text-blue-400 flex items-center justify-center shrink-0">
-                  <Mail className="w-4 h-4" />
+                <div className="w-7 h-7 rounded-lg bg-blue-900/50 text-blue-400 flex items-center justify-center shrink-0 border border-blue-800/30">
+                  <Mail className="w-3.5 h-3.5" />
                 </div>
-                <span>info@Parivar.me</span>
+                <a href="mailto:info@Parivar.me" className="hover:text-blue-400 transition-colors font-medium">
+                  info@Parivar.me
+                </a>
               </div>
+
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-blue-900/40 text-blue-400 flex items-center justify-center shrink-0">
-                  <MapPin className="w-4 h-4" />
+                <div className="w-7 h-7 rounded-lg bg-blue-900/50 text-blue-400 flex items-center justify-center shrink-0 border border-blue-800/30 mt-0.5">
+                  <MapPin className="w-3.5 h-3.5" />
                 </div>
-                <span className="leading-relaxed">2nd floor, C1, above Adarsh Farsan Mart, Baroda Prestige, Ganesh Colony, Varachha, Surat, Gujarat 395010</span>
+                <span className="leading-relaxed text-slate-400 text-xs">
+                  2nd floor, C1, above Adarsh Farsan Mart, Baroda Prestige, Ganesh Colony, Varachha, Surat, Gujarat 395010
+                </span>
               </div>
             </div>
           </div>

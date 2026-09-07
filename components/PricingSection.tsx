@@ -307,7 +307,8 @@ export default function PricingSection() {
       "Events, News, Business, Jobs, etc.",
       "Notifications and Updates",
       "Secure Data Backup",
-      "Free SMS"
+      "Free SMS",
+      "Website & App customization available (up to 15 hours)"
     ],
     gu: [
       "તમારી પોતાની Community App",
@@ -318,7 +319,8 @@ export default function PricingSection() {
       "Events, News, Business, Jobs વગેરે",
       "Notifications અને Updates",
       "સુરક્ષિત Data Backup",
-      "Free SMS"
+      "Free SMS",
+      "તમારી વેબસાઇટ Customize કરી આપીશું (15 કલાક માટે)"
     ],
     hi: [
       "आपका अपना कम्युनिटी ऐप",
@@ -329,7 +331,8 @@ export default function PricingSection() {
       "इवेंट्स, समाचार, बिजनेस, जॉब्स आदि",
       "सूचनाएं और अपडेट",
       "सुरक्षित डेटा बैकअप",
-      "फ्री एसएमएस"
+      "फ्री एसएमएस",
+      "वेबसाइट व ऐप कस्टमाइज़ेशन उपलब्ध (15 घंटे के लिए)"
     ]
   };
 
@@ -371,13 +374,26 @@ export default function PricingSection() {
         <div className="max-w-4xl mx-auto relative">
           <div
             id={planId}
-            className={`bg-white/90 backdrop-blur-md border-2 ${isNewPlan ? 'border-emerald-200 shadow-[0_8px_30px_-4px_rgba(16,185,129,0.15)]' : 'border-blue-200 shadow-[0_8px_30px_-4px_rgba(59,130,246,0.15)]'} rounded-3xl flex flex-col transition-all duration-500 relative group overflow-hidden`}
+            className={`bg-white/95 backdrop-blur-md border-2 ${isNewPlan ? 'border-emerald-300 shadow-[0_12px_40px_-8px_rgba(16,185,129,0.2)]' : 'border-blue-300 shadow-[0_12px_40px_-8px_rgba(59,130,246,0.2)]'} rounded-3xl flex flex-col transition-all duration-500 relative group overflow-hidden`}
           >
             {/* Top highlight bar */}
             <div className={`absolute top-0 inset-x-0 h-1.5 ${isNewPlan ? 'bg-gradient-to-r from-emerald-500 to-teal-500' : 'bg-gradient-to-r from-blue-600 to-indigo-600'} z-20`} />
             
+            {/* Premium Corner Badge (Top-Left) */}
+            <div className="absolute top-0 left-0 z-30 overflow-hidden w-32 h-32 pointer-events-none">
+              <div className={`absolute transform -rotate-45 text-center font-black tracking-wider py-1.5 left-[-38px] top-[26px] w-[150px] shadow-md text-[11px] sm:text-xs text-white uppercase ${
+                isNewPlan 
+                  ? 'bg-gradient-to-r from-rose-500 via-red-500 to-pink-500 shadow-rose-500/40' 
+                  : 'bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 shadow-orange-500/40'
+              }`}>
+                <span className="drop-shadow-sm flex items-center justify-center gap-1">
+                  🔥 50% OFF
+                </span>
+              </div>
+            </div>
+
             {/* Card Main Content */}
-            <div className="p-6 md:p-10 flex flex-col md:flex-row gap-8 md:gap-12 relative z-10">
+            <div className="p-6 sm:p-8 md:p-10 flex flex-col md:flex-row gap-8 md:gap-12 relative z-10 pt-10 sm:pt-10">
               
               {/* Left Side: Pricing & Details */}
               <div className="w-full md:w-1/2 flex flex-col justify-center space-y-6 md:space-y-8">
