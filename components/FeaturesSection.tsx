@@ -181,21 +181,18 @@ export default function FeaturesSection() {
         </div>
       </div>
 
-      {/* Mockups Carousel Section (Premium Coverflow Showcase) */}
       <div className="pb-12 md:pb-16 pt-6 md:pt-6">
         <div className="w-full max-w-[1400px] 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 md:px-8">
           <div className="rounded-[2.5rem] p-4 sm:p-8 md:p-12 relative overflow-hidden bg-gradient-to-b from-white/60 to-slate-50/80 border border-slate-100 shadow-sm">
-            
-            {/* Title above carousel */}
-            <div className="text-center mb-4 sm:mb-8 relative z-10">
+               <div className="text-center mb-4 sm:mb-8 relative z-10">
                <h3 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">{t("features.experienceTitle1")}</span> {t("features.experienceTitle2")}
+               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">{t("features.experienceTitle1")}</span> {t("features.experienceTitle2")}
                </h3>
                <p className="text-slate-500 font-medium mt-2 sm:mt-3 text-sm sm:text-base">{t("features.experienceSubtitle")}</p>
             </div>
 
             <div 
-              className="flex items-center justify-center min-h-[650px] sm:min-h-[820px] relative z-10 select-none overflow-hidden"
+              className="flex items-center justify-center h-[520px] sm:h-[620px] md:h-[680px] relative z-10 select-none overflow-hidden"
               onTouchStart={onTouchStart}
               onTouchMove={onTouchMove}
               onTouchEnd={onTouchEnd}
@@ -206,33 +203,26 @@ export default function FeaturesSection() {
                 if (diff > mockups.length / 2) diff -= mockups.length;
                 if (diff < -mockups.length / 2) diff += mockups.length;
 
-                // Render only the active 3 plus the entering/exiting items (5 total) for 60fps hardware performance
                 if (Math.abs(diff) > 2) return null;
 
                 let styles = "";
                 let zIndex = 0;
-                // High-end Apple-grade smooth deceleration curve
-                const transitionClass = "transition-all duration-600 ease-[cubic-bezier(0.22,1,0.36,1)]";
+                const transitionClass = "transition-all duration-500 ease-out";
 
                 if (diff === 0) {
-                  // Active Center Phone: Dominant scale, deep 3D shadow, opaque
-                  styles = "opacity-100 scale-100 translate-x-0 drop-shadow-[0_30px_60px_rgba(15,23,42,0.32)] z-30 pointer-events-auto filter brightness-100";
+                  styles = "opacity-100 scale-100 translate-x-0 drop-shadow-[0_25px_50px_rgba(15,23,42,0.28)] z-30 pointer-events-auto filter brightness-100";
                   zIndex = 30;
                 } else if (diff === -1) {
-                  // Left Phone: Scaled down, crisp, placed on left, interactive
-                  styles = "opacity-95 scale-[0.82] -translate-x-[82%] sm:-translate-x-[108%] drop-shadow-[0_16px_36px_rgba(15,23,42,0.18)] cursor-pointer z-20 filter brightness-[0.96] hover:brightness-100 hover:scale-[0.84] pointer-events-auto";
+                  styles = "opacity-90 scale-[0.82] -translate-x-[78%] sm:-translate-x-[95%] drop-shadow-[0_12px_24px_rgba(15,23,42,0.15)] cursor-pointer z-20 filter brightness-[0.95] pointer-events-auto";
                   zIndex = 20;
                 } else if (diff === 1) {
-                  // Right Phone: Scaled down, crisp, placed on right, interactive
-                  styles = "opacity-95 scale-[0.82] translate-x-[82%] sm:translate-x-[108%] drop-shadow-[0_16px_36px_rgba(15,23,42,0.18)] cursor-pointer z-20 filter brightness-[0.96] hover:brightness-100 hover:scale-[0.84] pointer-events-auto";
+                  styles = "opacity-90 scale-[0.82] translate-x-[78%] sm:translate-x-[95%] drop-shadow-[0_12px_24px_rgba(15,23,42,0.15)] cursor-pointer z-20 filter brightness-[0.95] pointer-events-auto";
                   zIndex = 20;
                 } else if (diff === -2) {
-                  // Outgoing / Incoming Left: Visibly slides towards/from the left edge with smooth fade
-                  styles = "opacity-0 scale-[0.68] -translate-x-[140%] sm:-translate-x-[185%] pointer-events-none z-10 filter brightness-90";
+                  styles = "opacity-0 scale-[0.7] -translate-x-[130%] sm:-translate-x-[160%] pointer-events-none z-10 filter brightness-90";
                   zIndex = 10;
                 } else if (diff === 2) {
-                  // Outgoing / Incoming Right: Visibly slides towards/from the right edge with smooth fade
-                  styles = "opacity-0 scale-[0.68] translate-x-[140%] sm:translate-x-[185%] pointer-events-none z-10 filter brightness-90";
+                  styles = "opacity-0 scale-[0.7] translate-x-[130%] sm:translate-x-[160%] pointer-events-none z-10 filter brightness-90";
                   zIndex = 10;
                 }
 
@@ -243,16 +233,16 @@ export default function FeaturesSection() {
                       if (diff !== 0 && !isTransitioning) {
                         setIsTransitioning(true);
                         setCurrentMockupIndex(index);
-                        setTimeout(() => setIsTransitioning(false), 600);
+                        setTimeout(() => setIsTransitioning(false), 500);
                       }
                     }}
-                    className={`absolute ${transitionClass} w-[280px] sm:w-[340px] transform-gpu will-change-transform [backface-visibility:hidden] ${styles}`}
+                    className={`absolute ${transitionClass} w-[260px] sm:w-[310px] md:w-[330px] transform-gpu [backface-visibility:hidden] ${styles}`}
                     style={{ zIndex }}
                   >
                     <img 
                       src={mockup} 
                       alt={`App Screenshot ${index + 1}`} 
-                      className="w-full h-auto object-contain pointer-events-none select-none drop-shadow-md"
+                      className="w-full h-auto max-h-[480px] sm:max-h-[580px] md:max-h-[640px] object-contain pointer-events-none select-none drop-shadow-md"
                       draggable={false}
                       loading="eager"
                       onError={(e) => { e.currentTarget.style.display = 'none'; }}

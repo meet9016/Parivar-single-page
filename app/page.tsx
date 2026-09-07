@@ -15,27 +15,7 @@ import WhatsAppChat from "@/components/WhatsAppChat";
 import InquiryPopup from "@/components/InquiryPopup";
 
 export default function Home() {
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-          } else {
-            entry.target.classList.remove("is-visible");
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
 
-    const elements = document.querySelectorAll(".scroll-animate");
-    elements.forEach((el) => observer.observe(el));
-
-    return () => {
-      elements.forEach((el) => observer.unobserve(el));
-    };
-  }, []);
 
   return (
     <main className="min-h-screen bg-white text-slate-900 font-sans selection:bg-blue-600 selection:text-white relative overflow-x-hidden">
@@ -49,49 +29,28 @@ export default function Home() {
       <Navbar />
 
       {/* 2. Hero Section */}
-      <div className="scroll-animate">
-        <HeroSection />
-      </div>
-
-      {/* 3. Statistics Banner (Hidden) */}
-      {/* <div className="scroll-animate">
-        <StatsSection />
-      </div> */}
+      <HeroSection />
 
       {/* 4. About Parivar Section */}
-      <div className="scroll-animate">
-        <AboutSection />
-      </div>
+      <AboutSection />
 
       {/* 5. Before & After Comparison */}
-      <div className="scroll-animate">
-        <ComparisonSection />
-      </div>
+      <ComparisonSection />
 
       {/* 6. What We Offer Features Section */}
-      <div className="scroll-animate">
-        <FeaturesSection />
-      </div>
+      <FeaturesSection />
 
       {/* 7. Superadmin Managed Pricing Section */}
-      <div className="scroll-animate">
-        <PricingSection />
-      </div>
+      <PricingSection />
 
       {/* 8. WhatsApp CTA Banner */}
-      <div className="scroll-animate">
-        <WhatsAppBanner />
-      </div>
+      <WhatsAppBanner />
 
       {/* 9. Contact Us / Let's Create Something Section */}
-      <div className="scroll-animate">
-        <ContactSection />
-      </div>
+      <ContactSection />
 
       {/* 10. DigiTalks Company & Team Section */}
-      <div className="scroll-animate">
-        <CompanySection />
-      </div>
+      <CompanySection />
 
       {/* 11. Footer Section */}
       <Footer />
