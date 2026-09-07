@@ -91,7 +91,7 @@ const hiPhrases: Record<string, string> = {
 
 // ─── WORD-LEVEL DICTIONARY ───
 const guWords: Record<string, string> = {
-  "whatsapp": "વોટ્સએપ", "free": "ફ્રી", "domain": "ડોમેન", "server": "સર્વર", "smart": "સ્માર્ટ", 
+  "whatsapp": "વોટ્સએપ", "free": "ફ્રી", "domain": "ડોમેન", "server": "સર્વર", "smart": "સ્માર્ટ",
   "app": "એપ", "solution": "સોલ્યુશન", "backup": "બેકઅપ", "instant": "ઇન્સ્ટન્ટ",
   "technical": "ટેકનિકલ", "support": "સપોર્ટ", "renewal": "રિન્યુઅલ", "plan": "પ્લાન",
   "new": "નવી", "offer": "ઓફર", "special": "ખાસ", "deal": "પ્લાન", "exclusive": "ખાસ",
@@ -244,8 +244,8 @@ export default function PricingSection() {
   const [expandedPlans, setExpandedPlans] = useState<Record<string, boolean>>({});
   const [activePlanType, setActivePlanType] = useState<'new' | 'renewal'>('new');
   const { t, language } = useLanguage();
-  
-  const whatsappNumber = "918866779008"; 
+
+  const whatsappNumber = "918866779008";
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -320,7 +320,7 @@ export default function PricingSection() {
       "Notifications અને Updates",
       "સુરક્ષિત Data Backup",
       "Free SMS",
-      "તમારી વેબસાઇટ Customize કરી આપીશું (15 કલાક માટે)"
+      "તમારી જરૂરિયાત મુજબ Website & App Customize કરી આપીશું — (15 કલાક સુધી)."
     ],
     hi: [
       "आपका अपना कम्युनिटी ऐप",
@@ -348,7 +348,7 @@ export default function PricingSection() {
       </div>
 
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 md:px-8 z-10">
-        
+
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16 space-y-4">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 border border-blue-100 shadow-2xs text-xs font-bold text-blue-900 tracking-wide">
@@ -358,7 +358,7 @@ export default function PricingSection() {
             </span>
             <span>{t("pricing.tag")}</span>
           </div>
-          
+
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
             {t("pricing.title1")}{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
@@ -378,14 +378,13 @@ export default function PricingSection() {
           >
             {/* Top highlight bar */}
             <div className={`absolute top-0 inset-x-0 h-1.5 ${isNewPlan ? 'bg-gradient-to-r from-emerald-500 to-teal-500' : 'bg-gradient-to-r from-blue-600 to-indigo-600'} z-20`} />
-            
+
             {/* Premium Corner Badge (Top-Left) */}
             <div className="absolute top-0 left-0 z-30 overflow-hidden w-32 h-32 pointer-events-none">
-              <div className={`absolute transform -rotate-45 text-center font-black tracking-wider py-1.5 left-[-38px] top-[26px] w-[150px] shadow-md text-[11px] sm:text-xs text-white uppercase ${
-                isNewPlan 
-                  ? 'bg-gradient-to-r from-rose-500 via-red-500 to-pink-500 shadow-rose-500/40' 
-                  : 'bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 shadow-orange-500/40'
-              }`}>
+              <div className={`absolute transform -rotate-45 text-center font-black tracking-wider py-1.5 left-[-38px] top-[26px] w-[150px] shadow-md text-[11px] sm:text-xs text-white uppercase ${isNewPlan
+                ? 'bg-gradient-to-r from-rose-500 via-red-500 to-pink-500 shadow-rose-500/40'
+                : 'bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 shadow-orange-500/40'
+                }`}>
                 <span className="drop-shadow-sm flex items-center justify-center gap-1">
                   🔥 50% OFF
                 </span>
@@ -394,7 +393,7 @@ export default function PricingSection() {
 
             {/* Card Main Content */}
             <div className="p-6 sm:p-8 md:p-10 flex flex-col md:flex-row gap-8 md:gap-12 relative z-10 pt-10 sm:pt-10">
-              
+
               {/* Left Side: Pricing & Details */}
               <div className="w-full md:w-1/2 flex flex-col justify-center space-y-6 md:space-y-8">
                 {/* Badges / Header */}
@@ -472,16 +471,15 @@ export default function PricingSection() {
               </div>
 
             </div>
-            
+
             {/* Bottom Toggle Area */}
             {hasMultiplePlans && otherPlan && (
               <button
                 onClick={() => setActivePlanType(activePlanType === 'new' ? 'renewal' : 'new')}
-                className={`w-full text-left flex items-center justify-between p-5 md:px-10 md:py-6 border-t cursor-pointer transition-all duration-300 group ${
-                  activePlanType === 'new' 
-                    ? 'bg-blue-50/60 hover:bg-blue-100/60 border-blue-100' 
-                    : 'bg-emerald-50/60 hover:bg-emerald-100/60 border-emerald-100'
-                }`}
+                className={`w-full text-left flex items-center justify-between p-5 md:px-10 md:py-6 border-t cursor-pointer transition-all duration-300 group ${activePlanType === 'new'
+                  ? 'bg-blue-50/60 hover:bg-blue-100/60 border-blue-100'
+                  : 'bg-emerald-50/60 hover:bg-emerald-100/60 border-emerald-100'
+                  }`}
               >
                 <div className="flex items-center gap-4">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center shadow-sm ${activePlanType === 'new' ? 'bg-blue-100 text-blue-600' : 'bg-emerald-100 text-emerald-600'}`}>

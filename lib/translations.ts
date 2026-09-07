@@ -12,7 +12,8 @@ export const translations = {
     },
     hero: {
       pill: "All-in-One Community Management + App for Every Samaj",
-      title1: "Automate Your Community with",
+      title1: "One App, Thousands of Connections, One Strong Community.",
+      title11: "A Community That’s Not Just Connected, But Digitally Organized.",
       title2: "Parivar.me",
       subtitle: "Manage Members, Automate Announcements, and Boost Engagement — All in One Platform",
       worksFor: "Works for Samaj, Parivar, Associations, Trust & More",
@@ -226,7 +227,8 @@ export const translations = {
     },
     hero: {
       pill: "हर समाज के लिए ऑल-इन-वन कम्युनिटी मैनेजमेंट + ऐप",
-      title1: "अपने समुदाय को ऑटोमेट करें",
+      title1: "एक ऐप, हजारों रिश्ते, एक मजबूत समाज।",
+      title11: "समाज सिर्फ जुड़ा हुआ नहीं, अब डिजिटल रूप से संगठित भी।",
       title2: "Parivar.me के साथ",
       subtitle: "सदस्यों को प्रबंधित करें, घोषणाओं को स्वचालित करें - सब कुछ एक ही मंच पर",
       worksFor: "समाज, परिवार, संघ, ट्रस्ट और अधिक के लिए उपयोगी",
