@@ -20,14 +20,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "https://parivar.me/logo.png",
-        width: 800,
-        height: 600,
-        alt: "Parivar.me - Community Management At Your Fingertips",
-      },
-      {
-        url: "https://parivar.me/logo.png",
-        width: 800,
-        height: 600,
+        width: 300,
+        height: 300,
         alt: "Parivar.me Logo",
       }
     ],
