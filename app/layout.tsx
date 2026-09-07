@@ -13,6 +13,20 @@ const notoSans = Noto_Sans({
 export const metadata: Metadata = {
   title: "Parivar.me - Community Management At Your Fingertips",
   description: "Parivar.me is a warm, modern platform built for Samaj, Parivar, and Community Organizations.",
+  openGraph: {
+    url: "https://parivar.me/",
+    title: "Parivar.me - Community Management At Your Fingertips",
+    description: "Parivar.me is a warm, modern platform built for Samaj, Parivar, and Community Organizations.",
+    images: [
+      {
+        url: "https://parivar.me/logo.png",
+        alt: "Parivar.me - Community Management At Your Fingertips",
+      },
+    ],
+    type: "website",
+    siteName: "Parivar.me",
+    locale: "en_US",
+  },
 };
 
 export default function RootLayout({
