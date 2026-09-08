@@ -3,8 +3,10 @@ import React, { useState, useEffect } from "react";
 import { X, Send, Loader2, CheckCircle2 } from "lucide-react";
 import axios from "axios";
 import { toast } from "sonner";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function InquiryPopup() {
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -71,13 +73,13 @@ export default function InquiryPopup() {
     const newErrors: { name?: string; mobile?: string } = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = "Name is required.";
+      newErrors.name = t("popup.errNameReq");
     }
 
     if (!formData.mobile.trim()) {
-      newErrors.mobile = "Mobile number is required.";
+      newErrors.mobile = t("popup.errMobileReq");
     } else if (formData.mobile.trim().length !== 10) {
-      newErrors.mobile = "Enter a valid 10-digit mobile number.";
+      newErrors.mobile = t("popup.errMobileInvalid");
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -103,15 +105,15 @@ export default function InquiryPopup() {
       });
 
       if (response.data?.success === false || response.data?.data?.status === false) {
-        toast.error(response.data?.data?.message || response.data?.error || "Failed to submit demo request.");
+        toast.error(response.data?.data?.message || response.data?.error || t("popup.errFailed"));
         return;
       }
 
-      toast.success("Demo request submitted successfully!");
+      toast.success(t("popup.toastSuccess"));
       setIsSuccess(true);
     } catch (error) {
       console.error("Popup Inquiry Error:", error);
-      toast.error("Failed to submit demo request. Please try again.");
+      toast.error(t("popup.errFailed"));
     } finally {
       setLoading(false);
     }
@@ -137,28 +139,23 @@ export default function InquiryPopup() {
 
         {!isSuccess ? (
           <>
-            <div className="text-center mb-6">
-              <div className="mb-3 flex justify-center">
-                <img 
-                  src="/logo.png" 
-                  alt="Parivar Logo" 
-                  className="h-9 w-auto object-contain"
-                />
-              </div>
-              <h3 className="text-2xl font-extrabold text-[#0B1340] tracking-tight">Claim Your Free Demo</h3>
-              <p className="text-slate-500 text-xs sm:text-sm mt-1">
-                Enter your details below to get a free live demo.
+            <div className="text-center mb-6 pt-1">
+              <h3 className="text-2xl font-extrabold text-[#0B1340] tracking-tight">
+                {t("popup.title")}
+              </h3>
+              <p className="text-slate-500 text-xs sm:text-sm mt-1.5 leading-relaxed">
+                {t("popup.subtitle")}
               </p>
             </div>
 
             <form onSubmit={handleSubmit} noValidate className="space-y-4">
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                  Your Name <span className="text-red-500 font-bold">*</span>
+                <label className="block text-xs font-semibold capitalize text-slate-700 mb-1.5">
+                  {t("popup.nameLabel")} <span className="text-red-500 font-bold">*</span>
                 </label>
                 <input 
                   type="text" 
-                  placeholder="e.g. Ramesh Patel"
+                  placeholder={t("popup.namePlaceholder")}
                   value={formData.name}
                   onChange={(e) => {
                     setFormData({...formData, name: e.target.value});
@@ -176,12 +173,12 @@ export default function InquiryPopup() {
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                  Samaj / Parivar Name
+                <label className="block text-xs font-semibold capitalize text-slate-700 mb-1.5">
+                  {t("popup.samajLabel")}
                 </label>
                 <input 
                   type="text" 
-                  placeholder="e.g. Patel Parivar / Leuva Samaj"
+                  placeholder={t("popup.samajPlaceholder")}
                   value={formData.samaj_name}
                   onChange={(e) => setFormData({...formData, samaj_name: e.target.value})}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-sm font-medium text-slate-800 placeholder:text-slate-400 bg-white"
@@ -190,13 +187,13 @@ export default function InquiryPopup() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                    Mobile Number <span className="text-red-500 font-bold">*</span>
+                  <label className="block text-xs font-semibold capitalize text-slate-700 mb-1.5">
+                    {t("popup.mobileLabel")} <span className="text-red-500 font-bold">*</span>
                   </label>
                   <input 
                     type="tel" 
                     maxLength={10}
-                    placeholder="9876543210"
+                    placeholder={t("popup.mobilePlaceholder")}
                     value={formData.mobile}
                     onChange={(e) => {
                       const val = e.target.value.replace(/\D/g, '');
@@ -215,12 +212,12 @@ export default function InquiryPopup() {
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-1.5">
-                    City
+                  <label className="block text-xs font-semibold capitalize text-slate-700 mb-1.5">
+                    {t("popup.cityLabel")}
                   </label>
                   <input 
                     type="text" 
-                    placeholder="e.g. Surat"
+                    placeholder={t("popup.cityPlaceholder")}
                     value={formData.city}
                     onChange={(e) => setFormData({...formData, city: e.target.value})}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-sm font-medium text-slate-800 placeholder:text-slate-400 bg-white"
@@ -236,12 +233,12 @@ export default function InquiryPopup() {
                 {loading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin text-white" />
-                    <span>Submitting...</span>
+                    <span>{t("popup.submitting")}</span>
                   </>
                 ) : (
                   <>
                     <Send className="w-4 h-4" />
-                    <span>Get Free Demo</span>
+                    <span>{t("popup.cta")}</span>
                   </>
                 )}
               </button>
@@ -253,16 +250,16 @@ export default function InquiryPopup() {
               <CheckCircle2 className="w-14 h-14 text-emerald-500 animate-bounce" />
             </div>
             
-            <h3 className="text-2xl font-black text-[#0B1340] mb-2">Demo Claimed!</h3>
+            <h3 className="text-2xl font-black text-[#0B1340] mb-2">{t("popup.successTitle")}</h3>
             <p className="text-slate-600 text-sm mb-6">
-              Thank you, <b>{formData.name}</b>! Your demo request has been submitted successfully. Our team will contact you shortly.
+              {t("popup.successMessage")}
             </p>
             
             <button 
               onClick={handleClose}
               className="w-full bg-[#0B1340] hover:bg-blue-950 text-white font-bold py-3 rounded-xl shadow-lg transition-all cursor-pointer text-sm"
             >
-              Done
+              {t("popup.done")}
             </button>
           </div>
         )}
