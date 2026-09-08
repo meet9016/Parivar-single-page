@@ -15,15 +15,11 @@ export default function InquiryPopup() {
   const [loading, setLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   
-  const whatsappNumber = "918866779008"; 
   const API_URL = "/api/add-demo-lead";
-
-  const [isFromWhatsApp, setIsFromWhatsApp] = useState(false);
 
   useEffect(() => {
     // 1. Show popup on custom trigger or when any WhatsApp button on the page is clicked
     const handleOpenInquiry = () => {
-      setIsFromWhatsApp(true);
       setIsOpen(true);
       setIsSuccess(false);
     };
@@ -41,7 +37,6 @@ export default function InquiryPopup() {
       if (isWhatsAppLink) {
         e.preventDefault();
         e.stopPropagation();
-        setIsFromWhatsApp(true);
         setIsOpen(true);
         setIsSuccess(false);
       }
@@ -51,7 +46,6 @@ export default function InquiryPopup() {
 
     // 2. Automatically show popup when website opens (1.5 seconds delay)
     const timer = setTimeout(() => {
-      setIsFromWhatsApp(false);
       setIsOpen(true);
     }, 1500);
 
@@ -89,29 +83,22 @@ export default function InquiryPopup() {
       };
 
       // Call the requested CRM API
-      await axios.post(API_URL, payload, {
+      const response = await axios.post(API_URL, payload, {
         headers: {
           "Content-Type": "application/json"
         }
       });
 
+      if (response.data?.success === false || response.data?.data?.status === false) {
+        toast.error(response.data?.data?.message || response.data?.error || "Failed to submit demo request.");
+        return;
+      }
+
       toast.success("Demo request submitted successfully!");
       setIsSuccess(true);
-      
-      // Open WhatsApp only if triggered from WhatsApp click
-      if (isFromWhatsApp) {
-        const msg = `Hello, I am interested in a demo of Parivar.me.\n*Name:* ${formData.name}\n*Mobile:* ${formData.mobile}\n*City:* ${formData.city}\n*Samaj:* ${formData.samaj_name}`;
-        window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`, "_blank");
-      }
     } catch (error) {
       console.error("Popup Inquiry Error:", error);
-      toast.info("Connecting...");
-      
-      if (isFromWhatsApp) {
-        const msg = `Hello, I am interested in a demo of Parivar.me.\n*Name:* ${formData.name}\n*Mobile:* ${formData.mobile}\n*City:* ${formData.city}\n*Samaj:* ${formData.samaj_name}`;
-        window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`, "_blank");
-      }
-      setIsSuccess(true);
+      toast.error("Failed to submit demo request. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -146,7 +133,7 @@ export default function InquiryPopup() {
               </div>
               <h3 className="text-2xl font-black text-[#0B1340] font-sans">Claim Your Free Demo</h3>
               <p className="text-slate-500 text-xs sm:text-sm mt-1.5 font-sans">
-                Enter your details below and connect with us on WhatsApp instantly.
+                Enter your details below to get a free live demo.
               </p>
             </div>
 
@@ -208,7 +195,7 @@ export default function InquiryPopup() {
               <button 
                 type="submit"
                 disabled={loading}
-                className="w-full mt-3 flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-green-500/30 transition-all hover:-translate-y-0.5 cursor-pointer disabled:opacity-75 font-sans"
+                className="w-full mt-3 flex items-center justify-center gap-2 bg-[#0B1340] hover:bg-blue-900 text-white font-bold py-3 rounded-xl shadow-lg transition-all hover:-translate-y-0.5 cursor-pointer disabled:opacity-75 font-sans"
               >
                 {loading ? (
                   <>
@@ -218,7 +205,7 @@ export default function InquiryPopup() {
                 ) : (
                   <>
                     <Send className="w-4 h-4" />
-                    <span>Get Free Demo & Chat</span>
+                    <span>Get Free Demo</span>
                   </>
                 )}
               </button>
@@ -232,7 +219,7 @@ export default function InquiryPopup() {
             
             <h3 className="text-2xl font-black text-[#0B1340] mb-2 font-sans">Demo Claimed!</h3>
             <p className="text-slate-600 text-sm font-sans mb-6">
-              Thank you, <b>{formData.name}</b>! Your demo request has been submitted. WhatsApp has been opened to connect with our team.
+              Thank you, <b>{formData.name}</b>! Your demo request has been submitted successfully. Our team will contact you shortly.
             </p>
             
             <button 

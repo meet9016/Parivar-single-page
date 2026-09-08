@@ -4,12 +4,19 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const response = await fetch("http://crm.insuraa.in/add-demo-lead", {
+    const formData = new URLSearchParams();
+    if (body.name) formData.append("name", body.name);
+    if (body.mobile) formData.append("mobile", body.mobile);
+    if (body.city) formData.append("city", body.city);
+    if (body.samaj_name) formData.append("samaj_name", body.samaj_name);
+
+    const response = await fetch("https://crm.insuraa.in/add-demo-lead", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-Requested-With": "XMLHttpRequest",
       },
-      body: JSON.stringify(body),
+      body: formData.toString(),
     });
 
     const data = await response.json().catch(() => ({}));
