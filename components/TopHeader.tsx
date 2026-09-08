@@ -14,7 +14,7 @@ export default function TopHeader() {
             className="flex items-center gap-1.5 hover:text-white transition-colors"
           >
             <Phone className="w-3.5 h-3.5 text-blue-400" />
-            <span>+91 88667 79008</span>
+            <span>+91 63547 20801</span>
           </a>
           <a
             href="mailto:info@parivar.me"
