@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     if (body.city) formData.append("city", body.city);
     if (body.samaj_name) formData.append("samaj_name", body.samaj_name);
 
-    const response = await fetch("https://crm.insuraa.in/add-demo-lead", {
+    const response = await fetch("https://crm.parivar.in/add-demo-lead", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
