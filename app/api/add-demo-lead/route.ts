@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     if (body.city) formData.append("city", body.city);
     if (body.samaj_name) formData.append("samaj_name", body.samaj_name);
 
-    const response = await fetch("https://crm.insuraa.in/add-demo-lead", {
+    const response = await fetch("https://crm.parivar.me/add-demo-lead", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
       { status: response.status || 200 }
     );
   } catch (error: any) {
-    console.error("Proxy error to crm.insuraa.in:", error);
+    console.error("Proxy error to crm.parivar.me:", error);
     return NextResponse.json(
       { success: false, error: error.message || "Failed to forward lead" },
       { status: 500 }
