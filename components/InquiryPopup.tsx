@@ -90,22 +90,22 @@ export default function InquiryPopup() {
     setErrors({});
     setLoading(true);
     try {
-      const payload = {
-        name: formData.name.trim(),
-        mobile: formData.mobile.trim(),
-        city: formData.city.trim(),
-        samaj_name: formData.samaj_name.trim()
-      };
+      const params = new URLSearchParams();
+      params.append("name", formData.name.trim());
+      params.append("mobile", formData.mobile.trim());
+      params.append("city", formData.city.trim());
+      params.append("samaj_name", formData.samaj_name.trim());
 
-      // Call the requested CRM API
-      const response = await axios.post(API_URL, payload, {
+      // Call the requested CRM API directly
+      const response = await axios.post(API_URL, params.toString(), {
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-Requested-With": "XMLHttpRequest",
         }
       });
 
-      if (response.data?.success === false || response.data?.data?.status === false) {
-        toast.error(response.data?.data?.message || response.data?.error || t("popup.errFailed"));
+      if (response.data?.status === false || response.data?.success === false) {
+        toast.error(response.data?.message || response.data?.data?.message || response.data?.error || t("popup.errFailed"));
         return;
       }
 
