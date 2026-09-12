@@ -158,7 +158,8 @@ export default function ContactSection() {
                     placeholder={t("contact.name")}
                     value={formData.parivar_name}
                     onChange={(e) => {
-                      setFormData({ ...formData, parivar_name: e.target.value });
+                      const cleaned = e.target.value.replace(/[^\p{L}\p{N}\s]/gu, "");
+                      setFormData({ ...formData, parivar_name: cleaned });
                       if (errors.parivar_name) setErrors({ ...errors, parivar_name: "" });
                     }}
                     className={`w-full px-4 py-3.5 rounded-xl bg-slate-50 border ${errors.parivar_name ? 'border-rose-400 focus:ring-rose-500 focus:bg-rose-50/30' : 'border-slate-200 focus:ring-blue-500'} text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:bg-white transition-all font-medium shadow-2xs`}

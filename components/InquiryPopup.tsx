@@ -158,7 +158,8 @@ export default function InquiryPopup() {
                   placeholder={t("popup.namePlaceholder")}
                   value={formData.name}
                   onChange={(e) => {
-                    setFormData({...formData, name: e.target.value});
+                    const cleaned = e.target.value.replace(/[^\p{L}\s]/gu, "");
+                    setFormData({...formData, name: cleaned});
                     if (errors.name) setErrors({...errors, name: undefined});
                   }}
                   className={`w-full px-3.5 py-2.5 rounded-xl border ${
@@ -180,7 +181,10 @@ export default function InquiryPopup() {
                   type="text" 
                   placeholder={t("popup.samajPlaceholder")}
                   value={formData.samaj_name}
-                  onChange={(e) => setFormData({...formData, samaj_name: e.target.value})}
+                  onChange={(e) => {
+                    const cleaned = e.target.value.replace(/[^\p{L}\p{N}\s]/gu, "");
+                    setFormData({...formData, samaj_name: cleaned});
+                  }}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-sm font-medium text-slate-800 placeholder:text-slate-400 bg-white"
                 />
               </div>
@@ -219,7 +223,10 @@ export default function InquiryPopup() {
                     type="text" 
                     placeholder={t("popup.cityPlaceholder")}
                     value={formData.city}
-                    onChange={(e) => setFormData({...formData, city: e.target.value})}
+                    onChange={(e) => {
+                      const cleaned = e.target.value.replace(/[^\p{L}\s]/gu, "");
+                      setFormData({...formData, city: cleaned});
+                    }}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all text-sm font-medium text-slate-800 placeholder:text-slate-400 bg-white"
                   />
                 </div>
