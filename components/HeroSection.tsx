@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { MessageCircle, Sparkles, Users } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
+import Image from "next/image";
 
 export default function HeroSection() {
   const { t } = useLanguage();
@@ -112,10 +113,13 @@ export default function HeroSection() {
 
               {/* Seamless Full Card Showcase without black border */}
               <div className="relative rounded-[2.5rem] overflow-hidden bg-transparent shadow-[0_25px_70px_-15px_rgba(59,130,246,0.3)] hover:shadow-[0_30px_80px_-10px_rgba(59,130,246,0.4)] transition-all duration-500 hover:-translate-y-2">
-                <img
+                <Image
                   src="/parivar_ads.png"
                   alt="Parivar.me App Showcase"
                   className="w-full h-auto object-cover block"
+                  width={1247}
+                  height={1247}
+                  priority
                 />
               </div>
             </div>
