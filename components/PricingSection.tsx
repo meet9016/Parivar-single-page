@@ -190,7 +190,7 @@ const isNewDealPlan = (plan: any) => {
     s.includes("नई") ||
     s.includes("विशेष") ||
     plan.badgeType === "new" ||
-    Number(plan.discountedPrice || 0) > 15000
+    !isRenewalPlan(plan)
   );
 };
 
@@ -200,9 +200,9 @@ const DEFAULT_PLANS = [
     title: "1st year plan",
     subtitle: "New plan",
     badgeType: "new",
-    originalPrice: 35000,
-    discountedPrice: 25000,
-    description: "Get the Complete Package at Just ₹25,000",
+    originalPrice: 39000,
+    discountedPrice: 19999,
+    description: "Get the Complete Package at Just ₹19999",
     features: [
       "Smart app solution",
       "Instant notifications",
@@ -293,6 +293,13 @@ export default function PricingSection() {
   const planId = activePlan._id || `plan-active`;
   const isNewPlan = isNewDealPlan(activePlan);
 
+  const originalPriceNum = Number(activePlan.originalPrice || 0);
+  const discountedPriceNum = Number(activePlan.discountedPrice || 0);
+  const discountPercent =
+    originalPriceNum > discountedPriceNum && originalPriceNum > 0
+      ? Math.round(((originalPriceNum - discountedPriceNum) / originalPriceNum) * 100)
+      : null;
+
   const defaultMsg = `Hello, I want to book a free demo of Parivar for the "${activePlan.title}" package.`;
   const waMsg = activePlan.whatsappMessage || defaultMsg;
   const waLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(waMsg)}`;
@@ -336,7 +343,11 @@ export default function PricingSection() {
     ]
   };
 
-  const currentFeatures = FIXED_FEATURES_TRANSLATIONS[language] || FIXED_FEATURES_TRANSLATIONS["en"];
+  // If superadmin added custom features, use them (translated), otherwise fallback to fixed standard features list
+  const currentFeatures =
+    Array.isArray(activePlan.features) && activePlan.features.length > 0
+      ? activePlan.features.map((f: string) => translateText(f, language))
+      : (FIXED_FEATURES_TRANSLATIONS[language] || FIXED_FEATURES_TRANSLATIONS["en"]);
 
   return (
     <section id="pricing" className="relative overflow-hidden bg-[#fafcff] py-12 md:py-16 border-t border-slate-100">
@@ -380,16 +391,18 @@ export default function PricingSection() {
             <div className={`absolute top-0 inset-x-0 h-1.5 ${isNewPlan ? 'bg-gradient-to-r from-emerald-500 to-teal-500' : 'bg-gradient-to-r from-blue-600 to-indigo-600'} z-20`} />
 
             {/* Premium Corner Badge (Top-Left) */}
-            <div className="absolute top-0 left-0 z-30 overflow-hidden w-32 h-32 pointer-events-none">
-              <div className={`absolute transform -rotate-45 text-center font-black tracking-wider py-1.5 left-[-38px] top-[26px] w-[150px] shadow-md text-[11px] sm:text-xs text-white uppercase ${isNewPlan
-                ? 'bg-gradient-to-r from-rose-500 via-red-500 to-pink-500 shadow-rose-500/40'
-                : 'bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 shadow-orange-500/40'
-                }`}>
-                <span className="drop-shadow-sm flex items-center justify-center gap-1">
-                  🔥 50% OFF
-                </span>
+            {discountPercent && (
+              <div className="absolute top-0 left-0 z-30 overflow-hidden w-32 h-32 pointer-events-none">
+                <div className={`absolute transform -rotate-45 text-center font-black tracking-wider py-1.5 left-[-38px] top-[26px] w-[150px] shadow-md text-[11px] sm:text-xs text-white uppercase ${isNewPlan
+                  ? 'bg-gradient-to-r from-rose-500 via-red-500 to-pink-500 shadow-rose-500/40'
+                  : 'bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 shadow-orange-500/40'
+                  }`}>
+                  <span className="drop-shadow-sm flex items-center justify-center gap-1">
+                    🔥 {discountPercent}% OFF
+                  </span>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Card Main Content */}
             <div className="p-6 sm:p-8 md:p-10 flex flex-col md:flex-row gap-8 md:gap-12 relative z-10 pt-10 sm:pt-10">
@@ -411,11 +424,13 @@ export default function PricingSection() {
                   {/* Subtle shine effect */}
                   <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-tr from-white/0 via-white/50 to-white/0 transform -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
                   <div className="flex items-center justify-center md:justify-start gap-4 relative z-10">
-                    <span className="text-slate-400 text-lg md:text-xl line-through font-extrabold">
-                      ₹{activePlan.originalPrice.toLocaleString("en-IN")}
-                    </span>
+                    {originalPriceNum > 0 && (
+                      <span className="text-slate-400 text-lg md:text-xl line-through font-extrabold">
+                        ₹{originalPriceNum.toLocaleString("en-IN")}
+                      </span>
+                    )}
                     <span className={`text-4xl md:text-5xl font-black ${isNewPlan ? 'text-emerald-700' : 'text-blue-700'} tracking-tight`}>
-                      ₹{activePlan.discountedPrice.toLocaleString("en-IN")}
+                      ₹{discountedPriceNum.toLocaleString("en-IN")}
                     </span>
                   </div>
                   {activePlan.description && (
@@ -490,7 +505,7 @@ export default function PricingSection() {
                       {translateText(otherPlan.title, language)} જુઓ
                     </h5>
                     <p className={`text-xs md:text-sm font-semibold mt-0.5 ${activePlanType === 'new' ? 'text-blue-600/80' : 'text-emerald-600/80'}`}>
-                      માત્ર ₹{otherPlan.discountedPrice.toLocaleString("en-IN")}
+                      માત્ર ₹{Number(otherPlan.discountedPrice || 0).toLocaleString("en-IN")}
                     </p>
                   </div>
                 </div>
