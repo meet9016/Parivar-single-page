@@ -61,6 +61,7 @@ interface SuperAdminContextType {
   setEditingParivar: (val: any) => void;
   editLoading: boolean;
   handleEditParivar: (e: React.FormEvent, form: any) => Promise<void>;
+  handleDeleteParivar: (id: string) => Promise<boolean>;
 
   // Pricing Plans
   pricingPlans: any[];
@@ -364,27 +365,32 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
 
       if (res.status === 200 || res.status === 201) {
         const displayName = newParivar.parivar_name || newParivar.village_name;
-        toast.success(`${newParivar.community_type} "${displayName}" created successfully!`);
+        toast.success(`"${displayName}" created successfully!`);
         setCreateStatus({
           type: "success",
-          text: `${newParivar.community_type} "${displayName}" registered!`,
+          text: `"${displayName}" added!`,
         });
         setNewParivar({
-          parivar_name: "", admin_first_name: "", admin_last_name: "",
-          admin_email: "", admin_mobile: "", admin_password: "",
+          community_type: "Parivar",
+          parivar_name: "",
+          admin_first_name: "",
+          admin_last_name: "",
+          admin_email: "",
+          admin_mobile: "",
+          notes: "",
         });
         fetchParivars();
         setTimeout(() => {
           setIsCreateModalOpen(false);
           setCreateStatus(null);
-        }, 1200);
+        }, 1000);
       } else {
         toast.error(res.data.message || "Failed to create Parivar.");
         setCreateStatus({ type: "error", text: res.data.message || "Failed to create Parivar" });
       }
     } catch (err: any) {
-      toast.error("Error contacting server. Please check backend.");
-      setCreateStatus({ type: "error", text: "Error contacting server. Make sure backend is running." });
+      toast.error(err.response?.data?.message || "Error contacting server. Please check backend.");
+      setCreateStatus({ type: "error", text: err.response?.data?.message || "Error contacting server." });
     } finally {
       setCreateLoading(false);
     }
@@ -398,17 +404,15 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
     try {
       const updateRes = await axiosInstance.put(ENDPOINTS.UPDATE_PARIVAR(editingParivar._id), {
         parivar_name: editForm.parivar_name,
+        community_type: editForm.community_type,
+        village_name: editForm.village_name,
         status: editForm.status,
         admin_first_name: editForm.admin_first_name,
         admin_last_name: editForm.admin_last_name,
-        admin_mobile: editForm.admin_mobile
+        admin_email: editForm.admin_email,
+        admin_mobile: editForm.admin_mobile,
+        notes: editForm.notes,
       });
-
-      if (editForm.new_password) {
-        await axiosInstance.put(ENDPOINTS.UPDATE_PARIVAR_PASSWORD(editingParivar._id), {
-          new_password: editForm.new_password
-        });
-      }
 
       if (updateRes.status === 200) {
         toast.success(`Parivar "${editForm.parivar_name}" updated successfully!`);
@@ -418,11 +422,27 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
         toast.error(updateRes.data.message || "Failed to update Parivar.");
       }
     } catch (err: any) {
-      toast.error("Error contacting server.");
+      toast.error(err.response?.data?.message || "Error contacting server.");
     } finally {
       setEditLoading(false);
     }
   };
+
+  const handleDeleteParivar = async (id: string) => {
+    try {
+      const res = await axiosInstance.delete(ENDPOINTS.UPDATE_PARIVAR(id));
+      if (res.status === 200) {
+        toast.success("Parivar deleted successfully!");
+        fetchParivars();
+        return true;
+      }
+      return false;
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to delete Parivar.");
+      return false;
+    }
+  };
+
 
   const handleCreatePricingPlan = async (plan: any) => {
     try {
@@ -536,7 +556,7 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
     inquiries, inquiriesLoading, inquirySearch, setInquirySearch, fetchInquiries, handleInquiryStatus,
     parivars, parivarsLoading, parivarSearch, setParivarSearch, fetchParivars,
     isCreateModalOpen, setIsCreateModalOpen, createLoading, createStatus, handleCreateParivar,
-    editingParivar, setEditingParivar, editLoading, handleEditParivar,
+    editingParivar, setEditingParivar, editLoading, handleEditParivar, handleDeleteParivar,
     pricingPlans, pricingLoading, fetchPricingPlans, handleCreatePricingPlan, handleEditPricingPlan, handleDeletePricingPlan,
     projectTasks, tasksLoading, taskSearch, setTaskSearch, taskFilters, setTaskFilters, taskMeta,
     fetchProjectTasks, handleCreateTask, handleUpdateTask, handleLogTaskTime, handleDeleteTask
