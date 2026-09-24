@@ -4,10 +4,14 @@ export const ENDPOINTS = {
   SUPERADMIN_LOGIN: '/api/register-parivar/superadmin-login',
   PRICING: '/api/pricing',
   PRICING_ALL: '/api/pricing/all',
+  PROJECT_TASKS: '/api/project-tasks',
   
   // Dynamic Endpoints
   UPDATE_INQUIRY: (id: string) => `/api/inquiry/${id}`,
   UPDATE_PARIVAR: (id: string) => `/api/register-parivar/${id}`,
   UPDATE_PARIVAR_PASSWORD: (id: string) => `/api/register-parivar/${id}/password`,
   UPDATE_PRICING: (id: string) => `/api/pricing/${id}`,
+  UPDATE_PROJECT_TASK: (id: string) => `/api/project-tasks/${id}`,
+  LOG_PROJECT_TASK_TIME: (id: string) => `/api/project-tasks/${id}/time`,
 };
+

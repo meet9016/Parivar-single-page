@@ -9,6 +9,7 @@ import Header from "../components/Header";
 import InquiriesTab from "../components/InquiriesTab";
 import ParivarsTab from "../components/ParivarsTab";
 import PricingTab from "../components/PricingTab";
+import ProjectTasksTab from "../components/ProjectTasksTab";
 import CreateParivarModal from "../components/CreateParivarModal";
 import EditParivarModal from "../components/EditParivarModal";
 
@@ -44,6 +45,7 @@ function DashboardLayout() {
     parivars: { title: "All Parivars (Tenants)", subtitle: "Manage isolated community databases, admins, and status" },
     inquiries: { title: "User Inquiries", subtitle: "Landing page visitor requests and contact inquiries" },
     pricing: { title: "Pricing & Offers", subtitle: "Manage the dynamic pricing plans shown on parivar.me" },
+    tasks: { title: "Project Tasks & Time Tracking", subtitle: "Assign customization tasks, record work hours, and generate Excel reports" },
   };
   const meta = tabMeta[activeTab] ?? { title: "", subtitle: "" };
 
@@ -97,6 +99,7 @@ function DashboardLayout() {
           {activeTab === "inquiries" && <InquiriesTab />}
           {activeTab === "parivars" && <ParivarsTab />}
           {activeTab === "pricing" && <PricingTab />}
+          {activeTab === "tasks" && <ProjectTasksTab />}
         </main>
 
         <CreateParivarModal />

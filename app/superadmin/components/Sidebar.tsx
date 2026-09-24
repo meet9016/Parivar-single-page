@@ -1,22 +1,24 @@
 "use client";
 
 import React from "react";
-import { Shield, Building2, MessageSquare, Tag } from "lucide-react";
+import { Shield, Building2, MessageSquare, Tag, CheckSquare } from "lucide-react";
 import { useSuperAdmin } from "../context/SuperAdminContext";
 
 const NAV = [
   { id: "parivars", label: "All Parivars", Icon: Building2, countKey: "parivars" },
   { id: "inquiries", label: "User Inquiries", Icon: MessageSquare, countKey: "inquiries" },
   { id: "pricing", label: "Pricing & Offers", Icon: Tag, countKey: "pricingPlans" },
+  { id: "tasks", label: "Project Tasks & Time", Icon: CheckSquare, countKey: "tasks" },
 ] as const;
 
 export default function Sidebar() {
-  const { activeTab, setActiveTab, parivars, inquiries, pricingPlans } = useSuperAdmin();
+  const { activeTab, setActiveTab, parivars, inquiries, pricingPlans, projectTasks } = useSuperAdmin();
 
   const countMap: Record<string, number> = {
     parivars: parivars.length,
     inquiries: inquiries.length,
     pricingPlans: pricingPlans.length,
+    tasks: projectTasks.length,
   };
 
   return (
@@ -69,8 +71,8 @@ export default function Sidebar() {
             <span className="text-[9px] font-semibold text-white/40 uppercase tracking-wider">Leads</span>
           </div>
           <div className="bg-white/10 rounded-lg p-2">
-            <span className="text-base font-black text-emerald-300 block">{pricingPlans.length}</span>
-            <span className="text-[9px] font-semibold text-white/40 uppercase tracking-wider">Plans</span>
+            <span className="text-base font-black text-emerald-300 block">{projectTasks.length}</span>
+            <span className="text-[9px] font-semibold text-white/40 uppercase tracking-wider">Tasks</span>
           </div>
         </div>
       </div>

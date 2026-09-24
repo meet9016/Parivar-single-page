@@ -2,20 +2,38 @@
 
 import React, { useState, useEffect } from "react";
 import { useSuperAdmin } from "../context/SuperAdminContext";
+import { Building2 } from "lucide-react";
 
 export default function EditParivarModal() {
   const { editingParivar, setEditingParivar, editLoading, handleEditParivar } = useSuperAdmin();
 
   const [editForm, setEditForm] = useState({
+    community_type: "Parivar",
     parivar_name: "",
     status: 1,
     admin_first_name: "",
     admin_last_name: "",
+    admin_email: "",
     admin_mobile: "",
-    new_password: ""
+    notes: "",
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  useEffect(() => {
+    if (editingParivar) {
+      setEditForm({
+        community_type: editingParivar.community_type || "Parivar",
+        parivar_name: editingParivar.parivar_name || "",
+        status: editingParivar.status ?? 1,
+        admin_first_name: editingParivar.admin_first_name || editingParivar.admin?.first_name || "",
+        admin_last_name: editingParivar.admin_last_name || editingParivar.admin?.last_name || "",
+        admin_email: editingParivar.admin_email || editingParivar.admin?.email || "",
+        admin_mobile: editingParivar.admin_mobile || editingParivar.admin?.mobile || "",
+        notes: editingParivar.notes || "",
+      });
+    }
+  }, [editingParivar]);
 
   const validateAndSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,10 +42,8 @@ export default function EditParivarModal() {
     if (!editForm.parivar_name.trim()) newErrors.parivar_name = "Parivar Name is required.";
     if (!editForm.admin_first_name.trim()) newErrors.admin_first_name = "First Name is required.";
     
-    if (!editForm.admin_mobile.trim()) {
-      newErrors.admin_mobile = "Mobile Number is required.";
-    } else if (!/^\d{10}$/.test(editForm.admin_mobile.trim())) {
-      newErrors.admin_mobile = "Mobile Number must be exactly 10 digits.";
+    if (editForm.admin_mobile.trim() && !/^\d{10}$/.test(editForm.admin_mobile.trim())) {
+      newErrors.admin_mobile = "Mobile Number must be 10 digits.";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -39,113 +55,137 @@ export default function EditParivarModal() {
     handleEditParivar(e, editForm);
   };
 
-  useEffect(() => {
-    if (editingParivar) {
-      setEditForm({
-        parivar_name: editingParivar.parivar_name,
-        status: editingParivar.status ?? 1,
-        admin_first_name: editingParivar.admin_first_name || "",
-        admin_last_name: editingParivar.admin_last_name || "",
-        admin_mobile: editingParivar.admin_mobile || "",
-        new_password: ""
-      });
-    }
-  }, [editingParivar]);
-
   if (!editingParivar) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#070D2B]/80 backdrop-blur-sm p-4 animate-in fade-in">
-      <div className="bg-white rounded-3xl p-6 sm:p-8 w-full max-w-lg shadow-2xl relative">
+      <div className="bg-white rounded-3xl p-6 sm:p-7 w-full max-w-lg shadow-2xl relative space-y-4 border border-slate-100">
         <button 
           onClick={() => setEditingParivar(null)}
-          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200"
+          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors cursor-pointer"
         >
           ✕
         </button>
         
-        <h3 className="text-xl font-black text-[#0B1340] mb-6">
-          Edit Parivar Details
-        </h3>
+        <div className="border-b border-slate-100 pb-3 space-y-0.5">
+          <div className="flex items-center gap-1.5 text-blue-600 font-bold text-xs uppercase tracking-wider">
+            <Building2 className="w-3.5 h-3.5" />
+            <span>Update Details</span>
+          </div>
+          <h3 className="text-lg font-black text-[#0B1340]">
+            Edit Parivar Details
+          </h3>
+        </div>
         
-        <form onSubmit={validateAndSubmit} noValidate className="space-y-4">
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1.5">
-              Parivar Name <span className="text-rose-500">*</span>
-            </label>
-            <input
-              type="text"
-              required
-              value={editForm.parivar_name}
-              onChange={(e) => setEditForm({...editForm, parivar_name: e.target.value})}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500"
-            />
-            {errors.parivar_name && <p className="text-[11px] text-rose-500 mt-1 font-semibold">{errors.parivar_name}</p>}
+        <form onSubmit={validateAndSubmit} noValidate className="space-y-3.5">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">
+                Community Type <span className="text-rose-500">*</span>
+              </label>
+              <select
+                value={editForm.community_type}
+                onChange={(e) => setEditForm({ ...editForm, community_type: e.target.value })}
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-[#0B1340]/20 focus:bg-white outline-none cursor-pointer"
+              >
+                <option value="Parivar">Parivar</option>
+                <option value="Village">Village</option>
+                <option value="Trust">Trust</option>
+                <option value="Samaj">Samaj</option>
+                <option value="Mandal">Mandal</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">
+                Parivar / Community Name <span className="text-rose-500">*</span>
+              </label>
+              <input
+                type="text"
+                required
+                value={editForm.parivar_name}
+                onChange={(e) => setEditForm({...editForm, parivar_name: e.target.value})}
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-[#0B1340]/20 focus:bg-white outline-none"
+              />
+              {errors.parivar_name && <p className="text-[11px] text-rose-500 mt-1 font-semibold">{errors.parivar_name}</p>}
+            </div>
           </div>
           
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 mb-1">
                 Admin First Name <span className="text-rose-500">*</span>
               </label>
               <input
                 type="text"
                 value={editForm.admin_first_name}
                 onChange={(e) => setEditForm({...editForm, admin_first_name: e.target.value})}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-[#0B1340]/20 focus:bg-white outline-none"
               />
               {errors.admin_first_name && <p className="text-[11px] text-rose-500 mt-1 font-semibold">{errors.admin_first_name}</p>}
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">Admin Last Name</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1">Admin Last Name</label>
               <input
                 type="text"
                 value={editForm.admin_last_name}
                 onChange={(e) => setEditForm({...editForm, admin_last_name: e.target.value})}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-[#0B1340]/20 focus:bg-white outline-none"
               />
             </div>
           </div>
 
-          <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1.5">
-              Admin Mobile <span className="text-rose-500">*</span>
-            </label>
-            <input
-              type="text"
-              maxLength={10}
-              value={editForm.admin_mobile}
-              onChange={(e) => setEditForm({...editForm, admin_mobile: e.target.value.replace(/\D/g, '')})}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500"
-            />
-            {errors.admin_mobile && <p className="text-[11px] text-rose-500 mt-1 font-semibold">{errors.admin_mobile}</p>}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">
+                Admin Email
+              </label>
+              <input
+                type="email"
+                value={editForm.admin_email}
+                onChange={(e) => setEditForm({...editForm, admin_email: e.target.value})}
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-[#0B1340]/20 focus:bg-white outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">
+                Admin Mobile
+              </label>
+              <input
+                type="tel"
+                maxLength={10}
+                value={editForm.admin_mobile}
+                onChange={(e) => setEditForm({...editForm, admin_mobile: e.target.value.replace(/\D/g, '')})}
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-[#0B1340]/20 focus:bg-white outline-none"
+              />
+              {errors.admin_mobile && <p className="text-[11px] text-rose-500 mt-1 font-semibold">{errors.admin_mobile}</p>}
+            </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1.5">Status</label>
+            <label className="block text-xs font-bold text-slate-700 mb-1">Status</label>
             <select
               value={editForm.status}
               onChange={(e) => setEditForm({...editForm, status: Number(e.target.value)})}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-semibold text-slate-900 focus:ring-2 focus:ring-[#0B1340]/20 focus:bg-white outline-none cursor-pointer"
             >
               <option value={1}>Active</option>
-              <option value={0}>Suspended</option>
+              <option value={0}>Suspended / Inactive</option>
             </select>
           </div>
 
-          <div className="pt-4 border-t border-slate-100">
-            <label className="block text-xs font-bold text-slate-700 mb-1.5">Reset Password (Optional)</label>
+          <div>
+            <label className="block text-xs font-bold text-slate-700 mb-1">Notes (Optional)</label>
             <input
               type="text"
-              placeholder="Enter new password to reset"
-              value={editForm.new_password}
-              onChange={(e) => setEditForm({...editForm, new_password: e.target.value})}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 focus:ring-2 focus:ring-blue-500"
+              value={editForm.notes}
+              onChange={(e) => setEditForm({...editForm, notes: e.target.value})}
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-[#0B1340]/20 focus:bg-white outline-none"
             />
-            <p className="text-[10px] text-slate-500 mt-1">Leave empty to keep current password</p>
           </div>
 
-          <div className="flex items-center gap-3 pt-4">
+          <div className="flex items-center gap-3 pt-3 border-t border-slate-100">
             <button
               type="button"
               onClick={() => setEditingParivar(null)}
