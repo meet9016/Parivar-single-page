@@ -106,7 +106,9 @@ interface SuperAdminContextType {
   handleUpdateTask: (id: string, task: Partial<ProjectTask>) => Promise<boolean>;
   handleLogTaskTime: (id: string, data: { add_hours?: number; set_hours?: number; status?: string; remarks?: string }) => Promise<boolean>;
   handleDeleteTask: (id: string) => Promise<boolean>;
+  handleBatchImportTasks: (tasks: any[]) => Promise<boolean>;
 }
+
 
 const SuperAdminContext = createContext<SuperAdminContextType | undefined>(undefined);
 
@@ -550,6 +552,21 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const handleBatchImportTasks = async (tasks: any[]) => {
+    try {
+      const res = await axiosInstance.post(`${ENDPOINTS.PROJECT_TASKS}/batch-import`, { tasks });
+      if (res.status === 200 || res.status === 201) {
+        toast.success(`Successfully imported ${tasks.length} tasks!`);
+        fetchProjectTasks();
+        return true;
+      }
+      return false;
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to import tasks from Excel.");
+      return false;
+    }
+  };
+
   const value = {
     isAuthenticated, isInitializing, loginError, loginLoading, handleLogin, handleLogout,
     activeTab, setActiveTab,
@@ -559,8 +576,9 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
     editingParivar, setEditingParivar, editLoading, handleEditParivar, handleDeleteParivar,
     pricingPlans, pricingLoading, fetchPricingPlans, handleCreatePricingPlan, handleEditPricingPlan, handleDeletePricingPlan,
     projectTasks, tasksLoading, taskSearch, setTaskSearch, taskFilters, setTaskFilters, taskMeta,
-    fetchProjectTasks, handleCreateTask, handleUpdateTask, handleLogTaskTime, handleDeleteTask
+    fetchProjectTasks, handleCreateTask, handleUpdateTask, handleLogTaskTime, handleDeleteTask, handleBatchImportTasks
   };
+
 
   return <SuperAdminContext.Provider value={value}>{children}</SuperAdminContext.Provider>;
 }

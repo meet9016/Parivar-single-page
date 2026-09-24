@@ -7,6 +7,7 @@ import {
   Search,
   Filter,
   Download,
+  Upload,
   CheckCircle2,
   AlertCircle,
   Play,
@@ -20,19 +21,15 @@ import {
   Trash2,
   Edit2,
   Layers,
-  Sparkles,
   TrendingUp,
   FileSpreadsheet,
   X,
   ChevronDown,
   CheckSquare,
-  Flame,
-  Zap,
   Briefcase,
-  SlidersHorizontal,
-  ArrowRight,
   Check,
-  ChevronRight
+  FileUp,
+  HelpCircle
 } from "lucide-react";
 import * as XLSX from "xlsx";
 import { useSuperAdmin, ProjectTask } from "../context/SuperAdminContext";
@@ -74,7 +71,7 @@ function CustomSelect({
   value,
   onChange,
   options,
-  placeholder = "Select option...",
+  placeholder = "Select...",
   className = "",
   size = "md",
   searchable = false,
@@ -84,7 +81,6 @@ function CustomSelect({
   const [searchQuery, setSearchQuery] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close on outside click
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
@@ -110,18 +106,15 @@ function CustomSelect({
 
   return (
     <div ref={dropdownRef} className={`relative select-none ${className}`}>
-      {/* Trigger Button */}
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className={`w-full flex items-center justify-between gap-2 text-left transition-all duration-150 cursor-pointer ${
           size === "sm"
-            ? "px-3 py-1.5 rounded-xl text-xs font-semibold bg-white border border-slate-200/90 shadow-2xs hover:border-[#0B1340]/40"
-            : "px-3.5 py-2.5 rounded-xl text-xs font-semibold bg-slate-50/70 border border-slate-200 shadow-2xs hover:bg-white hover:border-[#0B1340]/40"
+            ? "px-3 py-1.5 rounded-lg text-xs font-medium bg-white border border-slate-200 hover:border-slate-300"
+            : "px-3.5 py-2 rounded-xl text-xs font-medium bg-slate-50 border border-slate-200 hover:bg-white hover:border-slate-300"
         } ${
-          isOpen
-            ? "ring-2 ring-[#0B1340]/15 border-[#0B1340] bg-white"
-            : "text-slate-800"
+          isOpen ? "ring-2 ring-[#0B1340]/10 border-[#0B1340] bg-white" : "text-slate-800"
         }`}
       >
         <div className="flex items-center gap-2 truncate min-w-0">
@@ -135,51 +128,37 @@ function CustomSelect({
           <span className="truncate">
             {selectedOption ? selectedOption.label : <span className="text-slate-400">{placeholder}</span>}
           </span>
-          {selectedOption?.badge && (
-            <span
-              className={`text-[9px] px-1.5 py-0.2 rounded-md font-bold uppercase shrink-0 ${
-                selectedOption.badgeColor || "bg-slate-100 text-slate-600"
-              }`}
-            >
-              {selectedOption.badge}
-            </span>
-          )}
         </div>
 
         <ChevronDown
-          className={`w-3.5 h-3.5 text-slate-400 shrink-0 transition-transform duration-200 ${
+          className={`w-3.5 h-3.5 text-slate-400 shrink-0 transition-transform duration-150 ${
             isOpen ? "rotate-180 text-[#0B1340]" : ""
           }`}
         />
       </button>
 
-      {/* Options Dropdown Menu */}
       {isOpen && (
-        <div className="absolute z-50 left-0 right-0 mt-1.5 min-w-[200px] max-w-sm bg-white rounded-2xl shadow-xl border border-slate-100 p-1.5 animate-in fade-in zoom-in-95 duration-150">
-          {/* Search bar inside dropdown */}
+        <div className="absolute z-50 left-0 right-0 mt-1 min-w-[200px] max-w-sm bg-white rounded-xl shadow-lg border border-slate-100 p-1 animate-in fade-in duration-100">
           {searchable && (
-            <div className="p-1.5 pb-2 border-b border-slate-100 mb-1">
+            <div className="p-1 border-b border-slate-100 mb-1">
               <div className="relative">
-                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2" />
+                <Search className="w-3 h-3 text-slate-400 absolute left-2.5 top-2" />
                 <input
                   type="text"
                   placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onClick={(e) => e.stopPropagation()}
-                  className="w-full pl-8 pr-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
+                  className="w-full pl-7 pr-3 py-1 rounded-lg bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
                   autoFocus
                 />
               </div>
             </div>
           )}
 
-          {/* List Options */}
-          <div className="max-h-60 overflow-y-auto space-y-0.5 scrollbar-thin">
+          <div className="max-h-56 overflow-y-auto space-y-0.5">
             {filteredOptions.length === 0 ? (
-              <div className="py-4 text-center text-slate-400 text-xs font-medium">
-                No options found
-              </div>
+              <div className="py-3 text-center text-slate-400 text-xs">No results found</div>
             ) : (
               filteredOptions.map((opt) => {
                 const isSelected = opt.value === value;
@@ -192,18 +171,16 @@ function CustomSelect({
                       setIsOpen(false);
                       setSearchQuery("");
                     }}
-                    className={`w-full flex items-center justify-between gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-left transition-colors cursor-pointer ${
+                    className={`w-full flex items-center justify-between gap-2 px-3 py-1.5 rounded-lg text-xs text-left transition-colors cursor-pointer ${
                       isSelected
-                        ? "bg-[#0B1340] text-white font-bold shadow-xs"
-                        : "text-slate-700 hover:bg-slate-100/80 hover:text-slate-900"
+                        ? "bg-[#0B1340] text-white font-semibold"
+                        : "text-slate-700 hover:bg-slate-50"
                     }`}
                   >
                     <div className="flex items-center gap-2 truncate min-w-0">
                       {opt.dotColor && (
                         <span
-                          className={`w-2 h-2 rounded-full shrink-0 ${
-                            isSelected ? "ring-2 ring-white/60" : ""
-                          }`}
+                          className="w-2 h-2 rounded-full shrink-0"
                           style={{ backgroundColor: opt.dotColor }}
                         />
                       )}
@@ -211,7 +188,7 @@ function CustomSelect({
                         <div className="truncate">{opt.label}</div>
                         {opt.sublabel && (
                           <div
-                            className={`text-[10px] font-normal truncate ${
+                            className={`text-[10px] truncate ${
                               isSelected ? "text-blue-100" : "text-slate-400"
                             }`}
                           >
@@ -220,21 +197,7 @@ function CustomSelect({
                         )}
                       </div>
                     </div>
-
-                    <div className="flex items-center gap-1.5 shrink-0">
-                      {opt.badge && (
-                        <span
-                          className={`text-[9px] px-1.5 py-0.5 rounded-md font-bold uppercase ${
-                            isSelected
-                              ? "bg-white/20 text-white"
-                              : opt.badgeColor || "bg-slate-100 text-slate-600"
-                          }`}
-                        >
-                          {opt.badge}
-                        </span>
-                      )}
-                      {isSelected && <Check className="w-3.5 h-3.5 text-white stroke-[2.5]" />}
-                    </div>
+                    {isSelected && <Check className="w-3.5 h-3.5 text-white shrink-0" />}
                   </button>
                 );
               })
@@ -259,11 +222,13 @@ export default function ProjectTasksTab() {
     handleUpdateTask,
     handleLogTaskTime,
     handleDeleteTask,
+    handleBatchImportTasks,
     parivars,
   } = useSuperAdmin();
 
   // Modals
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<ProjectTask | null>(null);
   const [quickLogTask, setQuickLogTask] = useState<ProjectTask | null>(null);
   const [stopTimerTaskModal, setStopTimerTaskModal] = useState<{
@@ -296,15 +261,18 @@ export default function ProjectTasksTab() {
     remarks: "",
   });
 
-  // Selected project filter view state
-  const [selectedProjectTab, setSelectedProjectTab] = useState<string>("all");
+  // Excel Import State
+  const [importParsedTasks, setImportParsedTasks] = useState<any[]>([]);
+  const [importFileName, setImportFileName] = useState<string>("");
+  const [importLoading, setImportLoading] = useState<boolean>(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // ── LIVE TIMER STATE ─────────────────────────────────────────────────
   const [activeTimer, setActiveTimer] = useState<ActiveTimer | null>(null);
   const [elapsedDisplayMs, setElapsedDisplayMs] = useState<number>(0);
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Load timer from localStorage on mount
+  // Load timer from localStorage
   useEffect(() => {
     try {
       const savedTimerStr = localStorage.getItem("parivar_active_task_timer");
@@ -317,7 +285,7 @@ export default function ProjectTasksTab() {
     }
   }, []);
 
-  // Save timer to localStorage whenever it changes
+  // Save timer to localStorage
   useEffect(() => {
     if (activeTimer) {
       localStorage.setItem("parivar_active_task_timer", JSON.stringify(activeTimer));
@@ -326,7 +294,7 @@ export default function ProjectTasksTab() {
     }
   }, [activeTimer]);
 
-  // Tick timer every second
+  // Tick timer
   useEffect(() => {
     if (activeTimer && !activeTimer.isPaused) {
       const updateElapsed = () => {
@@ -349,7 +317,6 @@ export default function ProjectTasksTab() {
     };
   }, [activeTimer]);
 
-  // Format Milliseconds into HH:MM:SS
   const formatTime = (ms: number) => {
     const totalSec = Math.floor(ms / 1000);
     const hours = Math.floor(totalSec / 3600);
@@ -358,7 +325,6 @@ export default function ProjectTasksTab() {
     return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
   };
 
-  // Start Timer for a specific task
   const handleStartTimer = (task: ProjectTask) => {
     if (activeTimer && activeTimer.taskId === task._id) {
       if (activeTimer.isPaused) {
@@ -375,7 +341,7 @@ export default function ProjectTasksTab() {
 
     if (activeTimer && activeTimer.taskId !== task._id) {
       const confirmSwitch = window.confirm(
-        `Timer is currently active for "${activeTimer.taskTitle}". Do you want to stop it and start timer for "${task.task_title}"?`
+        `Timer is currently running for "${activeTimer.taskTitle}". Do you want to switch timer to "${task.task_title}"?`
       );
       if (!confirmSwitch) return;
     }
@@ -396,10 +362,9 @@ export default function ProjectTasksTab() {
       handleLogTaskTime(task._id, { status: "In Progress" });
     }
 
-    toast.success(`⏱ Timer started for: ${task.task_title}`);
+    toast.success(`Timer started for: ${task.task_title}`);
   };
 
-  // Pause Timer
   const handlePauseTimer = () => {
     if (!activeTimer || activeTimer.isPaused) return;
     const now = Date.now();
@@ -413,7 +378,6 @@ export default function ProjectTasksTab() {
     toast.info("Timer paused");
   };
 
-  // Resume Timer
   const handleResumeTimer = () => {
     if (!activeTimer || !activeTimer.isPaused) return;
     const now = Date.now();
@@ -425,7 +389,6 @@ export default function ProjectTasksTab() {
     toast.info("Timer resumed");
   };
 
-  // Stop Timer & Open Summary / Confirmation to Log Hours
   const handleStopTimer = (task?: ProjectTask) => {
     if (!activeTimer) return;
     const now = Date.now();
@@ -449,11 +412,10 @@ export default function ProjectTasksTab() {
       elapsedSeconds,
       hoursDecimal: roundedHours,
     });
-    setLogRemarksInput(`Worked for ${formatTime(totalMs)} via live timer`);
+    setLogRemarksInput(`Worked ${formatTime(totalMs)} via live timer`);
     setLogStatusInput(targetTask.status);
   };
 
-  // Save Stopped Timer to Backend
   const handleConfirmSaveTimerHours = async () => {
     if (!stopTimerTaskModal) return;
     const { task, hoursDecimal } = stopTimerTaskModal;
@@ -473,9 +435,8 @@ export default function ProjectTasksTab() {
     }
   };
 
-  // Discard active timer
   const handleDiscardTimer = () => {
-    if (window.confirm("Are you sure you want to discard this timer session without logging time?")) {
+    if (window.confirm("Do you want to discard this timer without saving?")) {
       setActiveTimer(null);
       toast.info("Timer session discarded");
     }
@@ -528,7 +489,6 @@ export default function ProjectTasksTab() {
     });
   };
 
-  // Auto-fill client when project is changed in create modal
   const handleProjectSelectChange = (projectName: string) => {
     const matched = parivars.find((p) => p.parivar_name === projectName);
     const client = matched
@@ -542,7 +502,6 @@ export default function ProjectTasksTab() {
     }));
   };
 
-  // Submit Create or Edit Form
   const handleSubmitTask = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!taskForm.project_name.trim()) {
@@ -554,7 +513,7 @@ export default function ProjectTasksTab() {
       return;
     }
     if (!taskForm.assigned_to.trim()) {
-      toast.error("Please enter the developer/assignee name");
+      toast.error("Please enter the developer name");
       return;
     }
 
@@ -567,14 +526,13 @@ export default function ProjectTasksTab() {
     }
   };
 
-  // Submit Manual Quick Log Form
   const handleQuickLogSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!quickLogTask) return;
     const hoursVal = parseFloat(logHoursInput);
 
     if (isNaN(hoursVal) && !logStatusInput && !logRemarksInput) {
-      toast.error("Please provide hours or status update");
+      toast.error("Please provide hours or status");
       return;
     }
 
@@ -596,7 +554,7 @@ export default function ProjectTasksTab() {
     }
   };
 
-  // ── EXCEL REPORT DOWNLOAD ──────────────────────────────────────────
+  // ── EXCEL EXPORT (PROJECT-SPECIFIC OR ALL) ──────────────────────────
   const handleExportExcel = () => {
     if (projectTasks.length === 0) {
       toast.error("No tasks to export!");
@@ -605,48 +563,240 @@ export default function ProjectTasksTab() {
 
     const exportData = projectTasks.map((t, idx) => ({
       "Sr No": idx + 1,
-      "Project / Community Name": t.project_name,
-      "Client Name": t.client_name || "-",
+      "Project Name": t.project_name,
+      "Client Name": t.client_name || "",
       "Task Title": t.task_title,
-      "Task Description": t.description || "-",
-      "Task Category": t.category,
+      "Description": t.description || "",
+      "Category": t.category,
       "Assigned Developer": t.assigned_to,
       "Priority": t.priority,
       "Status": t.status,
       "Estimated Hours": t.estimated_hours || 0,
       "Spent Hours": t.spent_hours || 0,
       "Variance (Est - Spent)": ((t.estimated_hours || 0) - (t.spent_hours || 0)).toFixed(2),
-      "Billable": t.billable ? "Yes" : "No",
-      "Start Date": t.start_date ? new Date(t.start_date).toLocaleDateString("en-IN") : "-",
-      "Due Date": t.due_date ? new Date(t.due_date).toLocaleDateString("en-IN") : "-",
-      "Completed Date": t.completed_date ? new Date(t.completed_date).toLocaleDateString("en-IN") : "-",
-      "Remarks / Notes": t.remarks || "-",
-      "Created At": t.createdAt ? new Date(t.createdAt).toLocaleDateString("en-IN") : "-",
+      "Start Date": t.start_date ? new Date(t.start_date).toLocaleDateString("en-IN") : "",
+      "Due Date": t.due_date ? new Date(t.due_date).toLocaleDateString("en-IN") : "",
+      "Remarks / Notes": t.remarks || "",
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(exportData);
     const colWidths = Object.keys(exportData[0] || {}).map((key) => ({
-      wch: Math.max(key.length + 4, 18),
+      wch: Math.max(key.length + 4, 16),
     }));
     worksheet["!cols"] = colWidths;
 
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Project Tasks Report");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Tasks_Report");
 
-    const projectNameSuffix = taskFilters.project !== "all" ? `_${taskFilters.project}` : "";
-    const fileName = `Project_Tasks_Time_Report${projectNameSuffix}_${new Date().toISOString().split("T")[0]}.xlsx`;
+    const projectPrefix = taskFilters.project !== "all" ? `${taskFilters.project}_` : "All_Projects_";
+    const fileName = `${projectPrefix}Tasks_Report_${new Date().toISOString().split("T")[0]}.xlsx`;
     XLSX.writeFile(workbook, fileName);
-    toast.success("Excel spreadsheet downloaded successfully!");
+    toast.success(
+      taskFilters.project !== "all"
+        ? `Downloaded report for project "${taskFilters.project}" with all task hours!`
+        : "Downloaded all project tasks report!"
+    );
   };
 
-  // Badges & Option Maps for Themed Selects
+  interface ValidatedImportTask {
+    raw: any;
+    project_name: string;
+    task_title: string;
+    assigned_to: string;
+    client_name: string;
+    description: string;
+    category: string;
+    priority: string;
+    status: string;
+    estimated_hours: number;
+    spent_hours: number;
+    start_date: string;
+    due_date: string;
+    remarks: string;
+    errors: string[];
+    isValid: boolean;
+  }
+
+  const [importValidationList, setImportValidationList] = useState<ValidatedImportTask[]>([]);
+
+  // ── EXCEL IMPORT HANDLING WITH VALIDATION ────────────────────────────
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setImportFileName(file.name);
+    const reader = new FileReader();
+
+    reader.onload = (evt) => {
+      try {
+        const bstr = evt.target?.result;
+        const workbook = XLSX.read(bstr, { type: "binary" });
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        const rawJson: any[] = XLSX.utils.sheet_to_json(worksheet);
+
+        if (!rawJson || rawJson.length === 0) {
+          toast.error("The uploaded Excel file is empty!");
+          return;
+        }
+
+        // Validate each row
+        const validated: ValidatedImportTask[] = rawJson.map((row, index) => {
+          const rowErrors: string[] = [];
+
+          const projectName = String(row['Project Name'] || row['project_name'] || row['Project / Community Name'] || row.Project || '').trim();
+          const taskTitle = String(row['Task Title'] || row['task_title'] || row.Task || row.Title || '').trim();
+          const assignedTo = String(row['Assigned Developer'] || row['assigned_to'] || row['Assigned To'] || row.Developer || '').trim();
+          const clientName = String(row['Client Name'] || row['client_name'] || row.Client || '').trim();
+          const description = String(row['Description'] || row['Task Description'] || row['description'] || '').trim();
+          const category = String(row['Category'] || row['Task Category'] || row['category'] || 'Customization').trim();
+          const remarks = String(row['Remarks'] || row['Remarks / Notes'] || row['remarks'] || '').trim();
+
+          // Priority validation
+          const rawPriority = String(row['Priority'] || row['priority'] || 'Medium').trim();
+          const priority = ['Low', 'Medium', 'High', 'Urgent'].includes(rawPriority) ? rawPriority : 'Medium';
+
+          // Status validation
+          const rawStatus = String(row['Status'] || row['status'] || 'Pending').trim();
+          const status = ['Pending', 'In Progress', 'Testing', 'Completed'].includes(rawStatus) ? rawStatus : 'Pending';
+
+          // Hours validation
+          const rawEst = row['Estimated Hours'] ?? row['estimated_hours'] ?? row.Estimated ?? 0;
+          const estimated_hours = isNaN(Number(rawEst)) ? 0 : Math.max(0, Number(rawEst));
+
+          const rawSpent = row['Spent Hours'] ?? row['spent_hours'] ?? row.Spent ?? 0;
+          const spent_hours = isNaN(Number(rawSpent)) ? 0 : Math.max(0, Number(rawSpent));
+
+          // Required field checks
+          if (!projectName) {
+            rowErrors.push("Missing Project Name");
+          }
+          if (!taskTitle) {
+            rowErrors.push("Missing Task Title");
+          }
+          if (!assignedTo) {
+            rowErrors.push("Missing Assigned Developer");
+          }
+
+          return {
+            raw: row,
+            project_name: projectName || "Untitled Project",
+            task_title: taskTitle || "Untitled Task",
+            assigned_to: assignedTo || "Unassigned",
+            client_name: clientName,
+            description: description,
+            category: category,
+            priority: priority,
+            status: status,
+            estimated_hours: estimated_hours,
+            spent_hours: spent_hours,
+            start_date: String(row['Start Date'] || row['start_date'] || ''),
+            due_date: String(row['Due Date'] || row['due_date'] || ''),
+            remarks: remarks,
+            errors: rowErrors,
+            isValid: rowErrors.length === 0,
+          };
+        });
+
+        setImportParsedTasks(rawJson);
+        setImportValidationList(validated);
+        setIsImportModalOpen(true);
+      } catch (err) {
+        console.error("Failed to parse excel file", err);
+        toast.error("Could not parse Excel file. Please download the sample template.");
+      }
+    };
+
+    reader.readAsBinaryString(file);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleDownloadSampleTemplate = () => {
+    const sampleData = [
+      {
+        "Project Name": "Patel Parivar",
+        "Client Name": "Ramesh Patel",
+        "Task Title": "Custom Matrimony Filter",
+        "Description": "Add blood group and sub-caste filter on matrimony list",
+        "Assigned Developer": "Divyraj",
+        "Status": "Pending",
+        "Estimated Hours": 4.5,
+        "Spent Hours": 0,
+        "Start Date": "2026-09-24",
+        "Due Date": "2026-09-26",
+        "Remarks": "Requested by client",
+      },
+      {
+        "Project Name": "Shah Community",
+        "Client Name": "Amit Shah",
+        "Task Title": "Member Export to Excel",
+        "Description": "Export members directory to XLSX",
+        "Assigned Developer": "Amit",
+        "Status": "In Progress",
+        "Estimated Hours": 2,
+        "Spent Hours": 1,
+        "Start Date": "2026-09-24",
+        "Due Date": "2026-09-25",
+        "Remarks": "In progress",
+      }
+    ];
+
+    const worksheet = XLSX.utils.json_to_sheet(sampleData);
+    const colWidths = Object.keys(sampleData[0] || {}).map((key) => ({
+      wch: Math.max(key.length + 4, 16),
+    }));
+    worksheet["!cols"] = colWidths;
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Tasks_Template");
+    XLSX.writeFile(workbook, "Project_Tasks_Sample_Template.xlsx");
+    toast.success("Sample template downloaded! You can fill this sheet and upload directly.");
+  };
+
+  const handleConfirmBatchImport = async () => {
+    if (importValidationList.length === 0) return;
+    
+    // Check if there are any critical errors
+    const invalidCount = importValidationList.filter(t => !t.isValid).length;
+    if (invalidCount > 0) {
+      toast.error(`Please fix ${invalidCount} invalid row(s) in your Excel sheet or download sample template`);
+      return;
+    }
+
+    setImportLoading(true);
+    const payload = importValidationList.map(t => ({
+      project_name: t.project_name,
+      client_name: t.client_name,
+      task_title: t.task_title,
+      description: t.description,
+      assigned_to: t.assigned_to,
+      category: t.category,
+      priority: t.priority,
+      status: t.status,
+      estimated_hours: t.estimated_hours,
+      spent_hours: t.spent_hours,
+      start_date: t.start_date,
+      due_date: t.due_date,
+      remarks: t.remarks,
+    }));
+
+    const ok = await handleBatchImportTasks(payload);
+    setImportLoading(false);
+    if (ok) {
+      setIsImportModalOpen(false);
+      setImportParsedTasks([]);
+      setImportValidationList([]);
+      setImportFileName("");
+    }
+  };
+
+  // Dropdown options
   const projectOptions: CustomSelectOption[] = [
-    { value: "all", label: "All Projects", dotColor: "#64748B" },
+    { value: "all", label: "All Projects" },
     ...parivars.map((p) => ({
       value: p.parivar_name,
       label: p.parivar_name,
-      sublabel: p.community_type || "Tenant",
-      dotColor: "#2563EB",
+      sublabel: p.community_type || "Parivar",
     })),
     ...taskMeta.projectsList
       .filter((p) => !parivars.some((pr) => pr.parivar_name === p))
@@ -654,25 +804,23 @@ export default function ProjectTasksTab() {
         value: p,
         label: p,
         sublabel: "Custom Project",
-        dotColor: "#0D9488",
       })),
   ];
 
   const devOptions: CustomSelectOption[] = [
-    { value: "all", label: "All Developers", dotColor: "#64748B" },
+    { value: "all", label: "All Developers" },
     ...taskMeta.devsList.map((d) => ({
       value: d,
       label: d,
-      dotColor: "#6366F1",
     })),
   ];
 
   const statusOptions: CustomSelectOption[] = [
-    { value: "all", label: "All Statuses", dotColor: "#64748B" },
-    { value: "Pending", label: "Pending", dotColor: "#D97706", badgeColor: "bg-amber-50 text-amber-700" },
-    { value: "In Progress", label: "In Progress", dotColor: "#2563EB", badgeColor: "bg-blue-50 text-blue-700" },
-    { value: "Testing", label: "Testing", dotColor: "#9333EA", badgeColor: "bg-purple-50 text-purple-700" },
-    { value: "Completed", label: "Completed", dotColor: "#10B981", badgeColor: "bg-emerald-50 text-emerald-700" },
+    { value: "all", label: "All Statuses" },
+    { value: "Pending", label: "Pending", dotColor: "#D97706" },
+    { value: "In Progress", label: "In Progress", dotColor: "#2563EB" },
+    { value: "Testing", label: "Testing", dotColor: "#9333EA" },
+    { value: "Completed", label: "Completed", dotColor: "#10B981" },
   ];
 
   const formStatusOptions: CustomSelectOption[] = [
@@ -683,47 +831,36 @@ export default function ProjectTasksTab() {
   ];
 
   const priorityOptions: CustomSelectOption[] = [
-    { value: "all", label: "All Priorities", dotColor: "#64748B" },
-    { value: "Urgent", label: "Urgent", dotColor: "#E11D48", badgeColor: "bg-rose-50 text-rose-700" },
-    { value: "High", label: "High", dotColor: "#EA580C", badgeColor: "bg-orange-50 text-orange-700" },
-    { value: "Medium", label: "Medium", dotColor: "#D97706", badgeColor: "bg-amber-50 text-amber-700" },
-    { value: "Low", label: "Low", dotColor: "#64748B", badgeColor: "bg-slate-50 text-slate-600" },
+    { value: "all", label: "All Priorities" },
+    { value: "Urgent", label: "Urgent", dotColor: "#E11D48" },
+    { value: "High", label: "High", dotColor: "#EA580C" },
+    { value: "Medium", label: "Medium", dotColor: "#D97706" },
+    { value: "Low", label: "Low", dotColor: "#64748B" },
   ];
 
   const formPriorityOptions: CustomSelectOption[] = [
-    { value: "Urgent", label: "Urgent", dotColor: "#E11D48", badge: "Highest" },
+    { value: "Urgent", label: "Urgent", dotColor: "#E11D48" },
     { value: "High", label: "High", dotColor: "#EA580C" },
     { value: "Medium", label: "Medium", dotColor: "#D97706" },
     { value: "Low", label: "Low", dotColor: "#64748B" },
   ];
 
   const categoryOptions: CustomSelectOption[] = [
-    { value: "all", label: "All Categories", dotColor: "#64748B" },
-    { value: "Customization", label: "Customization", dotColor: "#2563EB" },
-    { value: "Feature", label: "Feature", dotColor: "#059669" },
-    { value: "Bug Fix", label: "Bug Fix", dotColor: "#DC2626" },
-    { value: "Design", label: "Design", dotColor: "#D946EF" },
-    { value: "Maintenance", label: "Maintenance", dotColor: "#D97706" },
-    { value: "Other", label: "Other", dotColor: "#64748B" },
-  ];
-
-  const formCategoryOptions: CustomSelectOption[] = [
-    { value: "Customization", label: "Customization", dotColor: "#2563EB" },
-    { value: "Feature", label: "Feature", dotColor: "#059669" },
-    { value: "Bug Fix", label: "Bug Fix", dotColor: "#DC2626" },
-    { value: "Design", label: "Design", dotColor: "#D946EF" },
-    { value: "Maintenance", label: "Maintenance", dotColor: "#D97706" },
-    { value: "Other", label: "Other", dotColor: "#64748B" },
+    { value: "all", label: "All Categories" },
+    { value: "Customization", label: "Customization" },
+    { value: "Feature", label: "Feature" },
+    { value: "Bug Fix", label: "Bug Fix" },
+    { value: "Design", label: "Design" },
+    { value: "Maintenance", label: "Maintenance" },
+    { value: "Other", label: "Other" },
   ];
 
   const modalProjectOptions: CustomSelectOption[] = parivars.map((p) => ({
     value: p.parivar_name,
     label: p.parivar_name,
-    sublabel: `${p.community_type || "Community Tenant"} • ${p.village_name || ""}`,
-    dotColor: "#2563EB",
+    sublabel: p.community_type || "Parivar",
   }));
 
-  // Helper badge styles
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "Completed":
@@ -751,48 +888,53 @@ export default function ProjectTasksTab() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* ── LIVE ACTIVE TIMER STICKY BANNER ── */}
+    <div className="space-y-5 font-sans">
+      {/* Hidden File Input for Excel Import */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".xlsx, .xls, .csv"
+        className="hidden"
+        onChange={handleFileSelect}
+      />
+
+      {/* ── LIVE ACTIVE TIMER BANNER (LIGHT THEME) ── */}
       {activeTimer && (
-        <div className="bg-gradient-to-r from-[#0B1340] via-[#12206B] to-[#1E3A8A] text-white rounded-2xl p-4 shadow-xl border border-blue-900/40 flex flex-wrap items-center justify-between gap-4 animate-in fade-in duration-300">
-          <div className="flex items-center gap-3.5">
-            <div className="relative flex items-center justify-center">
-              <div className="w-12 h-12 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center text-blue-300 shadow-inner">
-                <Clock className={`w-6 h-6 ${!activeTimer.isPaused ? "animate-spin text-emerald-400" : "text-amber-400"}`} style={{ animationDuration: "3s" }} />
-              </div>
-              {!activeTimer.isPaused && (
-                <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-[#0B1340]"></span>
-                </span>
-              )}
+        <div className="bg-white border-2 border-blue-500/30 rounded-2xl p-4 shadow-sm flex flex-wrap items-center justify-between gap-4 animate-in fade-in duration-200">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shrink-0">
+              <Clock className={`w-5 h-5 ${!activeTimer.isPaused ? "text-blue-600 animate-pulse" : "text-amber-500"}`} />
             </div>
 
             <div>
-              <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded-md bg-blue-400/20 text-blue-200 font-bold text-[10px] tracking-wide uppercase border border-blue-300/20">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="px-2.5 py-0.5 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 font-bold text-[10px] tracking-wide uppercase">
                   {activeTimer.projectName}
                 </span>
-                <span className="text-xs text-blue-200/80 font-medium">Assigned: {activeTimer.assignedTo}</span>
-                {activeTimer.isPaused && (
-                  <span className="px-2 py-0.5 rounded-md bg-amber-400/20 text-amber-300 font-bold text-[10px]">
+                <span className="text-xs font-semibold text-slate-600">Developer: {activeTimer.assignedTo}</span>
+                {activeTimer.isPaused ? (
+                  <span className="px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 font-bold text-[10px]">
                     PAUSED
+                  </span>
+                ) : (
+                  <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 font-bold text-[10px] flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+                    RECORDING
                   </span>
                 )}
               </div>
-              <h3 className="text-sm font-extrabold text-white mt-0.5 max-w-md truncate">
+              <h3 className="text-sm font-bold text-slate-900 mt-1 truncate max-w-md">
                 {activeTimer.taskTitle}
               </h3>
             </div>
           </div>
 
-          {/* Stopwatch Display & Actions */}
           <div className="flex items-center gap-4 ml-auto">
             <div className="text-right">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-blue-200/70 block">
-                Live Working Timer
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                Working Timer
               </span>
-              <span className="font-mono text-2xl font-black text-white tracking-wider drop-shadow-sm">
+              <span className="font-mono text-2xl font-black text-slate-900 tracking-tight">
                 {formatTime(elapsedDisplayMs)}
               </span>
             </div>
@@ -801,38 +943,35 @@ export default function ProjectTasksTab() {
               {activeTimer.isPaused ? (
                 <button
                   onClick={handleResumeTimer}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-extrabold transition-all cursor-pointer shadow-md"
-                  title="Resume Timer"
+                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all cursor-pointer shadow-2xs"
                 >
-                  <Play className="w-4 h-4 fill-white" />
+                  <Play className="w-3.5 h-3.5 fill-white" />
                   <span>Resume</span>
                 </button>
               ) : (
                 <button
                   onClick={handlePauseTimer}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-500/90 hover:bg-amber-500 text-white text-xs font-extrabold transition-all cursor-pointer shadow-md"
-                  title="Pause Timer"
+                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold transition-all cursor-pointer shadow-2xs"
                 >
-                  <Pause className="w-4 h-4 fill-white" />
+                  <Pause className="w-3.5 h-3.5 fill-white" />
                   <span>Pause</span>
                 </button>
               )}
 
               <button
                 onClick={() => handleStopTimer()}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-extrabold transition-all cursor-pointer shadow-md"
-                title="Stop Timer & Log Time"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all cursor-pointer shadow-2xs"
               >
-                <Square className="w-4 h-4 fill-white" />
+                <Square className="w-3.5 h-3.5 fill-white" />
                 <span>Stop & Log</span>
               </button>
 
               <button
                 onClick={handleDiscardTimer}
-                className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-blue-200 hover:text-white transition-colors cursor-pointer"
+                className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer border border-slate-200"
                 title="Discard Timer"
               >
-                <RotateCcw className="w-4 h-4" />
+                <RotateCcw className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>
@@ -841,39 +980,36 @@ export default function ProjectTasksTab() {
 
       {/* ── Top Stat Cards ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Total Tasks */}
-        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
+        <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-2xs flex items-center justify-between">
           <div>
             <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total Tasks</span>
             <div className="flex items-baseline gap-2 mt-1">
-              <span className="text-2xl font-black text-slate-900">{taskMeta.totalTasks}</span>
+              <span className="text-2xl font-bold text-slate-900">{taskMeta.totalTasks}</span>
               <span className="text-xs text-slate-400 font-medium">({taskMeta.filteredTasks} in view)</span>
             </div>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-[#0B1340]/5 flex items-center justify-center text-[#0B1340]">
+          <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-600">
             <Layers className="w-5 h-5" />
           </div>
         </div>
 
-        {/* Total Time Spent */}
-        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
+        <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-2xs flex items-center justify-between">
           <div>
             <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total Hours Spent</span>
             <div className="flex items-baseline gap-2 mt-1">
-              <span className="text-2xl font-black text-blue-600">{taskMeta.totalSpentHours} hrs</span>
+              <span className="text-2xl font-bold text-blue-600">{taskMeta.totalSpentHours} hrs</span>
               <span className="text-xs text-slate-400 font-medium">/ {taskMeta.totalEstimatedHours}h est</span>
             </div>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+          <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
             <Clock className="w-5 h-5" />
           </div>
         </div>
 
-        {/* Status Breakdown */}
-        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
+        <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-2xs flex items-center justify-between">
           <div>
             <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Task Status</span>
-            <div className="flex items-center gap-2 mt-1.5 text-xs font-bold">
+            <div className="flex items-center gap-2 mt-1.5 text-xs font-semibold">
               <span className="text-amber-600">{taskMeta.statusCounts.Pending || 0} Pending</span>
               <span className="text-slate-300">•</span>
               <span className="text-blue-600">{taskMeta.statusCounts["In Progress"] || 0} In Progress</span>
@@ -881,93 +1017,107 @@ export default function ProjectTasksTab() {
               <span className="text-emerald-600">{taskMeta.statusCounts.Completed || 0} Done</span>
             </div>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+          <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
             <CheckCircle2 className="w-5 h-5" />
           </div>
         </div>
 
-        {/* Registered Parivars / Projects */}
-        <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center justify-between">
+        <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-2xs flex items-center justify-between">
           <div>
             <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Projects & Devs</span>
             <div className="flex items-baseline gap-2 mt-1">
-              <span className="text-2xl font-black text-indigo-600">{parivars.length || taskMeta.projectsList.length}</span>
+              <span className="text-2xl font-bold text-slate-800">{parivars.length || taskMeta.projectsList.length}</span>
               <span className="text-xs text-slate-400 font-medium">
                 Parivars • {taskMeta.devsList.length} Developers
               </span>
             </div>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
+          <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
             <Briefcase className="w-5 h-5" />
           </div>
         </div>
       </div>
 
-      {/* ── PROJECT SELECTOR QUICK TABS ── */}
-      <div className="bg-white rounded-2xl p-3 border border-slate-200 shadow-sm">
-        <div className="flex items-center justify-between gap-3 mb-2 px-1">
+      {/* ── Project Breakdown & Quick Summary Bar ── */}
+      <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-2xs space-y-2.5">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Building className="w-4 h-4 text-slate-500" />
-            <span className="text-xs font-extrabold text-slate-800 uppercase tracking-wider text-[11px]">
-              Select Project / Parivar:
+            <Building className="w-4 h-4 text-[#0B1340]" />
+            <span className="text-xs font-bold text-slate-800">
+              Project Wise Tasks & Hours Summary:
             </span>
           </div>
-          <span className="text-[11px] text-slate-400 font-medium">
-            Showing tasks linked to All Parivars
+          <span className="text-[11px] text-slate-400">
+            Click any project to see its tasks & total hours
           </span>
         </div>
 
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1">
+          {/* All Projects pill */}
           <button
-            onClick={() => {
-              setSelectedProjectTab("all");
-              setTaskFilters((prev) => ({ ...prev, project: "all" }));
-            }}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition-all cursor-pointer ${
+            type="button"
+            onClick={() => setTaskFilters((prev) => ({ ...prev, project: "all" }))}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 transition-all cursor-pointer ${
               taskFilters.project === "all"
                 ? "bg-[#0B1340] text-white shadow-sm"
-                : "bg-slate-100 hover:bg-slate-200 text-slate-600"
+                : "bg-slate-100 hover:bg-slate-200/70 text-slate-700"
             }`}
           >
-            All Projects ({taskMeta.totalTasks})
+            <span>All Projects</span>
+            <span
+              className={`px-1.5 py-0.2 text-[10px] rounded-full font-bold ${
+                taskFilters.project === "all"
+                  ? "bg-white/20 text-white"
+                  : "bg-slate-200 text-slate-600"
+              }`}
+            >
+              {taskMeta.totalTasks}
+            </span>
           </button>
 
-          {parivars.map((p) => {
-            const pStats = taskMeta.projectStats[p.parivar_name];
-            const taskCount = pStats?.count || 0;
-            const spentHrs = pStats?.spent || 0;
-            const isSelected = taskFilters.project === p.parivar_name;
+          {/* Individual Project pills with count and spent hours */}
+          {taskMeta.projectsList.map((proj) => {
+            const stats = taskMeta.projectStats[proj] || { count: 0, spent: 0, estimated: 0 };
+            const isSelected = taskFilters.project === proj;
 
             return (
               <button
-                key={p._id}
-                onClick={() => {
-                  setSelectedProjectTab(p.parivar_name);
-                  setTaskFilters((prev) => ({ ...prev, project: p.parivar_name }));
-                }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition-all cursor-pointer border ${
+                key={proj}
+                type="button"
+                onClick={() => setTaskFilters((prev) => ({ ...prev, project: proj }))}
+                className={`flex items-center gap-2.5 px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 transition-all cursor-pointer border ${
                   isSelected
                     ? "bg-[#0B1340] text-white border-[#0B1340] shadow-sm"
-                    : "bg-white hover:bg-slate-50 text-slate-700 border-slate-200"
+                    : "bg-white hover:bg-slate-50 text-slate-800 border-slate-200"
                 }`}
               >
-                <span>{p.parivar_name}</span>
-                <span
-                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-black ${
-                    isSelected ? "bg-white/20 text-white" : "bg-slate-100 text-slate-500"
-                  }`}
-                >
-                  {taskCount} {taskCount === 1 ? "task" : "tasks"}
-                  {spentHrs > 0 ? ` • ${spentHrs}h` : ""}
-                </span>
+                <span className="font-bold">{proj}</span>
+                <div className="flex items-center gap-1.5 text-[10px]">
+                  <span
+                    className={`px-1.5 py-0.5 rounded-md font-bold ${
+                      isSelected
+                        ? "bg-white/20 text-white"
+                        : "bg-slate-100 text-slate-700"
+                    }`}
+                  >
+                    {stats.count} {stats.count === 1 ? "task" : "tasks"}
+                  </span>
+                  <span
+                    className={`font-bold ${
+                      isSelected ? "text-emerald-300" : "text-emerald-700"
+                    }`}
+                  >
+                    ⏱ {stats.spent}h
+                  </span>
+                </div>
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* ── Action & Themed Filter Bar ── */}
-      <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-4">
+      {/* ── Action & Filter Bar ── */}
+      <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-2xs space-y-3.5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           {/* Search */}
           <div className="relative flex-1 min-w-[240px] max-w-md">
@@ -977,62 +1127,65 @@ export default function ProjectTasksTab() {
               placeholder="Search by project, task title, developer, client, description..."
               value={taskSearch}
               onChange={(e) => setTaskSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B1340]/20 focus:border-[#0B1340]/40"
+              className="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B1340]/15"
             />
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex items-center gap-2.5">
+          {/* Action Buttons: Import, Export, Add Task */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-semibold transition-all cursor-pointer shadow-2xs"
+              title="Import Tasks from Excel / CSV"
+            >
+              <Upload className="w-3.5 h-3.5 text-slate-600" />
+              <span>Import Excel</span>
+            </button>
+
             <button
               onClick={handleExportExcel}
-              className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-bold transition-all cursor-pointer shadow-sm"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-semibold transition-all cursor-pointer shadow-2xs"
               title="Download Excel Spreadsheet Report"
             >
-              <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
+              <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" />
               <span>Download Excel</span>
             </button>
 
             <button
               onClick={openCreateModal}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#0B1340] hover:bg-[#0d1855] text-white text-xs font-bold transition-all cursor-pointer shadow-sm"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#0B1340] hover:bg-[#070D2B] text-white text-xs font-bold transition-all cursor-pointer shadow-sm"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-3.5 h-3.5" />
               <span>Add Project Task</span>
             </button>
           </div>
         </div>
 
-        {/* Themed Select Filters */}
-        <div className="flex flex-wrap items-center gap-2.5 pt-2 border-t border-slate-100 text-xs">
+        {/* Themed Select Filters (Clean & Simple) */}
+        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100 text-xs">
           <div className="flex items-center gap-1.5 text-slate-400 font-bold uppercase text-[10px] tracking-wider pr-1">
             <Filter className="w-3.5 h-3.5" />
             <span>Filters:</span>
           </div>
 
-          {/* Project Filter */}
           <CustomSelect
             value={taskFilters.project}
-            onChange={(val) => {
-              setSelectedProjectTab(val);
-              setTaskFilters((prev) => ({ ...prev, project: val }));
-            }}
+            onChange={(val) => setTaskFilters((prev) => ({ ...prev, project: val }))}
             options={projectOptions}
             size="sm"
             searchable={true}
             className="min-w-[150px]"
           />
 
-          {/* Developer Filter */}
           <CustomSelect
             value={taskFilters.assigned_to}
             onChange={(val) => setTaskFilters((prev) => ({ ...prev, assigned_to: val }))}
             options={devOptions}
             size="sm"
             searchable={true}
-            className="min-w-[145px]"
+            className="min-w-[150px]"
           />
 
-          {/* Status Filter */}
           <CustomSelect
             value={taskFilters.status}
             onChange={(val) => setTaskFilters((prev) => ({ ...prev, status: val }))}
@@ -1041,34 +1194,13 @@ export default function ProjectTasksTab() {
             className="min-w-[130px]"
           />
 
-          {/* Priority Filter */}
-          <CustomSelect
-            value={taskFilters.priority}
-            onChange={(val) => setTaskFilters((prev) => ({ ...prev, priority: val }))}
-            options={priorityOptions}
-            size="sm"
-            className="min-w-[130px]"
-          />
-
-          {/* Category Filter */}
-          <CustomSelect
-            value={taskFilters.category}
-            onChange={(val) => setTaskFilters((prev) => ({ ...prev, category: val }))}
-            options={categoryOptions}
-            size="sm"
-            className="min-w-[140px]"
-          />
-
           {(taskFilters.project !== "all" ||
             taskFilters.status !== "all" ||
             taskFilters.assigned_to !== "all" ||
-            taskFilters.priority !== "all" ||
-            taskFilters.category !== "all" ||
             taskSearch) && (
             <button
               onClick={() => {
                 setTaskSearch("");
-                setSelectedProjectTab("all");
                 setTaskFilters({
                   project: "all",
                   status: "all",
@@ -1086,15 +1218,15 @@ export default function ProjectTasksTab() {
       </div>
 
       {/* ── Tasks Table ── */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-200 text-slate-400 font-bold uppercase tracking-wider text-[10px]">
                 <th className="py-3.5 px-4">Project & Task Title</th>
-                <th className="py-3.5 px-4">Assignee & Category</th>
-                <th className="py-3.5 px-4">Priority & Status</th>
-                <th className="py-3.5 px-4">Live Timer & Hours</th>
+                <th className="py-3.5 px-4">Assigned Developer</th>
+                <th className="py-3.5 px-4">Status</th>
+                <th className="py-3.5 px-4">Live Timer & Hours Spent</th>
                 <th className="py-3.5 px-4">Dates</th>
                 <th className="py-3.5 px-4 text-right">Actions</th>
               </tr>
@@ -1112,7 +1244,7 @@ export default function ProjectTasksTab() {
                     <CheckSquare className="w-8 h-8 mx-auto text-slate-300 mb-2" />
                     <p className="font-semibold text-slate-600">No tasks found</p>
                     <p className="text-[11px] text-slate-400 mt-0.5">
-                      Select a project or create a new customization task.
+                      Create a task or click "Import Excel" to upload tasks.
                     </p>
                   </td>
                 </tr>
@@ -1124,20 +1256,20 @@ export default function ProjectTasksTab() {
                     <tr
                       key={t._id}
                       className={`hover:bg-slate-50/70 transition-colors ${
-                        isTimerRunningOnThisTask ? "bg-blue-50/40 border-l-4 border-l-blue-600" : ""
+                        isTimerRunningOnThisTask ? "bg-blue-50/30" : ""
                       }`}
                     >
                       {/* Project & Title */}
                       <td className="py-3.5 px-4 max-w-[280px]">
                         <div className="flex items-center gap-1.5 flex-wrap">
-                          <span className="px-2 py-0.5 rounded-md bg-[#0B1340]/10 text-[#0B1340] font-bold text-[10px]">
+                          <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-800 font-bold text-[10px]">
                             {t.project_name}
                           </span>
                           {t.client_name && (
                             <span className="text-[10px] text-slate-400">({t.client_name})</span>
                           )}
                         </div>
-                        <p className="font-extrabold text-slate-900 mt-1 text-xs truncate" title={t.task_title}>
+                        <p className="font-bold text-slate-900 mt-1 text-xs truncate" title={t.task_title}>
                           {t.task_title}
                         </p>
                         {t.description && (
@@ -1147,39 +1279,26 @@ export default function ProjectTasksTab() {
                         )}
                       </td>
 
-                      {/* Developer & Category */}
+                      {/* Developer */}
                       <td className="py-3.5 px-4">
-                        <div className="flex items-center gap-1.5 font-bold text-slate-800">
+                        <div className="flex items-center gap-1.5 font-semibold text-slate-800">
                           <User className="w-3.5 h-3.5 text-slate-400" />
                           <span>{t.assigned_to}</span>
                         </div>
-                        <div className="flex items-center gap-1 mt-1 text-[10px] text-slate-500 font-medium">
-                          <Tag className="w-3 h-3 text-slate-400" />
-                          <span>{t.category}</span>
-                        </div>
                       </td>
 
-                      {/* Priority & Status */}
+                      {/* Status */}
                       <td className="py-3.5 px-4">
-                        <div className="flex flex-wrap items-center gap-1.5">
-                          <span
-                            className={`px-2 py-0.5 rounded-md border text-[10px] font-bold ${getPriorityBadge(
-                              t.priority
-                            )}`}
-                          >
-                            {t.priority}
-                          </span>
-                          <span
-                            className={`px-2 py-0.5 rounded-md border text-[10px] font-bold ${getStatusBadge(
-                              t.status
-                            )}`}
-                          >
-                            {t.status}
-                          </span>
-                        </div>
+                        <span
+                          className={`px-2.5 py-1 rounded-md border text-[11px] font-semibold ${getStatusBadge(
+                            t.status
+                          )}`}
+                        >
+                          {t.status}
+                        </span>
                         {t.remarks && (
                           <p className="text-[10px] text-slate-400 mt-1 truncate max-w-[140px]" title={t.remarks}>
-                            📝 {t.remarks}
+                            {t.remarks}
                           </p>
                         )}
                       </td>
@@ -1190,8 +1309,8 @@ export default function ProjectTasksTab() {
                           {isTimerRunningOnThisTask ? (
                             <button
                               onClick={() => handleStopTimer(t)}
-                              className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-black text-[10px] shadow-sm transition-all cursor-pointer animate-pulse"
-                              title="Stop Running Timer & Log Time"
+                              className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold text-[10px] shadow-sm transition-all cursor-pointer"
+                              title="Stop Running Timer"
                             >
                               <Square className="w-3 h-3 fill-white" />
                               <span>{formatTime(elapsedDisplayMs)}</span>
@@ -1199,35 +1318,18 @@ export default function ProjectTasksTab() {
                           ) : (
                             <button
                               onClick={() => handleStartTimer(t)}
-                              className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-bold text-[10px] transition-all cursor-pointer"
-                              title="Start Live Stopwatch Timer for this Task"
+                              className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-semibold text-[10px] transition-all cursor-pointer"
+                              title="Start Timer for this Task"
                             >
                               <Play className="w-3 h-3 fill-emerald-600 text-emerald-600" />
                               <span>Start Timer</span>
                             </button>
                           )}
 
-                          <div>
-                            <span className="font-extrabold text-slate-900">{t.spent_hours || 0} hrs</span>
+                          <div className="text-xs">
+                            <span className="font-bold text-slate-900">{t.spent_hours || 0} hrs</span>
                             <span className="text-[10px] text-slate-400 ml-1">/ {t.estimated_hours || 0}h est</span>
                           </div>
-                        </div>
-
-                        {/* Progress Bar */}
-                        <div className="w-32 h-1.5 bg-slate-100 rounded-full mt-2 overflow-hidden">
-                          <div
-                            className={`h-full rounded-full transition-all duration-300 ${
-                              (t.spent_hours || 0) > (t.estimated_hours || 1)
-                                ? "bg-rose-500"
-                                : "bg-blue-500"
-                            }`}
-                            style={{
-                              width: `${Math.min(
-                                100,
-                                ((t.spent_hours || 0) / (t.estimated_hours || 1)) * 100
-                              )}%`,
-                            }}
-                          />
                         </div>
                       </td>
 
@@ -1254,7 +1356,7 @@ export default function ProjectTasksTab() {
                               setLogStatusInput(t.status);
                               setLogRemarksInput(t.remarks || "");
                             }}
-                            className="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-[11px] transition-colors cursor-pointer"
+                            className="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold text-[11px] transition-colors cursor-pointer"
                             title="Log Hours Manually"
                           >
                             + Manual Log
@@ -1290,16 +1392,181 @@ export default function ProjectTasksTab() {
         </div>
       </div>
 
+      {/* ── EXCEL IMPORT PREVIEW MODAL WITH ROW VALIDATION ── */}
+      {isImportModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="bg-white w-full max-w-3xl rounded-3xl p-6 shadow-2xl border border-slate-100 my-8 animate-in fade-in duration-150">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                  <FileUp className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">Import Tasks from Excel</h3>
+                  <p className="text-xs text-slate-500">
+                    File: <span className="font-semibold text-slate-700">{importFileName}</span> ({importValidationList.length} rows detected)
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => {
+                  setIsImportModalOpen(false);
+                  setImportParsedTasks([]);
+                  setImportValidationList([]);
+                }}
+                className="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-4 mt-4">
+              {/* Validation Summary Badge */}
+              {(() => {
+                const invalidRows = importValidationList.filter((r) => !r.isValid);
+                if (invalidRows.length > 0) {
+                  return (
+                    <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl flex items-start gap-2.5 text-xs text-rose-800">
+                      <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                      <div>
+                        <span className="font-bold">
+                          {invalidRows.length} row(s) have missing required fields!
+                        </span>
+                        <p className="text-[11px] text-rose-600 mt-0.5">
+                          Each row must have at least <strong>Project Name</strong>, <strong>Task Title</strong>, and <strong>Assigned Developer</strong>.
+                        </p>
+                      </div>
+                    </div>
+                  );
+                }
+                return (
+                  <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2 text-xs text-emerald-800">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span className="font-semibold">
+                      All {importValidationList.length} rows are valid and ready to import!
+                    </span>
+                  </div>
+                );
+              })()}
+
+              {/* Table Preview with Error Highlighting */}
+              <div className="border border-slate-200 rounded-xl overflow-hidden max-h-72 overflow-y-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase sticky top-0">
+                    <tr>
+                      <th className="py-2.5 px-3">#</th>
+                      <th className="py-2.5 px-3">Project</th>
+                      <th className="py-2.5 px-3">Task Title</th>
+                      <th className="py-2.5 px-3">Developer</th>
+                      <th className="py-2.5 px-3">Status</th>
+                      <th className="py-2.5 px-3">Est. / Spent</th>
+                      <th className="py-2.5 px-3">Validation</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {importValidationList.map((item, idx) => (
+                      <tr
+                        key={idx}
+                        className={item.isValid ? "hover:bg-slate-50" : "bg-rose-50/50 hover:bg-rose-50"}
+                      >
+                        <td className="py-2 px-3 text-slate-400 font-mono text-[10px]">{idx + 1}</td>
+                        <td className="py-2 px-3">
+                          <span
+                            className={`font-semibold ${
+                              item.project_name === "Untitled Project" ? "text-rose-600 italic" : "text-slate-900"
+                            }`}
+                          >
+                            {item.project_name}
+                          </span>
+                        </td>
+                        <td className="py-2 px-3">
+                          <div className="max-w-[180px] truncate" title={item.task_title}>
+                            <span className={item.task_title === "Untitled Task" ? "text-rose-600 italic" : "text-slate-900 font-medium"}>
+                              {item.task_title}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="py-2 px-3">
+                          <span className={item.assigned_to === "Unassigned" ? "text-rose-600 italic" : "text-slate-700 font-medium"}>
+                            {item.assigned_to}
+                          </span>
+                        </td>
+                        <td className="py-2 px-3">
+                          <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 text-[10px] font-semibold">
+                            {item.status}
+                          </span>
+                        </td>
+                        <td className="py-2 px-3 text-slate-700 font-medium">
+                          {item.estimated_hours}h <span className="text-slate-400">/ {item.spent_hours}h</span>
+                        </td>
+                        <td className="py-2 px-3">
+                          {item.isValid ? (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
+                              <Check className="w-3 h-3" /> Valid
+                            </span>
+                          ) : (
+                            <span
+                              className="inline-flex items-center gap-1 text-[10px] font-bold text-rose-700 bg-rose-100 px-2 py-0.5 rounded-full"
+                              title={item.errors.join(", ")}
+                            >
+                              <AlertCircle className="w-3 h-3" /> {item.errors[0]}
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="flex items-center justify-between pt-3 border-t border-slate-100 flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={handleDownloadSampleTemplate}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold transition-colors cursor-pointer border border-blue-200"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Download Sample Template</span>
+                </button>
+
+                <div className="flex items-center gap-2 ml-auto">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsImportModalOpen(false);
+                      setImportParsedTasks([]);
+                      setImportValidationList([]);
+                    }}
+                    className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    disabled={importLoading || importValidationList.some(r => !r.isValid)}
+                    onClick={handleConfirmBatchImport}
+                    className="px-5 py-2 rounded-xl bg-[#0B1340] hover:bg-[#070D2B] text-white text-xs font-bold transition-all cursor-pointer shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {importLoading ? "Importing..." : `Import ${importValidationList.length} Tasks`}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── CREATE / EDIT TASK MODAL ── */}
       {(isCreateModalOpen || editingTask) && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="bg-white w-full max-w-xl rounded-3xl p-6 shadow-2xl border border-slate-100 my-8 animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-white w-full max-w-xl rounded-3xl p-6 shadow-2xl border border-slate-100 my-8 animate-in fade-in duration-150">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
               <div>
-                <h3 className="text-base font-extrabold text-slate-900">
+                <h3 className="text-base font-bold text-slate-900">
                   {editingTask ? "Edit Project Task" : "Create New Project Task"}
                 </h3>
-                <p className="text-[11px] text-slate-400 mt-0.5">
+                <p className="text-xs text-slate-500 mt-0.5">
                   Assign tasks to projects & developers with estimated work time
                 </p>
               </div>
@@ -1316,9 +1583,8 @@ export default function ProjectTasksTab() {
 
             <form onSubmit={handleSubmitTask} className="space-y-4 mt-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Project Themed Selector */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
                     Project / Parivar <span className="text-rose-500">*</span>
                   </label>
                   <CustomSelect
@@ -1326,34 +1592,31 @@ export default function ProjectTasksTab() {
                     onChange={(val) => handleProjectSelectChange(val)}
                     options={modalProjectOptions}
                     searchable={true}
-                    placeholder="Select Parivar Project..."
+                    placeholder="Select Parivar..."
                   />
-                  {/* Or Custom project input */}
                   <input
                     type="text"
-                    placeholder="Or type custom project name..."
+                    placeholder="Or enter custom project name..."
                     value={taskForm.project_name}
                     onChange={(e) => setTaskForm({ ...taskForm, project_name: e.target.value })}
-                    className="w-full px-3 py-1.5 mt-1.5 rounded-lg bg-slate-50/50 border border-dashed border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
+                    className="w-full px-3 py-1.5 mt-1.5 rounded-lg bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
                   />
                 </div>
 
-                {/* Client Name */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Client / Admin Name</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Client / Admin Name</label>
                   <input
                     type="text"
                     placeholder="e.g. Ramesh Patel"
                     value={taskForm.client_name}
                     onChange={(e) => setTaskForm({ ...taskForm, client_name: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B1340]/20"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
                   />
                 </div>
               </div>
 
-              {/* Task Title */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
                   Task Title / Requirement <span className="text-rose-500">*</span>
                 </label>
                 <input
@@ -1362,26 +1625,24 @@ export default function ProjectTasksTab() {
                   placeholder="e.g. Add custom matrimony filter & blood group report"
                   value={taskForm.task_title}
                   onChange={(e) => setTaskForm({ ...taskForm, task_title: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B1340]/20"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
                 />
               </div>
 
-              {/* Description */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Task Description / Details</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Task Description / Details</label>
                 <textarea
                   rows={2}
                   placeholder="Specify customization scope, requirements, logic..."
                   value={taskForm.description}
                   onChange={(e) => setTaskForm({ ...taskForm, description: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B1340]/20"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {/* Assignee */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
                     Assigned Developer <span className="text-rose-500">*</span>
                   </label>
                   <input
@@ -1390,35 +1651,23 @@ export default function ProjectTasksTab() {
                     placeholder="e.g. Divyraj, Amit"
                     value={taskForm.assigned_to}
                     onChange={(e) => setTaskForm({ ...taskForm, assigned_to: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B1340]/20"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
                   />
                 </div>
 
-                {/* Category Themed Select */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Category</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Status</label>
                   <CustomSelect
-                    value={taskForm.category}
-                    onChange={(val) => setTaskForm({ ...taskForm, category: val })}
-                    options={formCategoryOptions}
-                  />
-                </div>
-
-                {/* Priority Themed Select */}
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Priority</label>
-                  <CustomSelect
-                    value={taskForm.priority}
-                    onChange={(val) => setTaskForm({ ...taskForm, priority: val as any })}
-                    options={formPriorityOptions}
+                    value={taskForm.status}
+                    onChange={(val) => setTaskForm({ ...taskForm, status: val as any })}
+                    options={formStatusOptions}
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {/* Status Themed Select */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Status</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Status</label>
                   <CustomSelect
                     value={taskForm.status}
                     onChange={(val) => setTaskForm({ ...taskForm, status: val as any })}
@@ -1426,9 +1675,8 @@ export default function ProjectTasksTab() {
                   />
                 </div>
 
-                {/* Estimated Hours */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Estimated Hours (hrs)</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Estimated Hours (hrs)</label>
                   <input
                     type="number"
                     step="0.25"
@@ -1436,13 +1684,12 @@ export default function ProjectTasksTab() {
                     placeholder="e.g. 5.5"
                     value={taskForm.estimated_hours}
                     onChange={(e) => setTaskForm({ ...taskForm, estimated_hours: parseFloat(e.target.value) || 0 })}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B1340]/20"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
                   />
                 </div>
 
-                {/* Spent Hours */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Spent Hours (hrs)</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Spent Hours (hrs)</label>
                   <input
                     type="number"
                     step="0.25"
@@ -1450,48 +1697,44 @@ export default function ProjectTasksTab() {
                     placeholder="e.g. 3.5"
                     value={taskForm.spent_hours}
                     onChange={(e) => setTaskForm({ ...taskForm, spent_hours: parseFloat(e.target.value) || 0 })}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B1340]/20"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Start Date */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Start Date</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Start Date</label>
                   <input
                     type="date"
                     value={taskForm.start_date}
                     onChange={(e) => setTaskForm({ ...taskForm, start_date: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B1340]/20"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
                   />
                 </div>
 
-                {/* Due Date */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Due Date</label>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">Due Date</label>
                   <input
                     type="date"
                     value={taskForm.due_date}
                     onChange={(e) => setTaskForm({ ...taskForm, due_date: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B1340]/20"
+                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
                   />
                 </div>
               </div>
 
-              {/* Remarks */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Remarks / Internal Notes</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Remarks / Internal Notes</label>
                 <input
                   type="text"
-                  placeholder="e.g. Delivered to staging, client confirmed."
+                  placeholder="e.g. Client confirmed logic."
                   value={taskForm.remarks}
                   onChange={(e) => setTaskForm({ ...taskForm, remarks: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B1340]/20"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
                 />
               </div>
 
-              {/* Footer */}
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
                 <button
                   type="button"
@@ -1499,13 +1742,13 @@ export default function ProjectTasksTab() {
                     setIsCreateModalOpen(false);
                     setEditingTask(null);
                   }}
-                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-[#0B1340] hover:bg-[#0d1855] text-white text-xs font-bold transition-all cursor-pointer shadow-sm"
+                  className="px-5 py-2 rounded-xl bg-[#0B1340] hover:bg-[#070D2B] text-white text-xs font-bold transition-all cursor-pointer shadow-sm"
                 >
                   {editingTask ? "Update Task" : "Create Task"}
                 </button>
@@ -1518,15 +1761,15 @@ export default function ProjectTasksTab() {
       {/* ── STOP TIMER & CONFIRM LOG MODAL ── */}
       {stopTimerTaskModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
-          <div className="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl border border-slate-100 animate-in fade-in duration-150">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
                   <CheckCircle2 className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="text-base font-extrabold text-slate-900">Log Timer Session</h3>
-                  <p className="text-[11px] text-slate-400 font-medium truncate max-w-[240px]">
+                  <h3 className="text-base font-bold text-slate-900">Log Timer Session</h3>
+                  <p className="text-xs text-slate-500 truncate max-w-[240px]">
                     {stopTimerTaskModal.task.task_title}
                   </p>
                 </div>
@@ -1540,12 +1783,12 @@ export default function ProjectTasksTab() {
             </div>
 
             <div className="space-y-4 mt-4">
-              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-2xl border border-blue-100 flex items-center justify-between">
+              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 flex items-center justify-between">
                 <div>
                   <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">
-                    Stopwatch Tracked Time
+                    Tracked Time
                   </span>
-                  <span className="font-mono text-xl font-black text-blue-900">
+                  <span className="font-mono text-xl font-bold text-slate-900">
                     {formatTime(stopTimerTaskModal.elapsedSeconds * 1000)}
                   </span>
                 </div>
@@ -1553,15 +1796,15 @@ export default function ProjectTasksTab() {
                   <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">
                     Calculated Hours
                   </span>
-                  <span className="text-lg font-black text-emerald-600">
+                  <span className="text-lg font-bold text-emerald-600">
                     +{stopTimerTaskModal.hoursDecimal} hrs
                   </span>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Hours to Add (you can adjust if needed)
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Hours to Add (Adjustable)
                 </label>
                 <input
                   type="number"
@@ -1574,12 +1817,12 @@ export default function ProjectTasksTab() {
                       hoursDecimal: parseFloat(e.target.value) || 0,
                     })
                   }
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0B1340]/20"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Update Task Status</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Update Task Status</label>
                 <CustomSelect
                   value={logStatusInput}
                   onChange={(val) => setLogStatusInput(val)}
@@ -1588,13 +1831,13 @@ export default function ProjectTasksTab() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Work Note / Remarks</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Work Note / Remarks</label>
                 <input
                   type="text"
-                  placeholder="e.g. Built export excel feature and fixed timer logic"
+                  placeholder="e.g. Completed feature implementation"
                   value={logRemarksInput}
                   onChange={(e) => setLogRemarksInput(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B1340]/20"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
                 />
               </div>
 
@@ -1602,14 +1845,14 @@ export default function ProjectTasksTab() {
                 <button
                   type="button"
                   onClick={() => setStopTimerTaskModal(null)}
-                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
                   onClick={handleConfirmSaveTimerHours}
-                  className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all cursor-pointer shadow-md"
+                  className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all cursor-pointer shadow-sm"
                 >
                   Save & Log Working Time
                 </button>
@@ -1622,11 +1865,11 @@ export default function ProjectTasksTab() {
       {/* ── MANUAL QUICK LOG TIME MODAL ── */}
       {quickLogTask && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
-          <div className="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl border border-slate-100 animate-in fade-in duration-150">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div>
-                <h3 className="text-base font-extrabold text-slate-900">Log Task Working Hours</h3>
-                <p className="text-[11px] text-slate-400 mt-0.5 font-medium truncate max-w-[280px]">
+                <h3 className="text-base font-bold text-slate-900">Log Task Working Hours</h3>
+                <p className="text-xs text-slate-500 mt-0.5 truncate max-w-[280px]">
                   {quickLogTask.task_title}
                 </p>
               </div>
@@ -1641,17 +1884,17 @@ export default function ProjectTasksTab() {
             <form onSubmit={handleQuickLogSubmit} className="space-y-4 mt-4">
               <div className="bg-slate-50 p-3 rounded-2xl flex items-center justify-between text-xs">
                 <div>
-                  <span className="text-slate-400 block text-[10px] uppercase font-bold">Current Spent Time</span>
-                  <span className="font-extrabold text-slate-900 text-sm">{quickLogTask.spent_hours || 0} Hours</span>
+                  <span className="text-slate-400 block text-[10px] uppercase font-bold">Spent Time</span>
+                  <span className="font-bold text-slate-900 text-sm">{quickLogTask.spent_hours || 0} Hours</span>
                 </div>
                 <div>
                   <span className="text-slate-400 block text-[10px] uppercase font-bold">Estimated</span>
-                  <span className="font-extrabold text-blue-600 text-sm">{quickLogTask.estimated_hours || 0} Hours</span>
+                  <span className="font-bold text-blue-600 text-sm">{quickLogTask.estimated_hours || 0} Hours</span>
                 </div>
               </div>
 
               {/* Mode Toggle */}
-              <div className="flex items-center rounded-xl bg-slate-100 p-1 text-xs font-bold">
+              <div className="flex items-center rounded-xl bg-slate-100 p-1 text-xs font-semibold">
                 <button
                   type="button"
                   onClick={() => setLogMode("add")}
@@ -1676,7 +1919,7 @@ export default function ProjectTasksTab() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
                   {logMode === "add" ? "Hours to Add (hrs)" : "Exact Total Hours (hrs)"}
                 </label>
                 <input
@@ -1686,12 +1929,12 @@ export default function ProjectTasksTab() {
                   placeholder="e.g. 2.5"
                   value={logHoursInput}
                   onChange={(e) => setLogHoursInput(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B1340]/20"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Update Status</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Update Status</label>
                 <CustomSelect
                   value={logStatusInput}
                   onChange={(val) => setLogStatusInput(val)}
@@ -1700,13 +1943,13 @@ export default function ProjectTasksTab() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Work Note / Remarks</label>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Work Note / Remarks</label>
                 <input
                   type="text"
-                  placeholder="e.g. Added custom API filter and responsive styles"
+                  placeholder="e.g. Completed API integration and tested"
                   value={logRemarksInput}
                   onChange={(e) => setLogRemarksInput(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B1340]/20"
+                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
                 />
               </div>
 
@@ -1714,13 +1957,13 @@ export default function ProjectTasksTab() {
                 <button
                   type="button"
                   onClick={() => setQuickLogTask(null)}
-                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-[#0B1340] hover:bg-[#0d1855] text-white text-xs font-bold transition-all cursor-pointer shadow-sm"
+                  className="px-5 py-2 rounded-xl bg-[#0B1340] hover:bg-[#070D2B] text-white text-xs font-bold transition-all cursor-pointer shadow-sm"
                 >
                   Save Time Log
                 </button>
