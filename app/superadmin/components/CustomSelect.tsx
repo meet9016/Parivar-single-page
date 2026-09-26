@@ -54,18 +54,18 @@ export default function CustomSelect({
         type="button"
         disabled={disabled}
         onClick={() => !disabled && setIsOpen(!isOpen)}
-        className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-slate-50 border transition-all text-left text-xs sm:text-sm font-semibold text-slate-900 cursor-pointer ${
+        className={`w-full flex items-center justify-between px-3 py-2 rounded-md bg-white border transition-colors text-left text-xs font-medium text-slate-900 cursor-pointer ${
           isOpen
-            ? "border-[#0B1340] ring-2 ring-[#0B1340]/10 bg-white shadow-sm"
-            : "border-slate-200 hover:border-slate-300 hover:bg-slate-100/60"
-        } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
+            ? "border-[#0B1340] ring-1 ring-[#0B1340]"
+            : "border-slate-300 hover:border-slate-400"
+        } ${disabled ? "opacity-50 cursor-not-allowed bg-slate-50" : ""}`}
       >
         <span className="truncate flex items-center gap-2">
           {selectedOption?.icon}
-          {selectedOption ? selectedOption.label : <span className="text-slate-400 font-normal">{placeholder}</span>}
+          {selectedOption ? selectedOption.label : <span className="text-slate-500">{placeholder}</span>}
         </span>
         <ChevronDown
-          className={`w-4 h-4 text-slate-400 shrink-0 transition-transform duration-200 ${
+          className={`w-4 h-4 text-slate-500 shrink-0 transition-transform duration-150 ${
             isOpen ? "transform rotate-180 text-[#0B1340]" : ""
           }`}
         />
@@ -75,7 +75,7 @@ export default function CustomSelect({
       {isOpen && (
         <div
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-          className="no-scrollbar absolute left-0 right-0 top-full mt-1.5 z-50 bg-white border border-slate-200/90 rounded-2xl shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-150 py-1 max-h-56 overflow-y-auto"
+          className="no-scrollbar absolute left-0 right-0 top-full mt-1 z-50 bg-white border border-slate-300 rounded-md shadow-lg overflow-hidden py-1 max-h-56 overflow-y-auto"
         >
           {formattedOptions.map((opt) => {
             const isSelected = String(opt.value) === String(value);
@@ -87,10 +87,10 @@ export default function CustomSelect({
                   onChange(opt.value);
                   setIsOpen(false);
                 }}
-                className={`w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-sm text-left transition-colors cursor-pointer ${
+                className={`w-full flex items-center justify-between px-3 py-2 text-xs text-left transition-colors cursor-pointer ${
                   isSelected
-                    ? "bg-[#0B1340] text-white font-bold"
-                    : "text-slate-700 hover:bg-blue-50/80 hover:text-[#0B1340] font-medium"
+                    ? "bg-[#0B1340] text-white font-semibold"
+                    : "text-slate-800 hover:bg-slate-100 font-medium"
                 }`}
               >
                 <span className="truncate flex items-center gap-2">

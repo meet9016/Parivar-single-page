@@ -70,21 +70,21 @@ export default function EditParivarModal() {
   if (!editingParivar) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#070D2B]/80 backdrop-blur-sm p-4 animate-in fade-in overflow-y-auto">
-      <div className="bg-white rounded-3xl p-6 sm:p-7 w-full max-w-lg shadow-2xl relative space-y-4 border border-slate-100 my-8">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-in fade-in overflow-y-auto">
+      <div className="bg-white rounded-lg p-5 sm:p-6 w-full max-w-lg shadow-xl relative space-y-4 border border-slate-300 my-8">
         <button 
           onClick={() => setEditingParivar(null)}
-          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors cursor-pointer"
+          className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900 transition-colors cursor-pointer text-sm font-bold"
         >
           ✕
         </button>
         
-        <div className="border-b border-slate-100 pb-3 space-y-0.5">
-          <div className="flex items-center gap-1.5 text-blue-600 font-bold text-xs uppercase tracking-wider">
+        <div className="border-b border-slate-200 pb-3">
+          <div className="flex items-center gap-1.5 text-blue-700 font-bold text-xs uppercase tracking-wider mb-1">
             <User className="w-3.5 h-3.5" />
             <span>Update Details</span>
           </div>
-          <h3 className="text-lg font-black text-[#0B1340]">
+          <h3 className="text-base font-bold text-slate-900">
             Edit Customer / Parivar Details
           </h3>
         </div>
@@ -93,21 +93,21 @@ export default function EditParivarModal() {
           {/* Full Name & Parivar Name */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
-                Full Name <span className="text-rose-500">*</span>
+              <label className="block text-xs font-bold text-slate-800 mb-1">
+                Full Name <span className="text-rose-600">*</span>
               </label>
               <input
                 type="text"
                 value={editForm.admin_first_name}
                 onChange={(e) => setEditForm({...editForm, admin_first_name: e.target.value})}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-[#0B1340]/20 focus:bg-white outline-none"
+                className="w-full px-3 py-2 rounded-md bg-white border border-slate-300 text-xs font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
               />
-              {errors.admin_first_name && <p className="text-[11px] text-rose-500 mt-1 font-semibold">{errors.admin_first_name}</p>}
+              {errors.admin_first_name && <p className="text-[11px] text-rose-600 mt-1 font-semibold">{errors.admin_first_name}</p>}
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
-                Parivar Name <span className="text-rose-500">*</span>
+              <label className="block text-xs font-bold text-slate-800 mb-1">
+                Parivar Name <span className="text-rose-600">*</span>
               </label>
               <input
                 type="text"
@@ -117,16 +117,16 @@ export default function EditParivarModal() {
                   ...editForm, 
                   parivar_name: e.target.value 
                 })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-[#0B1340]/20 focus:bg-white outline-none"
+                className="w-full px-3 py-2 rounded-md bg-white border border-slate-300 text-xs font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
               />
-              {errors.parivar_name && <p className="text-[11px] text-rose-500 mt-1 font-semibold">{errors.parivar_name}</p>}
+              {errors.parivar_name && <p className="text-[11px] text-rose-600 mt-1 font-semibold">{errors.parivar_name}</p>}
             </div>
           </div>
 
           {/* Number & Email */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
+              <label className="block text-xs font-bold text-slate-800 mb-1">
                 Number
               </label>
               <input
@@ -134,20 +134,20 @@ export default function EditParivarModal() {
                 maxLength={10}
                 value={editForm.admin_mobile}
                 onChange={(e) => setEditForm({...editForm, admin_mobile: e.target.value.replace(/\D/g, '')})}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-[#0B1340]/20 focus:bg-white outline-none"
+                className="w-full px-3 py-2 rounded-md bg-white border border-slate-300 text-xs font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
               />
-              {errors.admin_mobile && <p className="text-[11px] text-rose-500 mt-1 font-semibold">{errors.admin_mobile}</p>}
+              {errors.admin_mobile && <p className="text-[11px] text-rose-600 mt-1 font-semibold">{errors.admin_mobile}</p>}
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
+              <label className="block text-xs font-bold text-slate-800 mb-1">
                 Email
               </label>
               <input
                 type="email"
                 value={editForm.admin_email}
                 onChange={(e) => setEditForm({...editForm, admin_email: e.target.value})}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-[#0B1340]/20 focus:bg-white outline-none"
+                className="w-full px-3 py-2 rounded-md bg-white border border-slate-300 text-xs font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
               />
             </div>
           </div>
@@ -155,20 +155,20 @@ export default function EditParivarModal() {
           {/* City & Plan Time */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
+              <label className="block text-xs font-bold text-slate-800 mb-1">
                 City
               </label>
               <input
                 type="text"
                 value={editForm.city}
                 onChange={(e) => setEditForm({...editForm, city: e.target.value})}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-[#0B1340]/20 focus:bg-white outline-none"
+                className="w-full px-3 py-2 rounded-md bg-white border border-slate-300 text-xs font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
-                Plan Time (Subscription) <span className="text-rose-500">*</span>
+              <label className="block text-xs font-bold text-slate-800 mb-1">
+                Plan Time (Subscription) <span className="text-rose-600">*</span>
               </label>
               <CustomSelect
                 value={editForm.subscription_plan_time}
@@ -189,24 +189,24 @@ export default function EditParivarModal() {
           {/* Project Amount & Status */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
+              <label className="block text-xs font-bold text-slate-800 mb-1">
                 Project Amount (₹)
               </label>
               <div className="relative">
-                <span className="absolute left-3.5 top-2.5 text-slate-400 font-bold text-sm">₹</span>
+                <span className="absolute left-3 top-2 text-slate-600 font-bold text-xs">₹</span>
                 <input
                   type="number"
                   placeholder="e.g. 25000"
                   min="0"
                   value={editForm.project_amount}
                   onChange={(e) => setEditForm({ ...editForm, project_amount: e.target.value })}
-                  className="w-full pl-8 pr-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm font-semibold text-slate-900 focus:ring-2 focus:ring-[#0B1340]/20 focus:bg-white outline-none"
+                  className="w-full pl-7 pr-3 py-2 rounded-md bg-white border border-slate-300 text-xs font-semibold text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Status</label>
+              <label className="block text-xs font-bold text-slate-800 mb-1">Status</label>
               <CustomSelect
                 value={editForm.status}
                 onChange={(val) => setEditForm({ ...editForm, status: Number(val) })}
@@ -219,27 +219,27 @@ export default function EditParivarModal() {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">Notes (Optional)</label>
+            <label className="block text-xs font-bold text-slate-800 mb-1">Notes (Optional)</label>
             <input
               type="text"
               value={editForm.notes}
               onChange={(e) => setEditForm({...editForm, notes: e.target.value})}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs sm:text-sm text-slate-900 focus:ring-2 focus:ring-[#0B1340]/20 focus:bg-white outline-none"
+              className="w-full px-3 py-2 rounded-md bg-white border border-slate-300 text-xs font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
             />
           </div>
 
-          <div className="flex items-center gap-3 pt-3 border-t border-slate-100">
+          <div className="flex items-center gap-2.5 pt-3 border-t border-slate-200">
             <button
               type="button"
               onClick={() => setEditingParivar(null)}
-              className="flex-1 py-2.5 rounded-xl font-bold text-xs text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors cursor-pointer"
+              className="flex-1 py-2 rounded-md font-semibold text-xs text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={editLoading}
-              className="flex-1 py-2.5 rounded-xl font-bold text-xs text-white bg-[#0B1340] hover:bg-[#070D2B] shadow-sm transition-all cursor-pointer disabled:opacity-50"
+              className="flex-1 py-2 rounded-md font-semibold text-xs text-white bg-[#0B1340] hover:bg-[#070D2B] shadow-xs transition-all cursor-pointer disabled:opacity-50"
             >
               {editLoading ? "Saving..." : "Save Changes"}
             </button>

@@ -18,7 +18,7 @@ function PrimaryButton({ onClick, children }: { onClick: () => void; children: R
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#0B1340] hover:bg-[#0d1855] text-white text-xs font-bold transition-all cursor-pointer shadow-sm"
+      className="flex items-center gap-1.5 px-3.5 py-2 rounded-md bg-[#0B1340] hover:bg-[#070D2B] text-white text-xs font-semibold transition-colors cursor-pointer shadow-xs"
     >
       {children}
     </button>
@@ -34,7 +34,7 @@ function DashboardLayout() {
   } = useSuperAdmin();
 
   if (isInitializing) {
-    return <div className="h-screen w-full bg-[#F4F7FF]" />;
+    return <div className="h-screen w-full bg-[#f8fafc]" />;
   }
 
   if (!isAuthenticated) {
@@ -50,23 +50,23 @@ function DashboardLayout() {
   const meta = tabMeta[activeTab] ?? { title: "", subtitle: "" };
 
   return (
-    <div className="h-screen w-full bg-[#F4F7FF] text-slate-800 flex overflow-hidden">
+    <div className="h-screen w-full bg-[#f8fafc] text-slate-900 flex overflow-hidden font-sans">
       <Sidebar />
 
       <div className="flex-1 flex flex-col h-full overflow-hidden">
         <Header />
 
         {/* Page top bar */}
-        <div className="bg-white border-b border-slate-200 px-6 py-3 flex flex-wrap items-center justify-between gap-3 shrink-0">
+        <div className="bg-white border-b border-slate-300 px-6 py-3.5 flex flex-wrap items-center justify-between gap-3 shrink-0">
           <div>
-            <h1 className="text-base font-extrabold text-slate-900">{meta.title}</h1>
-            <p className="text-[11px] text-slate-400 mt-0.5">{meta.subtitle}</p>
+            <h1 className="text-sm font-bold text-slate-900">{meta.title}</h1>
+            <p className="text-xs text-slate-500 mt-0.5">{meta.subtitle}</p>
           </div>
 
           <div className="flex items-center gap-2.5">
             {(activeTab === "inquiries" || activeTab === "parivars") && (
               <div className="relative">
-                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+                <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-2.5" />
                 <input
                   type="text"
                   placeholder={
@@ -80,7 +80,7 @@ function DashboardLayout() {
                       ? setInquirySearch(e.target.value)
                       : setParivarSearch(e.target.value)
                   }
-                  className="w-56 sm:w-72 pl-9 pr-4 py-2 rounded-lg bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B1340]/20 focus:border-[#0B1340]/40"
+                  className="w-56 sm:w-72 pl-9 pr-3.5 py-1.5 rounded-md bg-white border border-slate-300 text-xs text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
                 />
               </div>
             )}
@@ -95,7 +95,7 @@ function DashboardLayout() {
         </div>
 
         {/* Content */}
-        <main className="flex-1 p-6 overflow-y-auto">
+        <main className="flex-1 p-6 overflow-y-auto bg-[#f8fafc]">
           {activeTab === "inquiries" && <InquiriesTab />}
           {activeTab === "parivars" && <ParivarsTab />}
           {activeTab === "pricing" && <PricingTab />}

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Shield, Building2, MessageSquare, Tag, CheckSquare } from "lucide-react";
+import { Building2, MessageSquare, Tag } from "lucide-react";
 import { useSuperAdmin } from "../context/SuperAdminContext";
 
 const NAV = [
@@ -21,35 +21,33 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="w-60 bg-[#0B1340] flex flex-col shrink-0 h-full z-30">
+    <aside className="w-56 bg-[#0B1340] flex flex-col shrink-0 h-full z-30 border-r border-slate-800">
       {/* Logo */}
-      <div className="h-14 px-5 flex items-center border-b border-white/10">
-        <img src="/logo.png" alt="Parivar.me" className="h-8 w-auto object-contain brightness-0 invert" />
+      <div className="h-14 px-4 flex items-center border-b border-white/10 bg-[#070D2B]">
+        <img src="/logo.png" alt="Parivar.me" className="h-7 w-auto object-contain brightness-0 invert" />
       </div>
 
       {/* Nav */}
       <div className="flex-1 overflow-y-auto p-3 space-y-1">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-white/30 px-3 pt-2 pb-1.5">
-          Main Menu
-        </p>
+       
         {NAV.map(({ id, label, Icon, countKey }) => {
           const active = activeTab === id;
           return (
             <button
               key={id}
               onClick={() => setActiveTab(id)}
-              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${
+              className={`w-full flex items-center justify-between px-3 py-2 rounded-md text-xs font-semibold transition-colors cursor-pointer ${
                 active
-                  ? "bg-white text-[#0B1340] shadow-md"
-                  : "text-white/70 hover:bg-white/10 hover:text-white"
+                  ? "bg-white text-[#0B1340] shadow-xs"
+                  : "text-slate-200 hover:bg-white/10 hover:text-white"
               }`}
             >
               <div className="flex items-center gap-2.5">
-                <Icon className={`w-4 h-4 ${active ? "text-[#0B1340]" : "text-white/50"}`} />
+                <Icon className={`w-4 h-4 ${active ? "text-[#0B1340]" : "text-slate-300"}`} />
                 <span>{label}</span>
               </div>
-              <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-md ${
-                active ? "bg-[#0B1340]/10 text-[#0B1340]" : "bg-white/10 text-white/60"
+              <span className={`text-[11px] font-bold px-1.5 py-0.5 rounded ${
+                active ? "bg-slate-100 text-[#0B1340]" : "bg-white/10 text-white"
               }`}>
                 {countMap[countKey]}
               </span>
@@ -59,19 +57,19 @@ export default function Sidebar() {
       </div>
 
       {/* Footer stats */}
-      <div className="p-4 border-t border-white/10">
-        <div className="grid grid-cols-3 gap-2 text-center">
-          <div className="bg-white/10 rounded-lg p-2">
-            <span className="text-base font-black text-white block">{parivars.length}</span>
-            <span className="text-[9px] font-semibold text-white/40 uppercase tracking-wider">Tenants</span>
+      <div className="p-3 border-t border-white/10 bg-[#070D2B]/60">
+        <div className="grid grid-cols-3 gap-1.5 text-center">
+          <div className="bg-white/10 rounded-md p-1.5 border border-white/5">
+            <span className="text-sm font-bold text-white block">{parivars.length}</span>
+            <span className="text-[10px] font-medium text-slate-300 uppercase">Tenants</span>
           </div>
-          <div className="bg-white/10 rounded-lg p-2">
-            <span className="text-base font-black text-amber-300 block">{inquiries.length}</span>
-            <span className="text-[9px] font-semibold text-white/40 uppercase tracking-wider">Leads</span>
+          <div className="bg-white/10 rounded-md p-1.5 border border-white/5">
+            <span className="text-sm font-bold text-amber-300 block">{inquiries.length}</span>
+            <span className="text-[10px] font-medium text-slate-300 uppercase">Leads</span>
           </div>
-          <div className="bg-white/10 rounded-lg p-2">
-            <span className="text-base font-black text-emerald-300 block">{projectTasks.length}</span>
-            <span className="text-[9px] font-semibold text-white/40 uppercase tracking-wider">Tasks</span>
+          <div className="bg-white/10 rounded-md p-1.5 border border-white/5">
+            <span className="text-sm font-bold text-emerald-300 block">{projectTasks.length}</span>
+            <span className="text-[10px] font-medium text-slate-300 uppercase">Tasks</span>
           </div>
         </div>
       </div>
