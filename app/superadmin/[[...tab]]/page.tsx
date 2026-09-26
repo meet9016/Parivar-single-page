@@ -18,7 +18,7 @@ function PrimaryButton({ onClick, children }: { onClick: () => void; children: R
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-1.5 px-3.5 py-2 rounded-md bg-[#0B1340] hover:bg-[#070D2B] text-white text-xs font-semibold transition-colors cursor-pointer shadow-xs"
+      className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#0B1340] hover:bg-[#070D2B] text-white text-sm font-semibold transition-colors cursor-pointer shadow-sm"
     >
       {children}
     </button>
@@ -42,7 +42,7 @@ function DashboardLayout() {
   }
 
   const tabMeta: Record<string, { title: string; subtitle: string }> = {
-    parivars: { title: "All Parivars (Tenants)", subtitle: "Manage isolated community databases, admins, and status" },
+    parivars: { title: "All Parivars ", subtitle: "Manage isolated community databases, admins, and status" },
     inquiries: { title: "User Inquiries", subtitle: "Landing page visitor requests and contact inquiries" },
     pricing: { title: "Pricing & Offers", subtitle: "Live landing page price & discount percentage" },
     tasks: { title: "Project Tasks & Time Tracking", subtitle: "Assign customization tasks, record work hours, and generate Excel reports" },
@@ -57,16 +57,16 @@ function DashboardLayout() {
         <Header />
 
         {/* Page top bar */}
-        <div className="bg-white border-b border-slate-300 px-6 py-3.5 flex flex-wrap items-center justify-between gap-3 shrink-0">
+        <div className="bg-white border-b border-slate-300 px-7 py-4 flex flex-wrap items-center justify-between gap-4 shrink-0">
           <div>
-            <h1 className="text-sm font-bold text-slate-900">{meta.title}</h1>
-            <p className="text-xs text-slate-500 mt-0.5">{meta.subtitle}</p>
+            <h1 className="text-lg font-bold text-slate-900">{meta.title}</h1>
+            <p className="text-sm text-slate-500 mt-0.5">{meta.subtitle}</p>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-3">
             {(activeTab === "inquiries" || activeTab === "parivars") && (
               <div className="relative">
-                <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-2.5" />
+                <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-3" />
                 <input
                   type="text"
                   placeholder={
@@ -80,14 +80,14 @@ function DashboardLayout() {
                       ? setInquirySearch(e.target.value)
                       : setParivarSearch(e.target.value)
                   }
-                  className="w-56 sm:w-72 pl-9 pr-3.5 py-1.5 rounded-md bg-white border border-slate-300 text-xs text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                  className="w-64 sm:w-80 pl-10 pr-4 py-2 rounded-lg bg-white border border-slate-300 text-sm text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
                 />
               </div>
             )}
 
             {activeTab === "parivars" && (
               <PrimaryButton onClick={() => setIsCreateModalOpen(true)}>
-                <PlusCircle className="w-3.5 h-3.5" />
+                <PlusCircle className="w-4 h-4" />
                 <span>Add Parivar</span>
               </PrimaryButton>
             )}
@@ -95,7 +95,7 @@ function DashboardLayout() {
         </div>
 
         {/* Content */}
-        <main className="flex-1 p-6 overflow-y-auto bg-[#f8fafc]">
+        <main className="flex-1 p-6 sm:p-7 overflow-y-auto bg-[#f8fafc]">
           {activeTab === "inquiries" && <InquiriesTab />}
           {activeTab === "parivars" && <ParivarsTab />}
           {activeTab === "pricing" && <PricingTab />}
