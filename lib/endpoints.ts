@@ -5,6 +5,7 @@ export const ENDPOINTS = {
   PRICING: '/api/pricing',
   PRICING_ALL: '/api/pricing/all',
   PROJECT_TASKS: '/api/project-tasks',
+  UPLOAD: '/api/upload',
   
   // Dynamic Endpoints
   UPDATE_INQUIRY: (id: string) => `/api/inquiry/${id}`,
