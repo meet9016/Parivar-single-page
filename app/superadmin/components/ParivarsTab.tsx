@@ -5,6 +5,8 @@ import { Search, Building2, Calendar, Edit2, Trash2, Tag, User, Phone, Mail, Che
 import { useSuperAdmin, ProjectTask } from "../context/SuperAdminContext";
 import { toast } from "sonner";
 import CustomSelect from "./CustomSelect";
+import axiosInstance from "../../../lib/axiosInstance";
+import { ENDPOINTS } from "../../../lib/endpoints";
 
 export default function ParivarsTab() {
   const {
@@ -165,49 +167,40 @@ export default function ParivarsTab() {
     });
   };
 
-  // Compress and handle Screenshot file upload (supports large images up to 15MB)
-  const handleScreenshotChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [uploadingScreenshot, setUploadingScreenshot] = useState(false);
+
+  // Upload Screenshot directly to Digitalks under 'parivar-superadmin' folder
+  const handleScreenshotChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      if (file.size > 15 * 1024 * 1024) {
-        toast.error("Screenshot image must be less than 15MB");
-        return;
+    if (!file) return;
+
+    if (file.size > 20 * 1024 * 1024) {
+      toast.error("Screenshot image must be less than 20MB");
+      return;
+    }
+
+    try {
+      setUploadingScreenshot(true);
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("folder_structure", "parivar-superadmin");
+
+      const res = await axiosInstance.post(ENDPOINTS.UPLOAD, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      const uploadedUrl = res.data?.data?.url || res.data?.data?.file_url || res.data?.url || res.data?.file_url;
+      if (uploadedUrl) {
+        setPaymentForm((prev) => ({ ...prev, screenshot: uploadedUrl }));
+        toast.success("Receipt image uploaded successfully to Digitalks!");
+      } else {
+        toast.error("Failed to retrieve uploaded image URL");
       }
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const img = new Image();
-        img.src = event.target?.result as string;
-        img.onload = () => {
-          // Resize if width/height is larger than 1600px to optimize size
-          const maxWidth = 1600;
-          const maxHeight = 1600;
-          let width = img.width;
-          let height = img.height;
-
-          if (width > maxWidth || height > maxHeight) {
-            if (width > height) {
-              height = Math.round((height * maxWidth) / width);
-              width = maxWidth;
-            } else {
-              width = Math.round((width * maxHeight) / height);
-              height = maxHeight;
-            }
-          }
-
-          const canvas = document.createElement("canvas");
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext("2d");
-          if (ctx) {
-            ctx.drawImage(img, 0, 0, width, height);
-            const compressedBase64 = canvas.toDataURL("image/jpeg", 0.85);
-            setPaymentForm((prev) => ({ ...prev, screenshot: compressedBase64 }));
-          } else {
-            setPaymentForm((prev) => ({ ...prev, screenshot: img.src }));
-          }
-        };
-      };
-      reader.readAsDataURL(file);
+    } catch (err: any) {
+      console.error("Screenshot upload error:", err);
+      toast.error(err.response?.data?.message || err.message || "Failed to upload screenshot to media server");
+    } finally {
+      setUploadingScreenshot(false);
     }
   };
 
@@ -836,11 +829,22 @@ export default function ParivarsTab() {
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
+                      disabled={uploadingScreenshot}
                       onClick={() => paymentFileInputRef.current?.click()}
-                      className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-colors cursor-pointer border border-slate-300"
+                      className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-colors cursor-pointer border border-slate-300 disabled:opacity-50"
                     >
-                      <Upload className="w-3.5 h-3.5" />
-                      <span>{paymentForm.screenshot ? "Change Screenshot" : "Upload Screenshot"}</span>
+                      {uploadingScreenshot ? (
+                        <div className="w-3.5 h-3.5 border-2 border-slate-400 border-t-slate-800 rounded-full animate-spin" />
+                      ) : (
+                        <Upload className="w-3.5 h-3.5" />
+                      )}
+                      <span>
+                        {uploadingScreenshot
+                          ? "Uploading to Media Server..."
+                          : paymentForm.screenshot
+                          ? "Change Screenshot"
+                          : "Upload Screenshot"}
+                      </span>
                     </button>
                     {paymentForm.screenshot && (
                       <div className="flex items-center gap-2">
