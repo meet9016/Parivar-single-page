@@ -44,7 +44,7 @@ function DashboardLayout() {
   const tabMeta: Record<string, { title: string; subtitle: string }> = {
     parivars: { title: "All Parivars (Tenants)", subtitle: "Manage isolated community databases, admins, and status" },
     inquiries: { title: "User Inquiries", subtitle: "Landing page visitor requests and contact inquiries" },
-    pricing: { title: "Pricing & Offers", subtitle: "Manage the dynamic pricing plans shown on parivar.me" },
+    pricing: { title: "Pricing & Offers", subtitle: "Live landing page price & discount percentage" },
     tasks: { title: "Project Tasks & Time Tracking", subtitle: "Assign customization tasks, record work hours, and generate Excel reports" },
   };
   const meta = tabMeta[activeTab] ?? { title: "", subtitle: "" };

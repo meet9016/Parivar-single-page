@@ -1,420 +1,351 @@
 "use client";
 
 import React, { useState } from "react";
-import { Plus, Edit2, Trash2, CheckCircle, X, DollarSign, List, ArrowUp, ArrowDown } from "lucide-react";
+import { Edit2, CheckCircle2, DollarSign, Sparkles, RefreshCw, ArrowRight, IndianRupee, Percent } from "lucide-react";
 import { useSuperAdmin } from "../context/SuperAdminContext";
 import { toast } from "sonner";
 
 export default function PricingTab() {
-  const { pricingPlans, pricingLoading, handleCreatePricingPlan, handleEditPricingPlan, handleDeletePricingPlan } = useSuperAdmin();
-  
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingPlan, setEditingPlan] = useState<any>(null);
-  
+  const { pricingPlans, pricingLoading, handleCreatePricingPlan, handleEditPricingPlan } = useSuperAdmin();
+
+  const [editingPlanType, setEditingPlanType] = useState<"new" | "renewal" | null>(null);
+
+  // Form states
   const [formData, setFormData] = useState({
-    title: "",
-    subtitle: "",
     originalPrice: "",
     discountedPrice: "",
-    description: "",
-    features: [] as string[],
+    discountPercent: "",
     badgeText: "",
-    buttonText: "Get Free Demo",
-    whatsappMessage: "",
-    status: 1,
-    order: "" as string | number,
+    mode: "price", // "price" | "percent"
   });
 
-  const [featureInput, setFeatureInput] = useState("");
+  // Identify plans from DB or fallback
+  const newPlanFromDB = pricingPlans.find(
+    (p) =>
+      p.subtitle?.toLowerCase().includes("new") ||
+      p.title?.toLowerCase().includes("1st") ||
+      p.title?.toLowerCase().includes("first") ||
+      p.title?.toLowerCase().includes("exclusive") ||
+      p.order === 0
+  ) || pricingPlans[0];
 
-  const handleOpenCreate = () => {
-    setEditingPlan(null);
+  const renewalPlanFromDB = pricingPlans.find(
+    (p) =>
+      p.subtitle?.toLowerCase().includes("renewal") ||
+      p.title?.toLowerCase().includes("renewal") ||
+      p.title?.toLowerCase().includes("annual") ||
+      p.order === 1
+  ) || pricingPlans[1];
+
+  const plansConfig = [
+    {
+      type: "new" as const,
+      icon: "👑",
+      title: "1st Year Plan (પ્રથમ વર્ષનો પ્લાન)",
+      subtitle: "New Plan Offer",
+      theme: "emerald",
+      badgeColor: "bg-emerald-50 text-emerald-700 border-emerald-200",
+      btnColor: "bg-emerald-600 hover:bg-emerald-700",
+      borderActive: "border-emerald-300 ring-4 ring-emerald-50",
+      defaultOriginal: 39000,
+      defaultDiscounted: 19999,
+      defaultTitle: "1st year plan",
+      defaultSubtitle: "New plan",
+      defaultBadgeText: "Official WhatsApp support - ₹6,000",
+      dbPlan: newPlanFromDB,
+    },
+    {
+      type: "renewal" as const,
+      icon: "⭐",
+      title: "Annual Renewal Plan (વાર્ષિક રિન્યુઅલ પ્લાન)",
+      subtitle: "Renewal Plan Offer",
+      theme: "blue",
+      badgeColor: "bg-blue-50 text-blue-700 border-blue-200",
+      btnColor: "bg-[#0B1340] hover:bg-[#070D2B]",
+      borderActive: "border-blue-300 ring-4 ring-blue-50",
+      defaultOriginal: 15000,
+      defaultDiscounted: 10000,
+      defaultTitle: "Annual renewal plan",
+      defaultSubtitle: "Renewal plan",
+      defaultBadgeText: "Official WhatsApp support - ₹6,000",
+      dbPlan: renewalPlanFromDB,
+    },
+  ];
+
+  const handleOpenEdit = (cfg: typeof plansConfig[0]) => {
+    const orig = cfg.dbPlan?.originalPrice ?? cfg.defaultOriginal;
+    const disc = cfg.dbPlan?.discountedPrice ?? cfg.defaultDiscounted;
+    const calcPct = orig > disc && orig > 0 ? Math.round(((orig - disc) / orig) * 100) : 0;
+    const badge = cfg.dbPlan?.badgeText || cfg.defaultBadgeText;
+
+    setEditingPlanType(cfg.type);
     setFormData({
-      title: "",
-      subtitle: "",
-      originalPrice: "",
-      discountedPrice: "",
-      description: "",
-      features: [],
-      badgeText: "",
-      buttonText: "Get Free Demo",
-      whatsappMessage: "",
-      status: 1,
-      order: pricingPlans.length,
+      originalPrice: String(orig),
+      discountedPrice: String(disc),
+      discountPercent: String(calcPct),
+      badgeText: badge,
+      mode: "price",
     });
-    setFeatureInput("");
-    setIsModalOpen(true);
   };
 
-  const handleOpenEdit = (plan: any) => {
-    setEditingPlan(plan);
-    setFormData({
-      title: plan.title,
-      subtitle: plan.subtitle || "",
-      originalPrice: String(plan.originalPrice),
-      discountedPrice: String(plan.discountedPrice),
-      description: plan.description || "",
-      features: plan.features || [],
-      badgeText: plan.badgeText || "",
-      buttonText: plan.buttonText || "Get Free Demo",
-      whatsappMessage: plan.whatsappMessage || "",
-      status: plan.status ?? 1,
-      order: plan.order !== undefined && plan.order !== null ? String(plan.order) : "",
-    });
-    setFeatureInput("");
-    setIsModalOpen(true);
-  };
-
-  const handleAddFeature = () => {
-    if (featureInput.trim()) {
-      setFormData(prev => ({
-        ...prev,
-        features: [...prev.features, featureInput.trim()]
-      }));
-      setFeatureInput("");
+  const handlePriceChange = (origStr: string, discStr: string) => {
+    const orig = Number(origStr) || 0;
+    const disc = Number(discStr) || 0;
+    let pct = "";
+    if (orig > 0 && disc > 0 && orig > disc) {
+      pct = String(Math.round(((orig - disc) / orig) * 100));
     }
-  };
-
-  const handleRemoveFeature = (index: number) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      features: prev.features.filter((_, i) => i !== index)
+      originalPrice: origStr,
+      discountedPrice: discStr,
+      discountPercent: pct,
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.title || !formData.originalPrice || !formData.discountedPrice) {
-      toast.error("Please fill all required fields.");
+  const handlePercentChange = (origStr: string, pctStr: string) => {
+    const orig = Number(origStr) || 0;
+    const pct = Number(pctStr) || 0;
+    let disc = "";
+    if (orig > 0 && pct >= 0 && pct <= 100) {
+      disc = String(Math.round(orig - (orig * pct) / 100));
+    }
+    setFormData((prev) => ({
+      ...prev,
+      originalPrice: origStr,
+      discountPercent: pctStr,
+      discountedPrice: disc,
+    }));
+  };
+
+  const handleSubmit = async (cfg: typeof plansConfig[0]) => {
+    const orig = Number(formData.originalPrice);
+    const disc = Number(formData.discountedPrice);
+
+    if (!orig || !disc || orig <= 0 || disc <= 0) {
+      toast.error("Please enter valid positive prices.");
+      return;
+    }
+
+    if (disc > orig) {
+      toast.error("Offer price cannot be greater than original price.");
       return;
     }
 
     const payload = {
-      ...formData,
-      originalPrice: Number(formData.originalPrice),
-      discountedPrice: Number(formData.discountedPrice),
-      status: Number(formData.status),
-      order: Number(formData.order),
+      title: cfg.dbPlan?.title || cfg.defaultTitle,
+      subtitle: cfg.dbPlan?.subtitle || cfg.defaultSubtitle,
+      originalPrice: orig,
+      discountedPrice: disc,
+      description: cfg.type === "new" ? `Get the Complete Package at Just ₹${disc}` : `Renew your package at just ₹${disc}`,
+      features: cfg.dbPlan?.features?.length
+        ? cfg.dbPlan.features
+        : [
+            "Smart app solution",
+            "Instant notifications",
+            "Secure data backup",
+            "Free domain",
+            "Free server",
+            "Website and app customization",
+            "Free technical support",
+          ],
+      badgeText: formData.badgeText.trim() || cfg.defaultBadgeText,
+      buttonText: "Contact on WhatsApp",
+      whatsappMessage:
+        cfg.type === "new"
+          ? `Hello, I want to inquire about the 1st Year Plan (₹${disc.toLocaleString("en-IN")}) for Parivar.me`
+          : `Hello, I want to inquire about the Annual Renewal Plan (₹${disc.toLocaleString("en-IN")}) for Parivar.me`,
+      status: 1,
+      order: cfg.type === "new" ? 0 : 1,
     };
 
     let success = false;
-    if (editingPlan) {
-      success = await handleEditPricingPlan(editingPlan._id, payload);
+    if (cfg.dbPlan?._id) {
+      success = await handleEditPricingPlan(cfg.dbPlan._id, payload);
     } else {
       success = await handleCreatePricingPlan(payload);
     }
 
     if (success) {
-      setIsModalOpen(false);
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this pricing plan?")) {
-      await handleDeletePricingPlan(id);
+      setEditingPlanType(null);
     }
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-sm font-bold text-slate-600">All Plans</h2>
-        <button
-          onClick={handleOpenCreate}
-          className="inline-flex items-center gap-2 bg-[#0B1340] hover:bg-[#0d1855] text-white font-bold text-xs px-4 py-2 rounded-lg shadow-sm transition-colors"
-        >
-          <Plus className="w-3.5 h-3.5" />
-          <span>Add Plan</span>
-        </button>
-      </div>
+    <div className="space-y-4 max-w-4xl">
+      {/* Compact Cards Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {plansConfig.map((cfg) => {
+          const orig = cfg.dbPlan?.originalPrice ?? cfg.defaultOriginal;
+          const disc = cfg.dbPlan?.discountedPrice ?? cfg.defaultDiscounted;
+          const discountPct = orig > disc && orig > 0 ? Math.round(((orig - disc) / orig) * 100) : 0;
+          const badge = cfg.dbPlan?.badgeText || cfg.defaultBadgeText;
+          const isEditing = editingPlanType === cfg.type;
 
-      <div className="bg-white border border-slate-200/80 rounded-2xl shadow-2xs overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs sm:text-sm">
-            <thead className="bg-slate-50 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-              <tr>
-                <th className="px-5 py-3.5 w-12 text-center">Order</th>
-                <th className="px-5 py-3.5">Plan Title / Subtitle</th>
-                <th className="px-5 py-3.5">Pricing</th>
-                <th className="px-5 py-3.5">Features Included</th>
-                <th className="px-5 py-3.5">Badge/WhatsApp CTA</th>
-                <th className="px-5 py-3.5">Status</th>
-                <th className="px-5 py-3.5 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {pricingLoading && pricingPlans.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="text-center py-10 text-slate-400 font-medium">
-                    Loading pricing plans...
-                  </td>
-                </tr>
-              ) : pricingPlans.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="text-center py-10 text-slate-400 space-y-2">
-                    <List className="w-7 h-7 mx-auto text-slate-300 stroke-[1.5]" />
-                    <p>No pricing plans created yet. They will appear here and on the landing page.</p>
-                  </td>
-                </tr>
-              ) : (
-                pricingPlans.map((plan) => (
-                  <tr key={plan._id} className="hover:bg-slate-50/60 transition-colors">
-                    <td className="px-5 py-4 text-center font-semibold text-slate-600">
-                      {plan.order}
-                    </td>
-                    <td className="px-5 py-4">
-                      <div className="font-bold text-sm text-slate-800">{plan.title}</div>
-                      {plan.subtitle && <div className="text-xs text-slate-500 mt-0.5">{plan.subtitle}</div>}
-                    </td>
-                    <td className="px-5 py-4">
-                      <div className="flex items-center gap-1.5 font-bold text-sm text-slate-800">
-                        <span>₹{plan.discountedPrice}</span>
-                        <span className="text-xs font-medium text-slate-400 line-through">₹{plan.originalPrice}</span>
-                      </div>
-                    </td>
-                    <td className="px-5 py-4">
-                      <div className="max-w-[220px]">
-                        <ul className="list-disc list-inside text-xs text-slate-600 space-y-0.5">
-                          {plan.features?.slice(0, 3).map((f: string, idx: number) => (
-                            <li key={idx} className="truncate">{f}</li>
-                          ))}
-                          {plan.features?.length > 3 && (
-                            <li className="text-blue-500 font-semibold list-none mt-0.5">
-                              +{plan.features.length - 3} more features
-                            </li>
-                          )}
-                        </ul>
-                      </div>
-                    </td>
-                    <td className="px-5 py-4 text-xs text-slate-600 space-y-1">
-                      {plan.badgeText && (
-                        <span className="inline-block bg-amber-50 text-amber-700 font-semibold border border-amber-200 px-2 py-0.5 rounded text-[10px]">
-                          {plan.badgeText}
-                        </span>
-                      )}
-                      <div>
-                        <span className="font-semibold text-slate-700">Button: </span>
-                        <span>{plan.buttonText}</span>
-                      </div>
-                    </td>
-                    <td className="px-5 py-4">
-                      <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-bold ${
-                        plan.status === 1
-                          ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                          : "bg-slate-100 text-slate-600 border border-slate-200"
-                      }`}>
-                        {plan.status === 1 ? "Active" : "Inactive"}
-                      </span>
-                    </td>
-                    <td className="px-5 py-4 text-right">
-                      <div className="flex items-center justify-end gap-1.5">
-                        <button
-                          onClick={() => handleOpenEdit(plan)}
-                          className="p-1.5 rounded-lg bg-[#0B1340]/5 hover:bg-[#0B1340] text-[#0B1340] hover:text-white transition-all"
-                          title="Edit Plan"
-                        >
-                          <Edit2 className="w-3.5 h-3.5" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(plan._id)}
-                          className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-600 text-rose-500 hover:text-white transition-all"
-                          title="Delete Plan"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Add/Edit Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-          <div className="bg-white border border-slate-150 rounded-3xl shadow-xl w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
-            <div className="flex justify-between items-center px-6 py-5 border-b border-slate-100">
-              <h3 className="text-base font-bold text-slate-800">
-                {editingPlan ? "Edit Pricing Deal Card" : "Add New Pricing Deal Card"}
-              </h3>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="p-1 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="p-6 overflow-y-auto max-h-[75vh] space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Deal Title *</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. Exclusive Deal"
-                    value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                    className="w-full text-sm border border-slate-200 rounded-xl px-4 py-2.5 outline-hidden focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Subtitle / Offer Label</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Limited Time Offer"
-                    value={formData.subtitle}
-                    onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
-                    className="w-full text-sm border border-slate-200 rounded-xl px-4 py-2.5 outline-hidden focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Original Price (₹) *</label>
-                  <input
-                    type="number"
-                    required
-                    placeholder="e.g. 20000"
-                    value={formData.originalPrice}
-                    onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
-                    className="w-full text-sm border border-slate-200 rounded-xl px-4 py-2.5 outline-hidden focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Discounted / Offer Price (₹) *</label>
-                  <input
-                    type="number"
-                    required
-                    placeholder="e.g. 10000"
-                    value={formData.discountedPrice}
-                    onChange={(e) => setFormData({ ...formData, discountedPrice: e.target.value })}
-                    className="w-full text-sm border border-slate-200 rounded-xl px-4 py-2.5 outline-hidden focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Brief Description</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Get the Complete Package at Just ₹10,000"
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full text-sm border border-slate-200 rounded-xl px-4 py-2.5 outline-hidden focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Add Included Features / Points</label>
-                <div className="flex gap-2 mb-2">
-                  <input
-                    type="text"
-                    placeholder="e.g. 1 Official WhatsApp API Number"
-                    value={featureInput}
-                    onChange={(e) => setFeatureInput(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        handleAddFeature();
-                      }
-                    }}
-                    className="flex-1 text-sm border border-slate-200 rounded-xl px-4 py-2.5 outline-hidden focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleAddFeature}
-                    className="bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-colors"
-                  >
-                    Add
-                  </button>
-                </div>
-
-                {formData.features.length > 0 && (
-                  <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 space-y-2">
-                    {formData.features.map((feature, idx) => (
-                      <div key={idx} className="flex justify-between items-center gap-2 bg-white px-3 py-1.5 border border-slate-100 rounded-lg shadow-3xs">
-                        <input
-                          type="text"
-                          value={feature}
-                          onChange={(e) => {
-                            const newFeatures = [...formData.features];
-                            newFeatures[idx] = e.target.value;
-                            setFormData({ ...formData, features: newFeatures });
-                          }}
-                          className="w-full bg-transparent border-none outline-hidden focus:ring-0 text-xs font-semibold text-slate-700 p-0"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveFeature(idx)}
-                          className="text-slate-400 hover:text-red-500 p-0.5 rounded-md hover:bg-slate-50 transition-all shrink-0"
-                        >
-                          <X className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    ))}
+          return (
+            <div
+              key={cfg.type}
+              className={`bg-white border rounded-2xl p-4 sm:p-5 shadow-xs transition-all relative overflow-hidden flex flex-col justify-between ${
+                isEditing ? cfg.borderActive : "border-slate-200 hover:border-slate-300"
+              }`}
+            >
+              {/* Card Header */}
+              <div className="flex items-center justify-between gap-2 mb-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-base">{cfg.icon}</span>
+                  <div>
+                    <h3 className="text-sm font-extrabold text-slate-900 leading-tight">
+                      {cfg.title}
+                    </h3>
                   </div>
+                </div>
+
+                {discountPct > 0 && (
+                  <span className="bg-rose-50 text-rose-700 border border-rose-200 font-extrabold text-[11px] px-2 py-0.5 rounded-full shrink-0">
+                    🔥 {discountPct}% OFF
+                  </span>
                 )}
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Highlight Yellow Badge Text</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Additional WhatsApp Number — Only ₹6,000"
-                    value={formData.badgeText}
-                    onChange={(e) => setFormData({ ...formData, badgeText: e.target.value })}
-                    className="w-full text-sm border border-slate-200 rounded-xl px-4 py-2.5 outline-hidden focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                  />
+              {!isEditing ? (
+                /* Compact View */
+                <div className="space-y-3 pt-1">
+                  <div className="bg-slate-50 border border-slate-100 rounded-xl p-3.5 flex items-baseline justify-between">
+                    <div>
+                      <span className="text-[11px] font-semibold text-slate-400 block mb-0.5">Offer Price</span>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-xl font-black text-slate-900">
+                          ₹{disc.toLocaleString("en-IN")}
+                        </span>
+                        <span className="text-xs text-slate-400 line-through font-bold">
+                          ₹{orig.toLocaleString("en-IN")}
+                        </span>
+                      </div>
+                    </div>
+                    <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
+                      Save ₹{(orig - disc).toLocaleString("en-IN")}
+                    </span>
+                  </div>
+
+                  {/* Official WhatsApp Support Badge Preview */}
+                  <div className="bg-emerald-50/60 border border-emerald-100 rounded-lg px-3 py-2 text-xs font-semibold text-emerald-800 flex items-center gap-2">
+                    <span>🎧</span>
+                    <span className="truncate">{badge}</span>
+                  </div>
+
+                  <div className="pt-2 flex justify-end">
+                    <button
+                      onClick={() => handleOpenEdit(cfg)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0B1340] hover:bg-[#070D2B] text-white text-xs font-bold transition-all shadow-2xs cursor-pointer"
+                    >
+                      <Edit2 className="w-3 h-3" />
+                      <span>Edit Price, % & WhatsApp Support</span>
+                    </button>
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">CTA Button Label</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Get Free Demo"
-                    value={formData.buttonText}
-                    onChange={(e) => setFormData({ ...formData, buttonText: e.target.value })}
-                    className="w-full text-sm border border-slate-200 rounded-xl px-4 py-2.5 outline-hidden focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Custom WhatsApp Auto-Msg on Click</label>
-                <textarea
-                  placeholder="e.g. Hello, I am interested in the WhatsApp CRM Setup deal. Please call back."
-                  value={formData.whatsappMessage}
-                  onChange={(e) => setFormData({ ...formData, whatsappMessage: e.target.value })}
-                  rows={2}
-                  className="w-full text-sm border border-slate-200 rounded-xl px-4 py-2.5 outline-hidden focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none"
-                />
-              </div>
-
-
-              <div className="flex justify-end gap-2.5 pt-4 border-t border-slate-100">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs px-5 py-2.5 rounded-lg transition-colors"
+              ) : (
+                /* Compact Edit Form */
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSubmit(cfg);
+                  }}
+                  className="space-y-3 pt-1 animate-in fade-in"
                 >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-[#0B1340] hover:bg-[#0d1855] text-white font-bold text-xs px-6 py-2.5 rounded-lg transition-colors"
-                >
-                  Save Plan
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+                  <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3 space-y-2.5">
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-600 mb-1">
+                        Original Price (₹)
+                      </label>
+                      <div className="relative">
+                        <span className="absolute left-2.5 top-2 text-slate-400 font-bold text-xs">₹</span>
+                        <input
+                          type="number"
+                          required
+                          min="1"
+                          value={formData.originalPrice}
+                          onChange={(e) => handlePriceChange(e.target.value, formData.discountedPrice)}
+                          className="w-full pl-6 pr-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-900 outline-none focus:ring-1 focus:ring-[#0B1340]"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-600 mb-1">
+                          Offer Price (₹)
+                        </label>
+                        <div className="relative">
+                          <span className="absolute left-2.5 top-2 text-slate-400 font-bold text-xs">₹</span>
+                          <input
+                            type="number"
+                            required
+                            min="1"
+                            value={formData.discountedPrice}
+                            onChange={(e) => handlePriceChange(formData.originalPrice, e.target.value)}
+                            className="w-full pl-6 pr-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-bold text-emerald-700 outline-none focus:ring-1 focus:ring-emerald-500"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-[11px] font-bold text-slate-600 mb-1">
+                          Discount (% OFF)
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="number"
+                            min="0"
+                            max="99"
+                            value={formData.discountPercent}
+                            onChange={(e) => handlePercentChange(formData.originalPrice, e.target.value)}
+                            className="w-full pr-6 pl-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-bold text-rose-600 outline-none focus:ring-1 focus:ring-rose-500"
+                          />
+                          <span className="absolute right-2.5 top-2 text-slate-400 font-bold text-xs">%</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* WhatsApp Support Text/Price Field */}
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-600 mb-1">
+                        Official WhatsApp Support Text & Price
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={formData.badgeText}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, badgeText: e.target.value }))}
+                        placeholder="e.g. Official WhatsApp support - ₹6,000"
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-900 outline-none focus:ring-1 focus:ring-[#0B1340]"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex items-center justify-end gap-2 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => setEditingPlanType(null)}
+                      className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors cursor-pointer"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={pricingLoading}
+                      className="px-4 py-1.5 rounded-lg bg-[#0B1340] hover:bg-[#070D2B] text-white text-xs font-bold transition-all cursor-pointer shadow-xs disabled:opacity-50 flex items-center gap-1"
+                    >
+                      {pricingLoading ? <RefreshCw className="w-3 h-3 animate-spin" /> : <CheckCircle2 className="w-3 h-3" />}
+                      <span>Save</span>
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
