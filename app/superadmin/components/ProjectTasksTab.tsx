@@ -109,47 +109,43 @@ function CustomSelect({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full flex items-center justify-between gap-2 text-left transition-all duration-150 cursor-pointer ${
-          size === "sm"
-            ? "px-3 py-1.5 rounded-lg text-xs font-medium bg-white border border-slate-200 hover:border-slate-300"
-            : "px-3.5 py-2 rounded-xl text-xs font-medium bg-slate-50 border border-slate-200 hover:bg-white hover:border-slate-300"
-        } ${
-          isOpen ? "ring-2 ring-[#0B1340]/10 border-[#0B1340] bg-white" : "text-slate-800"
-        }`}
+        className={`w-full flex items-center justify-between gap-2 text-left transition-colors cursor-pointer bg-white border border-slate-300 text-xs font-semibold text-slate-900 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340] ${
+          size === "sm" ? "px-2.5 py-1.5 rounded-md" : "px-3 py-2 rounded-md"
+        } ${isOpen ? "border-[#0B1340] ring-1 ring-[#0B1340]" : ""}`}
       >
         <div className="flex items-center gap-2 truncate min-w-0">
-          {icon && <span className="text-slate-400 shrink-0">{icon}</span>}
+          {icon && <span className="text-slate-500 shrink-0">{icon}</span>}
           {selectedOption?.dotColor && (
             <span
               className="w-2 h-2 rounded-full shrink-0"
               style={{ backgroundColor: selectedOption.dotColor }}
             />
           )}
-          <span className="truncate">
-            {selectedOption ? selectedOption.label : <span className="text-slate-400">{placeholder}</span>}
+          <span className="truncate text-slate-900 font-semibold">
+            {selectedOption ? selectedOption.label : <span className="text-slate-500 font-normal">{placeholder}</span>}
           </span>
         </div>
 
         <ChevronDown
-          className={`w-3.5 h-3.5 text-slate-400 shrink-0 transition-transform duration-150 ${
-            isOpen ? "rotate-180 text-[#0B1340]" : ""
+          className={`w-3.5 h-3.5 text-slate-500 shrink-0 transition-transform duration-150 ${
+            isOpen ? "rotate-180 text-slate-900" : ""
           }`}
         />
       </button>
 
       {isOpen && (
-        <div className="absolute z-50 left-0 right-0 mt-1 min-w-[200px] max-w-sm bg-white rounded-xl shadow-lg border border-slate-100 p-1 animate-in fade-in duration-100">
+        <div className="absolute z-50 left-0 right-0 mt-1 min-w-[200px] max-w-sm bg-white rounded-md shadow-lg border border-slate-300 p-1 animate-in fade-in duration-100">
           {searchable && (
-            <div className="p-1 border-b border-slate-100 mb-1">
+            <div className="p-1 border-b border-slate-200 mb-1">
               <div className="relative">
-                <Search className="w-3 h-3 text-slate-400 absolute left-2.5 top-2" />
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2" />
                 <input
                   type="text"
                   placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onClick={(e) => e.stopPropagation()}
-                  className="w-full pl-7 pr-3 py-1 rounded-lg bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
+                  className="w-full pl-7 pr-3 py-1 rounded-md bg-white border border-slate-300 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340]"
                   autoFocus
                 />
               </div>
@@ -158,7 +154,7 @@ function CustomSelect({
 
           <div className="max-h-56 overflow-y-auto space-y-0.5">
             {filteredOptions.length === 0 ? (
-              <div className="py-3 text-center text-slate-400 text-xs">No results found</div>
+              <div className="py-3 text-center text-slate-500 text-xs font-medium">No results found</div>
             ) : (
               filteredOptions.map((opt) => {
                 const isSelected = opt.value === value;
@@ -171,10 +167,10 @@ function CustomSelect({
                       setIsOpen(false);
                       setSearchQuery("");
                     }}
-                    className={`w-full flex items-center justify-between gap-2 px-3 py-1.5 rounded-lg text-xs text-left transition-colors cursor-pointer ${
+                    className={`w-full flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-md text-xs text-left transition-colors cursor-pointer ${
                       isSelected
-                        ? "bg-[#0B1340] text-white font-semibold"
-                        : "text-slate-700 hover:bg-slate-50"
+                        ? "bg-[#0B1340] text-white font-bold"
+                        : "text-slate-800 hover:bg-slate-100 font-medium"
                     }`}
                   >
                     <div className="flex items-center gap-2 truncate min-w-0">
@@ -189,7 +185,7 @@ function CustomSelect({
                         {opt.sublabel && (
                           <div
                             className={`text-[10px] truncate ${
-                              isSelected ? "text-blue-100" : "text-slate-400"
+                              isSelected ? "text-slate-200" : "text-slate-500"
                             }`}
                           >
                             {opt.sublabel}
@@ -477,7 +473,7 @@ export default function ProjectTasksTab() {
       assigned_to: "",
       category: "Customization",
       priority: "Medium",
-      status: "Pending",
+      status: "Completed",
       estimated_hours: 1,
       spent_hours: 1,
       billable: true,
@@ -932,25 +928,25 @@ export default function ProjectTasksTab() {
 
       {/* ── LIVE ACTIVE TIMER BANNER (LIGHT THEME) ── */}
       {activeTimer && (
-        <div className="bg-white border-2 border-blue-500/30 rounded-2xl p-4 shadow-sm flex flex-wrap items-center justify-between gap-4 animate-in fade-in duration-200">
+        <div className="bg-white border border-blue-300 rounded-lg p-4 shadow-xs flex flex-wrap items-center justify-between gap-4 animate-in fade-in duration-200">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shrink-0">
-              <Clock className={`w-5 h-5 ${!activeTimer.isPaused ? "text-blue-600 animate-pulse" : "text-amber-500"}`} />
+            <div className="w-9 h-9 rounded-md bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-800 shrink-0">
+              <Clock className={`w-4 h-4 ${!activeTimer.isPaused ? "text-blue-700 animate-pulse" : "text-amber-600"}`} />
             </div>
 
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="px-2.5 py-0.5 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 font-bold text-[10px] tracking-wide uppercase">
+                <span className="px-2 py-0.5 rounded-md bg-blue-50 border border-blue-300 text-blue-900 font-bold text-[10px] tracking-wide uppercase">
                   {activeTimer.projectName}
                 </span>
-                <span className="text-xs font-semibold text-slate-600">Developer: {activeTimer.assignedTo}</span>
+                <span className="text-xs font-semibold text-slate-700">Developer: {activeTimer.assignedTo}</span>
                 {activeTimer.isPaused ? (
-                  <span className="px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 font-bold text-[10px]">
+                  <span className="px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 font-bold text-[10px] border border-amber-300">
                     PAUSED
                   </span>
                 ) : (
-                  <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 font-bold text-[10px] flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+                  <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-900 font-bold text-[10px] border border-emerald-300 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-ping" />
                     RECORDING
                   </span>
                 )}
@@ -963,10 +959,10 @@ export default function ProjectTasksTab() {
 
           <div className="flex items-center gap-4 ml-auto">
             <div className="text-right">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-600 block">
                 Working Timer
               </span>
-              <span className="font-mono text-2xl font-black text-slate-900 tracking-tight">
+              <span className="font-mono text-2xl font-bold text-slate-900 tracking-tight">
                 {formatTime(elapsedDisplayMs)}
               </span>
             </div>
@@ -975,7 +971,7 @@ export default function ProjectTasksTab() {
               {activeTimer.isPaused ? (
                 <button
                   onClick={handleResumeTimer}
-                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all cursor-pointer shadow-2xs"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold transition-all cursor-pointer shadow-xs"
                 >
                   <Play className="w-3.5 h-3.5 fill-white" />
                   <span>Resume</span>
@@ -983,7 +979,7 @@ export default function ProjectTasksTab() {
               ) : (
                 <button
                   onClick={handlePauseTimer}
-                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold transition-all cursor-pointer shadow-2xs"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold transition-all cursor-pointer shadow-xs"
                 >
                   <Pause className="w-3.5 h-3.5 fill-white" />
                   <span>Pause</span>
@@ -992,7 +988,7 @@ export default function ProjectTasksTab() {
 
               <button
                 onClick={() => handleStopTimer()}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all cursor-pointer shadow-2xs"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-rose-700 hover:bg-rose-800 text-white text-xs font-semibold transition-all cursor-pointer shadow-xs"
               >
                 <Square className="w-3.5 h-3.5 fill-white" />
                 <span>Stop & Log</span>
@@ -1000,7 +996,7 @@ export default function ProjectTasksTab() {
 
               <button
                 onClick={handleDiscardTimer}
-                className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer border border-slate-200"
+                className="p-1.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 transition-colors cursor-pointer border border-slate-300"
                 title="Discard Timer"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
@@ -1012,76 +1008,76 @@ export default function ProjectTasksTab() {
 
       {/* ── Top Stat Cards ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-2xs flex items-center justify-between">
+        <div className="bg-white rounded-lg p-4 border border-slate-300 shadow-xs flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total Tasks</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600">Total Tasks</span>
             <div className="flex items-baseline gap-2 mt-1">
               <span className="text-2xl font-bold text-slate-900">{taskMeta.totalTasks}</span>
-              <span className="text-xs text-slate-400 font-medium">({taskMeta.filteredTasks} in view)</span>
+              <span className="text-xs text-slate-600 font-medium">({taskMeta.filteredTasks} in view)</span>
             </div>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-600">
-            <Layers className="w-5 h-5" />
+          <div className="w-9 h-9 rounded-md bg-slate-100 border border-slate-300 flex items-center justify-center text-slate-700">
+            <Layers className="w-4 h-4" />
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-2xs flex items-center justify-between">
+        <div className="bg-white rounded-lg p-4 border border-slate-300 shadow-xs flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Total Hours Spent</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600">Total Hours Spent</span>
             <div className="flex items-baseline gap-2 mt-1">
-              <span className="text-2xl font-bold text-blue-600">{taskMeta.totalSpentHours} hrs</span>
-              <span className="text-xs text-slate-400 font-medium">/ {taskMeta.totalEstimatedHours}h est</span>
+              <span className="text-2xl font-bold text-blue-950">{taskMeta.totalSpentHours} hrs</span>
+              <span className="text-xs text-slate-600 font-medium">/ {taskMeta.totalEstimatedHours}h est</span>
             </div>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
-            <Clock className="w-5 h-5" />
+          <div className="w-9 h-9 rounded-md bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-800">
+            <Clock className="w-4 h-4" />
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-2xs flex items-center justify-between">
+        <div className="bg-white rounded-lg p-4 border border-slate-300 shadow-xs flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Task Status</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600">Task Status</span>
             <div className="flex items-center gap-2 mt-1.5 text-xs font-semibold">
-              <span className="text-amber-600">{taskMeta.statusCounts.Pending || 0} Pending</span>
-              <span className="text-slate-300">•</span>
-              <span className="text-blue-600">{taskMeta.statusCounts["In Progress"] || 0} In Progress</span>
-              <span className="text-slate-300">•</span>
-              <span className="text-emerald-600">{taskMeta.statusCounts.Completed || 0} Done</span>
+              <span className="text-amber-800">{taskMeta.statusCounts.Pending || 0} Pending</span>
+              <span className="text-slate-400">•</span>
+              <span className="text-blue-800">{taskMeta.statusCounts["In Progress"] || 0} In Progress</span>
+              <span className="text-slate-400">•</span>
+              <span className="text-emerald-800">{taskMeta.statusCounts.Completed || 0} Done</span>
             </div>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
-            <CheckCircle2 className="w-5 h-5" />
+          <div className="w-9 h-9 rounded-md bg-emerald-50 border border-emerald-300 flex items-center justify-center text-emerald-800">
+            <CheckCircle2 className="w-4 h-4" />
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-2xs flex items-center justify-between">
+        <div className="bg-white rounded-lg p-4 border border-slate-300 shadow-xs flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Projects & Devs</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600">Projects & Devs</span>
             <div className="flex items-baseline gap-2 mt-1">
-              <span className="text-2xl font-bold text-slate-800">{parivars.length || taskMeta.projectsList.length}</span>
-              <span className="text-xs text-slate-400 font-medium">
+              <span className="text-2xl font-bold text-slate-900">{parivars.length || taskMeta.projectsList.length}</span>
+              <span className="text-xs text-slate-600 font-medium">
                 Parivars • {taskMeta.devsList.length} Developers
               </span>
             </div>
           </div>
-          <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
-            <Briefcase className="w-5 h-5" />
+          <div className="w-9 h-9 rounded-md bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-800">
+            <Briefcase className="w-4 h-4" />
           </div>
         </div>
       </div>
 
       {/* ── Action & Filter Bar ── */}
-      <div className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-2xs space-y-3.5">
+      <div className="bg-white rounded-lg p-4 border border-slate-300 shadow-xs space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           {/* Search */}
           <div className="relative flex-1 min-w-[240px] max-w-md">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-3" />
+            <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-2.5" />
             <input
               type="text"
               placeholder="Search by project, task title, developer, client, description..."
               value={taskSearch}
               onChange={(e) => setTaskSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#0B1340]/15"
+              className="w-full pl-8 pr-3 py-1.5 rounded-md bg-white border border-slate-300 text-xs font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
             />
           </div>
 
@@ -1089,25 +1085,25 @@ export default function ProjectTasksTab() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-semibold transition-all cursor-pointer shadow-2xs"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 text-xs font-semibold transition-all cursor-pointer"
               title="Import Tasks from Excel / CSV"
             >
-              <Upload className="w-3.5 h-3.5 text-slate-600" />
+              <Upload className="w-3.5 h-3.5 text-slate-700" />
               <span>Import Excel</span>
             </button>
 
             <button
               onClick={handleExportExcel}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-semibold transition-all cursor-pointer shadow-2xs"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 text-xs font-semibold transition-all cursor-pointer"
               title="Download Excel Spreadsheet Report"
             >
-              <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-600" />
+              <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-700" />
               <span>Download Excel</span>
             </button>
 
             <button
               onClick={openCreateModal}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#0B1340] hover:bg-[#070D2B] text-white text-xs font-bold transition-all cursor-pointer shadow-sm"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-[#0B1340] hover:bg-[#070D2B] text-white text-xs font-semibold transition-all cursor-pointer shadow-xs"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add Work Hours</span>
@@ -1116,8 +1112,8 @@ export default function ProjectTasksTab() {
         </div>
 
         {/* Themed Select Filters (Clean & Simple) */}
-        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100 text-xs">
-          <div className="flex items-center gap-1.5 text-slate-400 font-bold uppercase text-[10px] tracking-wider pr-1">
+        <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-200 text-xs">
+          <div className="flex items-center gap-1 text-slate-700 font-bold uppercase text-[11px] tracking-wider pr-1">
             <Filter className="w-3.5 h-3.5" />
             <span>Filters:</span>
           </div>
@@ -1163,7 +1159,7 @@ export default function ProjectTasksTab() {
                   category: "all",
                 });
               }}
-              className="text-xs text-rose-500 hover:text-rose-700 font-semibold underline ml-auto cursor-pointer"
+              className="text-xs text-rose-600 hover:text-rose-800 font-semibold underline ml-auto cursor-pointer"
             >
               Reset Filters
             </button>
@@ -1172,32 +1168,32 @@ export default function ProjectTasksTab() {
       </div>
 
       {/* ── Tasks Table ── */}
-      <div className="bg-white rounded-2xl border border-slate-200/90 shadow-2xs overflow-hidden">
+      <div className="bg-white rounded-lg border border-slate-300 shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-slate-50 border-b border-slate-200 text-slate-400 font-bold uppercase tracking-wider text-[10px]">
-                <th className="py-3.5 px-4">Project & Task Title</th>
-                <th className="py-3.5 px-4">Assigned Developer</th>
-                <th className="py-3.5 px-4">Status</th>
-                <th className="py-3.5 px-4">Live Timer & Hours Spent</th>
-                <th className="py-3.5 px-4">Dates</th>
-                <th className="py-3.5 px-4 text-right">Actions</th>
+              <tr className="bg-slate-100 border-b border-slate-300 text-slate-700 font-bold uppercase tracking-wider text-[11px]">
+                <th className="py-3 px-4">Project & Task Title</th>
+                <th className="py-3 px-4">Assigned Developer</th>
+                <th className="py-3 px-4">Status</th>
+                <th className="py-3 px-4">Live Timer & Hours Spent</th>
+                <th className="py-3 px-4">Dates</th>
+                <th className="py-3 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-slate-200">
               {tasksLoading ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-slate-400">
+                  <td colSpan={6} className="py-12 text-center text-slate-500 font-medium">
                     Loading project tasks...
                   </td>
                 </tr>
               ) : projectTasks.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-slate-400">
-                    <CheckSquare className="w-8 h-8 mx-auto text-slate-300 mb-2" />
-                    <p className="font-semibold text-slate-600">No tasks found</p>
-                    <p className="text-[11px] text-slate-400 mt-0.5">
+                  <td colSpan={6} className="py-12 text-center text-slate-500">
+                    <CheckSquare className="w-8 h-8 mx-auto text-slate-400 mb-2" />
+                    <p className="font-semibold text-slate-800">No tasks found</p>
+                    <p className="text-xs text-slate-500 mt-0.5">
                       Create a task or click "Import Excel" to upload tasks.
                     </p>
                   </td>
@@ -1209,61 +1205,67 @@ export default function ProjectTasksTab() {
                   return (
                     <tr
                       key={t._id}
-                      className={`hover:bg-slate-50/70 transition-colors ${
-                        isTimerRunningOnThisTask ? "bg-blue-50/30" : ""
+                      className={`hover:bg-slate-50 transition-colors ${
+                        isTimerRunningOnThisTask ? "bg-blue-50/50" : ""
                       }`}
                     >
                       {/* Project & Title */}
-                      <td className="py-3.5 px-4 max-w-[280px]">
+                      <td className="py-3 px-4 max-w-[280px]">
                         <div className="flex items-center gap-1.5 flex-wrap">
-                          <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-800 font-bold text-[10px]">
+                          <span className="px-2 py-0.5 rounded-md bg-slate-100 border border-slate-300 text-slate-800 font-bold text-[10px]">
                             {t.project_name}
                           </span>
                           {t.client_name && (
-                            <span className="text-[10px] text-slate-400">({t.client_name})</span>
+                            <span className="text-[11px] text-slate-500 font-medium">({t.client_name})</span>
                           )}
                         </div>
                         <p className="font-bold text-slate-900 mt-1 text-xs truncate" title={t.task_title}>
                           {t.task_title}
                         </p>
                         {t.description && (
-                          <p className="text-[11px] text-slate-500 line-clamp-1 mt-0.5" title={t.description}>
+                          <p className="text-xs text-slate-600 line-clamp-1 mt-0.5" title={t.description}>
                             {t.description}
                           </p>
                         )}
                       </td>
 
                       {/* Developer */}
-                      <td className="py-3.5 px-4">
+                      <td className="py-3 px-4">
                         <div className="flex items-center gap-1.5 font-semibold text-slate-800">
-                          <User className="w-3.5 h-3.5 text-slate-400" />
+                          <User className="w-3.5 h-3.5 text-slate-500" />
                           <span>{t.assigned_to}</span>
                         </div>
                       </td>
 
                       {/* Status */}
-                      <td className="py-3.5 px-4">
+                      <td className="py-3 px-4">
                         <span
-                          className={`px-2.5 py-1 rounded-md border text-[11px] font-semibold ${getStatusBadge(
-                            t.status
-                          )}`}
+                          className={`px-2.5 py-0.5 rounded-md border text-xs font-semibold ${
+                            t.status === "Completed"
+                              ? "bg-emerald-50 text-emerald-800 border-emerald-300"
+                              : t.status === "In Progress"
+                              ? "bg-blue-50 text-blue-800 border-blue-300"
+                              : t.status === "Testing"
+                              ? "bg-purple-50 text-purple-800 border-purple-300"
+                              : "bg-amber-50 text-amber-800 border-amber-300"
+                          }`}
                         >
                           {t.status}
                         </span>
                         {t.remarks && (
-                          <p className="text-[10px] text-slate-400 mt-1 truncate max-w-[140px]" title={t.remarks}>
+                          <p className="text-xs text-slate-500 mt-1 truncate max-w-[140px]" title={t.remarks}>
                             {t.remarks}
                           </p>
                         )}
                       </td>
 
                       {/* Live Timer & Time Tracking */}
-                      <td className="py-3.5 px-4">
+                      <td className="py-3 px-4">
                         <div className="flex items-center gap-2">
                           {isTimerRunningOnThisTask ? (
                             <button
                               onClick={() => handleStopTimer(t)}
-                              className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold text-[10px] shadow-sm transition-all cursor-pointer"
+                              className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-rose-700 hover:bg-rose-800 text-white font-bold text-[10px] shadow-xs transition-all cursor-pointer"
                               title="Stop Running Timer"
                             >
                               <Square className="w-3 h-3 fill-white" />
@@ -1272,35 +1274,35 @@ export default function ProjectTasksTab() {
                           ) : (
                             <button
                               onClick={() => handleStartTimer(t)}
-                              className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-semibold text-[10px] transition-all cursor-pointer"
+                              className="flex items-center gap-1 px-2 py-1 rounded-md bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-semibold text-[10px] transition-all cursor-pointer"
                               title="Start Timer for this Task"
                             >
-                              <Play className="w-3 h-3 fill-emerald-600 text-emerald-600" />
+                              <Play className="w-3 h-3 fill-emerald-700 text-emerald-700" />
                               <span>Start Timer</span>
                             </button>
                           )}
 
                           <div className="text-xs">
                             <span className="font-bold text-slate-900">{t.spent_hours || 0} hrs</span>
-                            <span className="text-[10px] text-slate-400 ml-1">/ {t.estimated_hours || 0}h est</span>
+                            <span className="text-xs text-slate-500 ml-1">/ {t.estimated_hours || 0}h est</span>
                           </div>
                         </div>
                       </td>
 
                       {/* Dates */}
-                      <td className="py-3.5 px-4 text-[11px] text-slate-600">
+                      <td className="py-3 px-4 text-xs text-slate-700">
                         <div>
-                          <span className="text-slate-400">Start:</span>{" "}
+                          <span className="text-slate-500">Start:</span>{" "}
                           {t.start_date ? new Date(t.start_date).toLocaleDateString("en-IN") : "-"}
                         </div>
                         <div className="mt-0.5">
-                          <span className="text-slate-400">Due:</span>{" "}
+                          <span className="text-slate-500">Due:</span>{" "}
                           {t.due_date ? new Date(t.due_date).toLocaleDateString("en-IN") : "-"}
                         </div>
                       </td>
 
                       {/* Actions */}
-                      <td className="py-3.5 px-4 text-right">
+                      <td className="py-3 px-4 text-right">
                         <div className="flex items-center justify-end gap-1.5">
                           <button
                             onClick={() => {
@@ -1310,7 +1312,7 @@ export default function ProjectTasksTab() {
                               setLogStatusInput(t.status);
                               setLogRemarksInput(t.remarks || "");
                             }}
-                            className="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold text-[11px] transition-colors cursor-pointer"
+                            className="px-2.5 py-1 rounded-md bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-300 font-semibold text-xs transition-colors cursor-pointer"
                             title="Log Hours Manually"
                           >
                             + Manual Log
@@ -1318,7 +1320,7 @@ export default function ProjectTasksTab() {
 
                           <button
                             onClick={() => openEditModal(t)}
-                            className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-600 transition-colors cursor-pointer"
+                            className="p-1.5 rounded-md hover:bg-slate-100 text-slate-700 border border-slate-300 transition-colors cursor-pointer bg-white"
                             title="Edit Task"
                           >
                             <Edit2 className="w-3.5 h-3.5" />
@@ -1330,7 +1332,7 @@ export default function ProjectTasksTab() {
                                 handleDeleteTask(t._id);
                               }
                             }}
-                            className="p-1.5 rounded-lg hover:bg-rose-50 text-rose-500 transition-colors cursor-pointer"
+                            className="p-1.5 rounded-md hover:bg-rose-50 text-rose-700 border border-rose-300 transition-colors cursor-pointer bg-white"
                             title="Delete Task"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -1348,17 +1350,17 @@ export default function ProjectTasksTab() {
 
       {/* ── EXCEL IMPORT PREVIEW MODAL WITH ROW VALIDATION ── */}
       {isImportModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="bg-white w-full max-w-3xl rounded-3xl p-6 shadow-2xl border border-slate-100 my-8 animate-in fade-in duration-150">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="bg-white w-full max-w-3xl rounded-lg p-5 sm:p-6 shadow-xl border border-slate-300 my-8 animate-in fade-in duration-150">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-                  <FileUp className="w-5 h-5" />
+                <div className="w-8 h-8 rounded-md bg-blue-50 text-blue-900 border border-blue-200 flex items-center justify-center">
+                  <FileUp className="w-4 h-4" />
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-slate-900">Import Tasks from Excel</h3>
-                  <p className="text-xs text-slate-500">
-                    File: <span className="font-semibold text-slate-700">{importFileName}</span> ({importValidationList.length} rows detected)
+                  <p className="text-xs text-slate-600 font-medium">
+                    File: <span className="font-semibold text-slate-900">{importFileName}</span> ({importValidationList.length} rows detected)
                   </p>
                 </div>
               </div>
@@ -1369,7 +1371,7 @@ export default function ProjectTasksTab() {
                   setImportParsedTasks([]);
                   setImportValidationList([]);
                 }}
-                className="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                className="p-1 rounded-md hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1381,13 +1383,13 @@ export default function ProjectTasksTab() {
                 const invalidRows = importValidationList.filter((r) => !r.isValid);
                 if (invalidRows.length > 0) {
                   return (
-                    <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl flex items-start gap-2.5 text-xs text-rose-800">
-                      <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                    <div className="p-3 bg-rose-50 border border-rose-300 rounded-md flex items-start gap-2.5 text-xs text-rose-900">
+                      <AlertCircle className="w-4 h-4 text-rose-700 shrink-0 mt-0.5" />
                       <div>
                         <span className="font-bold">
                           {invalidRows.length} row(s) have missing required fields!
                         </span>
-                        <p className="text-[11px] text-rose-600 mt-0.5">
+                        <p className="text-xs text-rose-800 mt-0.5">
                           Each row must have at least <strong>Project Name</strong>, <strong>Task Title</strong>, and <strong>Assigned Developer</strong>.
                         </p>
                       </div>
@@ -1395,8 +1397,8 @@ export default function ProjectTasksTab() {
                   );
                 }
                 return (
-                  <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center gap-2 text-xs text-emerald-800">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <div className="p-3 bg-emerald-50 border border-emerald-300 rounded-md flex items-center gap-2 text-xs text-emerald-900">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
                     <span className="font-semibold">
                       All {importValidationList.length} rows are valid and ready to import!
                     </span>
@@ -1405,9 +1407,9 @@ export default function ProjectTasksTab() {
               })()}
 
               {/* Table Preview with Error Highlighting */}
-              <div className="border border-slate-200 rounded-xl overflow-hidden max-h-72 overflow-y-auto">
+              <div className="border border-slate-300 rounded-md overflow-hidden max-h-72 overflow-y-auto">
                 <table className="w-full text-left text-xs border-collapse">
-                  <thead className="bg-slate-50 border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase sticky top-0">
+                  <thead className="bg-slate-100 border-b border-slate-300 text-[11px] font-bold text-slate-700 uppercase sticky top-0">
                     <tr>
                       <th className="py-2.5 px-3">#</th>
                       <th className="py-2.5 px-3">Project</th>
@@ -1418,17 +1420,17 @@ export default function ProjectTasksTab() {
                       <th className="py-2.5 px-3">Validation</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-slate-200">
                     {importValidationList.map((item, idx) => (
                       <tr
                         key={idx}
                         className={item.isValid ? "hover:bg-slate-50" : "bg-rose-50/50 hover:bg-rose-50"}
                       >
-                        <td className="py-2 px-3 text-slate-400 font-mono text-[10px]">{idx + 1}</td>
+                        <td className="py-2 px-3 text-slate-600 font-mono text-xs">{idx + 1}</td>
                         <td className="py-2 px-3">
                           <span
                             className={`font-semibold ${
-                              item.project_name === "Untitled Project" ? "text-rose-600 italic" : "text-slate-900"
+                              item.project_name === "Untitled Project" ? "text-rose-700 italic" : "text-slate-900"
                             }`}
                           >
                             {item.project_name}
@@ -1436,32 +1438,32 @@ export default function ProjectTasksTab() {
                         </td>
                         <td className="py-2 px-3">
                           <div className="max-w-[180px] truncate" title={item.task_title}>
-                            <span className={item.task_title === "Untitled Task" ? "text-rose-600 italic" : "text-slate-900 font-medium"}>
+                            <span className={item.task_title === "Untitled Task" ? "text-rose-700 italic" : "text-slate-900 font-medium"}>
                               {item.task_title}
                             </span>
                           </div>
                         </td>
                         <td className="py-2 px-3">
-                          <span className={item.assigned_to === "Unassigned" ? "text-rose-600 italic" : "text-slate-700 font-medium"}>
+                          <span className={item.assigned_to === "Unassigned" ? "text-rose-700 italic" : "text-slate-800 font-medium"}>
                             {item.assigned_to}
                           </span>
                         </td>
                         <td className="py-2 px-3">
-                          <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 text-[10px] font-semibold">
+                          <span className="px-2 py-0.5 rounded-md bg-slate-100 border border-slate-300 text-slate-800 text-[10px] font-semibold">
                             {item.status}
                           </span>
                         </td>
-                        <td className="py-2 px-3 text-slate-700 font-medium">
-                          {item.estimated_hours}h <span className="text-slate-400">/ {item.spent_hours}h</span>
+                        <td className="py-2 px-3 text-slate-800 font-medium">
+                          {item.estimated_hours}h <span className="text-slate-500">/ {item.spent_hours}h</span>
                         </td>
                         <td className="py-2 px-3">
                           {item.isValid ? (
-                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
+                            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2 py-0.5 rounded-md">
                               <Check className="w-3 h-3" /> Valid
                             </span>
                           ) : (
                             <span
-                              className="inline-flex items-center gap-1 text-[10px] font-bold text-rose-700 bg-rose-100 px-2 py-0.5 rounded-full"
+                              className="inline-flex items-center gap-1 text-[11px] font-bold text-rose-800 bg-rose-100 border border-rose-300 px-2 py-0.5 rounded-md"
                               title={item.errors.join(", ")}
                             >
                               <AlertCircle className="w-3 h-3" /> {item.errors[0]}
@@ -1474,11 +1476,11 @@ export default function ProjectTasksTab() {
                 </table>
               </div>
 
-              <div className="flex items-center justify-between pt-3 border-t border-slate-100 flex-wrap gap-2">
+              <div className="flex items-center justify-between pt-3 border-t border-slate-200 flex-wrap gap-2">
                 <button
                   type="button"
                   onClick={handleDownloadSampleTemplate}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold transition-colors cursor-pointer border border-blue-200"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-blue-50 hover:bg-blue-100 text-blue-900 text-xs font-semibold transition-colors cursor-pointer border border-blue-300"
                 >
                   <Download className="w-3.5 h-3.5" />
                   <span>Download Sample Template</span>
@@ -1492,7 +1494,7 @@ export default function ProjectTasksTab() {
                       setImportParsedTasks([]);
                       setImportValidationList([]);
                     }}
-                    className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors cursor-pointer"
+                    className="px-4 py-2 rounded-md bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-xs font-semibold transition-colors cursor-pointer"
                   >
                     Cancel
                   </button>
@@ -1500,7 +1502,7 @@ export default function ProjectTasksTab() {
                     type="button"
                     disabled={importLoading || importValidationList.some(r => !r.isValid)}
                     onClick={handleConfirmBatchImport}
-                    className="px-5 py-2 rounded-xl bg-[#0B1340] hover:bg-[#070D2B] text-white text-xs font-bold transition-all cursor-pointer shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-2 rounded-md bg-[#0B1340] hover:bg-[#070D2B] text-white text-xs font-semibold transition-all cursor-pointer shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {importLoading ? "Importing..." : `Import ${importValidationList.length} Tasks`}
                   </button>
@@ -1513,18 +1515,18 @@ export default function ProjectTasksTab() {
 
       {/* ── CREATE / EDIT TASK MODAL (WORK HOURS) ── */}
       {(isCreateModalOpen || editingTask) && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="bg-white w-full max-w-lg rounded-3xl p-6 shadow-2xl border border-slate-100 my-8 animate-in fade-in duration-150">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="bg-white w-full max-w-lg rounded-lg p-5 sm:p-6 shadow-xl border border-slate-300 my-8 animate-in fade-in duration-150">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-blue-50 text-[#0B1340] flex items-center justify-center">
-                  <Clock className="w-5 h-5" />
+                <div className="w-8 h-8 rounded-md bg-blue-50 text-blue-900 border border-blue-200 flex items-center justify-center">
+                  <Clock className="w-4 h-4" />
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-slate-900">
                     {editingTask ? "Edit Work Hours" : "Work Hours"}
                   </h3>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-slate-600 font-medium">
                     {editingTask ? "Update logged work details" : "Add daily work entry and task log"}
                   </p>
                 </div>
@@ -1534,17 +1536,17 @@ export default function ProjectTasksTab() {
                   setIsCreateModalOpen(false);
                   setEditingTask(null);
                 }}
-                className="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                className="p-1 rounded-md hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleSubmitTask} className="space-y-4 mt-4">
+            <form onSubmit={handleSubmitTask} className="space-y-3.5 mt-4">
               {/* Parivar / Project Select */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Project / Parivar Name <span className="text-rose-500">*</span>
+                <label className="block text-xs font-bold text-slate-800 mb-1">
+                  Project / Parivar Name <span className="text-rose-600">*</span>
                 </label>
                 <CustomSelect
                   value={taskForm.project_name}
@@ -1557,22 +1559,22 @@ export default function ProjectTasksTab() {
 
               {/* Date */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Date <span className="text-rose-500">*</span>
+                <label className="block text-xs font-bold text-slate-800 mb-1">
+                  Date <span className="text-rose-600">*</span>
                 </label>
                 <input
                   type="date"
                   required
                   value={taskForm.start_date}
                   onChange={(e) => setTaskForm({ ...taskForm, start_date: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
+                  className="w-full px-3 py-2 rounded-md bg-white border border-slate-300 text-xs font-medium text-slate-900 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
                 />
               </div>
 
               {/* Working Hours Dropdown */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Working Hours <span className="text-rose-500">*</span>
+                <label className="block text-xs font-bold text-slate-800 mb-1">
+                  Working Hours <span className="text-rose-600">*</span>
                 </label>
                 <CustomSelect
                   value={String(taskForm.spent_hours || "1")}
@@ -1588,15 +1590,15 @@ export default function ProjectTasksTab() {
                   searchable={true}
                   placeholder="-- Select Working Hours --"
                 />
-                <span className="text-[11px] text-slate-400 mt-1 block">
+                <span className="text-[11px] text-slate-600 font-medium mt-1 block">
                   Select in 15-minute intervals (e.g., 2.5 = 2 hours 30 minutes)
                 </span>
               </div>
 
               {/* Developer Name */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Developer Name <span className="text-rose-500">*</span>
+                <label className="block text-xs font-bold text-slate-800 mb-1">
+                  Developer Name <span className="text-rose-600">*</span>
                 </label>
                 <input
                   type="text"
@@ -1604,14 +1606,14 @@ export default function ProjectTasksTab() {
                   placeholder="Enter developer name"
                   value={taskForm.assigned_to}
                   onChange={(e) => setTaskForm({ ...taskForm, assigned_to: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
+                  className="w-full px-3 py-2 rounded-md bg-white border border-slate-300 text-xs font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
                 />
               </div>
 
               {/* Note / Description */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Note / Description <span className="text-rose-500">*</span>
+                <label className="block text-xs font-bold text-slate-800 mb-1">
+                  Note / Description <span className="text-rose-600">*</span>
                 </label>
                 <textarea
                   rows={3}
@@ -1626,24 +1628,24 @@ export default function ProjectTasksTab() {
                       task_title: val ? (val.length > 50 ? val.slice(0, 47) + "..." : val) : prev.task_title,
                     }));
                   }}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
+                  className="w-full px-3 py-2 rounded-md bg-white border border-slate-300 text-xs font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
+              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-200">
                 <button
                   type="button"
                   onClick={() => {
                     setIsCreateModalOpen(false);
                     setEditingTask(null);
                   }}
-                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors cursor-pointer"
+                  className="px-4 py-2 rounded-md bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-xs font-semibold transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-[#0B1340] hover:bg-[#070D2B] text-white text-xs font-bold transition-all cursor-pointer shadow-sm"
+                  className="px-4 py-2 rounded-md bg-[#0B1340] hover:bg-[#070D2B] text-white text-xs font-semibold transition-all cursor-pointer shadow-xs"
                 >
                   {editingTask ? "Update Work Hours" : "Save Work Hours"}
                 </button>
@@ -1655,32 +1657,32 @@ export default function ProjectTasksTab() {
 
       {/* ── STOP TIMER & CONFIRM LOG MODAL ── */}
       {stopTimerTaskModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
-          <div className="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl border border-slate-100 animate-in fade-in duration-150">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
+          <div className="bg-white w-full max-w-md rounded-lg p-5 sm:p-6 shadow-xl border border-slate-300 animate-in fade-in duration-150">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                  <CheckCircle2 className="w-5 h-5" />
+                <div className="w-8 h-8 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-300 flex items-center justify-center">
+                  <CheckCircle2 className="w-4 h-4" />
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-slate-900">Log Timer Session</h3>
-                  <p className="text-xs text-slate-500 truncate max-w-[240px]">
+                  <p className="text-xs text-slate-700 font-medium truncate max-w-[240px]">
                     {stopTimerTaskModal.task.task_title}
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setStopTimerTaskModal(null)}
-                className="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                className="p-1 rounded-md hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="space-y-4 mt-4">
-              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 flex items-center justify-between">
+            <div className="space-y-3.5 mt-4">
+              <div className="bg-slate-50 p-3.5 rounded-md border border-slate-300 flex items-center justify-between">
                 <div>
-                  <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">
+                  <span className="text-slate-600 block text-[11px] uppercase font-bold tracking-wider">
                     Tracked Time
                   </span>
                   <span className="font-mono text-xl font-bold text-slate-900">
@@ -1688,17 +1690,17 @@ export default function ProjectTasksTab() {
                   </span>
                 </div>
                 <div className="text-right">
-                  <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">
+                  <span className="text-slate-600 block text-[11px] uppercase font-bold tracking-wider">
                     Calculated Hours
                   </span>
-                  <span className="text-lg font-bold text-emerald-600">
+                  <span className="text-lg font-bold text-emerald-800">
                     +{stopTimerTaskModal.hoursDecimal} hrs
                   </span>
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-bold text-slate-800 mb-1">
                   Hours to Add (Adjustable)
                 </label>
                 <input
@@ -1712,12 +1714,12 @@ export default function ProjectTasksTab() {
                       hoursDecimal: parseFloat(e.target.value) || 0,
                     })
                   }
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
+                  className="w-full px-3 py-2 rounded-md bg-white border border-slate-300 text-xs font-bold text-slate-900 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Update Task Status</label>
+                <label className="block text-xs font-bold text-slate-800 mb-1">Update Task Status</label>
                 <CustomSelect
                   value={logStatusInput}
                   onChange={(val) => setLogStatusInput(val)}
@@ -1726,28 +1728,28 @@ export default function ProjectTasksTab() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Work Note / Remarks</label>
+                <label className="block text-xs font-bold text-slate-800 mb-1">Work Note / Remarks</label>
                 <input
                   type="text"
                   placeholder="e.g. Completed feature implementation"
                   value={logRemarksInput}
                   onChange={(e) => setLogRemarksInput(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
+                  className="w-full px-3 py-2 rounded-md bg-white border border-slate-300 text-xs font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
+              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-200">
                 <button
                   type="button"
                   onClick={() => setStopTimerTaskModal(null)}
-                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors cursor-pointer"
+                  className="px-4 py-2 rounded-md bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-xs font-semibold transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
                   onClick={handleConfirmSaveTimerHours}
-                  className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all cursor-pointer shadow-sm"
+                  className="px-4 py-2 rounded-md bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold transition-all cursor-pointer shadow-xs"
                 >
                   Save & Log Working Time
                 </button>
@@ -1759,42 +1761,42 @@ export default function ProjectTasksTab() {
 
       {/* ── MANUAL QUICK LOG TIME MODAL ── */}
       {quickLogTask && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
-          <div className="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl border border-slate-100 animate-in fade-in duration-150">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
+          <div className="bg-white w-full max-w-md rounded-lg p-5 sm:p-6 shadow-xl border border-slate-300 animate-in fade-in duration-150">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200">
               <div>
                 <h3 className="text-base font-bold text-slate-900">Log Task Working Hours</h3>
-                <p className="text-xs text-slate-500 mt-0.5 truncate max-w-[280px]">
+                <p className="text-xs text-slate-700 font-medium mt-0.5 truncate max-w-[280px]">
                   {quickLogTask.task_title}
                 </p>
               </div>
               <button
                 onClick={() => setQuickLogTask(null)}
-                className="p-1.5 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                className="p-1 rounded-md hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleQuickLogSubmit} className="space-y-4 mt-4">
-              <div className="bg-slate-50 p-3 rounded-2xl flex items-center justify-between text-xs">
+            <form onSubmit={handleQuickLogSubmit} className="space-y-3.5 mt-4">
+              <div className="bg-slate-50 p-3 rounded-md border border-slate-300 flex items-center justify-between text-xs">
                 <div>
-                  <span className="text-slate-400 block text-[10px] uppercase font-bold">Spent Time</span>
+                  <span className="text-slate-600 block text-[11px] uppercase font-bold">Spent Time</span>
                   <span className="font-bold text-slate-900 text-sm">{quickLogTask.spent_hours || 0} Hours</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block text-[10px] uppercase font-bold">Estimated</span>
-                  <span className="font-bold text-blue-600 text-sm">{quickLogTask.estimated_hours || 0} Hours</span>
+                  <span className="text-slate-600 block text-[11px] uppercase font-bold">Estimated</span>
+                  <span className="font-bold text-blue-900 text-sm">{quickLogTask.estimated_hours || 0} Hours</span>
                 </div>
               </div>
 
               {/* Mode Toggle */}
-              <div className="flex items-center rounded-xl bg-slate-100 p-1 text-xs font-semibold">
+              <div className="flex items-center rounded-md bg-slate-100 p-0.5 border border-slate-300 text-xs font-semibold">
                 <button
                   type="button"
                   onClick={() => setLogMode("add")}
-                  className={`flex-1 py-1.5 rounded-lg transition-all cursor-pointer ${
-                    logMode === "add" ? "bg-white text-slate-900 shadow-xs" : "text-slate-500 hover:text-slate-900"
+                  className={`flex-1 py-1.5 rounded-md transition-colors cursor-pointer ${
+                    logMode === "add" ? "bg-white text-slate-900 border border-slate-300 shadow-xs" : "text-slate-600 hover:text-slate-900"
                   }`}
                 >
                   + Add Additional Hours
@@ -1805,8 +1807,8 @@ export default function ProjectTasksTab() {
                     setLogMode("set");
                     setLogHoursInput(String(quickLogTask.spent_hours || 0));
                   }}
-                  className={`flex-1 py-1.5 rounded-lg transition-all cursor-pointer ${
-                    logMode === "set" ? "bg-white text-slate-900 shadow-xs" : "text-slate-500 hover:text-slate-900"
+                  className={`flex-1 py-1.5 rounded-md transition-colors cursor-pointer ${
+                    logMode === "set" ? "bg-white text-slate-900 border border-slate-300 shadow-xs" : "text-slate-600 hover:text-slate-900"
                   }`}
                 >
                   Set Total Hours
@@ -1814,7 +1816,7 @@ export default function ProjectTasksTab() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-bold text-slate-800 mb-1">
                   {logMode === "add" ? "Hours to Add (hrs)" : "Exact Total Hours (hrs)"}
                 </label>
                 <input
@@ -1824,12 +1826,12 @@ export default function ProjectTasksTab() {
                   placeholder="e.g. 2.5"
                   value={logHoursInput}
                   onChange={(e) => setLogHoursInput(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
+                  className="w-full px-3 py-2 rounded-md bg-white border border-slate-300 text-xs font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Update Status</label>
+                <label className="block text-xs font-bold text-slate-800 mb-1">Update Status</label>
                 <CustomSelect
                   value={logStatusInput}
                   onChange={(val) => setLogStatusInput(val)}
@@ -1838,27 +1840,27 @@ export default function ProjectTasksTab() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">Work Note / Remarks</label>
+                <label className="block text-xs font-bold text-slate-800 mb-1">Work Note / Remarks</label>
                 <input
                   type="text"
                   placeholder="e.g. Completed API integration and tested"
                   value={logRemarksInput}
                   onChange={(e) => setLogRemarksInput(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
+                  className="w-full px-3 py-2 rounded-md bg-white border border-slate-300 text-xs font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
+              <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-200">
                 <button
                   type="button"
                   onClick={() => setQuickLogTask(null)}
-                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors cursor-pointer"
+                  className="px-4 py-2 rounded-md bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-xs font-semibold transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-[#0B1340] hover:bg-[#070D2B] text-white text-xs font-bold transition-all cursor-pointer shadow-sm"
+                  className="px-4 py-2 rounded-md bg-[#0B1340] hover:bg-[#070D2B] text-white text-xs font-semibold transition-all cursor-pointer shadow-xs"
                 >
                   Save Time Log
                 </button>

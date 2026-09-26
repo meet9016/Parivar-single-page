@@ -57,22 +57,24 @@ export default function LoginView() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f4f6fc] text-[#080b2a] relative overflow-hidden font-sans p-4">
-      {/* Dynamic ambient backgrounds */}
-      <div className="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-500/10 blur-[120px] pointer-events-none animate-pulse"></div>
-      <div className="fixed bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-blue-500/10 blur-[120px] pointer-events-none animate-pulse" style={{ animationDelay: '1.5s' }}></div>
-
-      <div className="w-full max-w-md p-8 sm:p-10 bg-white border border-[#e2e8f4] rounded-3xl shadow-xl relative z-10">
-        <div className="flex flex-col items-center mb-8">
-          <h1 className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-[#4338ca] to-indigo-600 bg-clip-text text-transparent">
-            Super Admin Parivar
+    <div className="min-h-screen flex items-center justify-center bg-[#f8fafc] text-slate-900 font-sans p-4">
+      <div className="w-full max-w-sm p-6 sm:p-7 bg-white border border-slate-300 rounded-lg shadow-lg relative z-10">
+        <div className="flex flex-col items-center mb-6 text-center">
+          <div className="w-10 h-10 rounded-md bg-[#0B1340] text-white flex items-center justify-center font-black text-base mb-3 shadow-xs">
+            SP
+          </div>
+          <h1 className="text-lg font-bold text-slate-900">
+            Super Admin Login
           </h1>
+          <p className="text-xs text-slate-600 mt-0.5">
+            Enter your credentials to access the management portal
+          </p>
         </div>
 
-        <form onSubmit={onSubmit} className="space-y-5" noValidate>
+        <form onSubmit={onSubmit} className="space-y-4" noValidate>
           <div>
-            <label className="block text-sm font-semibold text-slate-600 mb-2 tracking-wider">
-              Email Address
+            <label className="block text-xs font-bold text-slate-800 mb-1">
+              Email Address <span className="text-rose-600">*</span>
             </label>
             <input
               type="email"
@@ -81,18 +83,18 @@ export default function LoginView() {
                 setLoginForm({ ...loginForm, email: e.target.value });
                 if (formErrors.email) setFormErrors({ ...formErrors, email: "" });
               }}
-              className={`w-full px-4 py-3 bg-white text-[#080b2a] placeholder-slate-400 border hover:border-slate-300 focus:border-[#4338ca]/50 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-[#4338ca]/10 transition-all duration-300 ${formErrors.email ? 'border-rose-400' : 'border-slate-200'}`}
+              className={`w-full px-3 py-2 bg-white text-slate-900 placeholder:text-slate-500 border rounded-md text-xs font-medium outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340] transition-colors ${formErrors.email ? 'border-rose-500' : 'border-slate-300'}`}
               placeholder="superadmin@gmail.com"
               disabled={loginLoading}
             />
             {formErrors.email && (
-              <p className="mt-1.5 text-xs text-rose-500 font-medium">{formErrors.email}</p>
+              <p className="mt-1 text-[11px] text-rose-600 font-semibold">{formErrors.email}</p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-slate-600 mb-2 tracking-wider">
-              Password
+            <label className="block text-xs font-bold text-slate-800 mb-1">
+              Password <span className="text-rose-600">*</span>
             </label>
             <div className="relative">
               <input
@@ -102,55 +104,55 @@ export default function LoginView() {
                   setLoginForm({ ...loginForm, password: e.target.value });
                   if (formErrors.password) setFormErrors({ ...formErrors, password: "" });
                 }}
-                className={`w-full px-4 py-3 bg-white text-[#080b2a] placeholder-slate-400 border hover:border-slate-300 focus:border-[#4338ca]/50 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-[#4338ca]/10 transition-all duration-300 pr-12 ${formErrors.password ? 'border-rose-400' : 'border-slate-200'}`}
+                className={`w-full px-3 py-2 bg-white text-slate-900 placeholder:text-slate-500 border rounded-md text-xs font-medium outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340] transition-colors pr-10 ${formErrors.password ? 'border-rose-500' : 'border-slate-300'}`}
                 placeholder="••••••••"
                 disabled={loginLoading}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
                 tabIndex={-1}
               >
                 {showPassword ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
                 ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                 )}
               </button>
             </div>
             {formErrors.password && (
-              <p className="mt-1.5 text-xs text-rose-500 font-medium">{formErrors.password}</p>
+              <p className="mt-1 text-[11px] text-rose-600 font-semibold">{formErrors.password}</p>
             )}
           </div>
 
           {loginError && (
-            <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 text-xs font-semibold flex items-center gap-2.5">
-              <AlertCircle className="w-4 h-4 shrink-0" />
+            <div className="p-2.5 rounded-md bg-rose-50 border border-rose-300 text-rose-800 text-xs font-semibold flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-700" />
               <span>{loginError}</span>
             </div>
           )}
 
-          <div className="flex items-center gap-2 mt-2">
+          <div className="flex items-center gap-2 pt-0.5">
             <input 
               type="checkbox" 
               id="remember" 
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
-              className="w-4 h-4 rounded border-slate-300 text-[#4338ca] focus:ring-[#4338ca]" 
+              className="w-3.5 h-3.5 rounded border-slate-300 text-[#0B1340] focus:ring-[#0B1340] cursor-pointer" 
             />
-            <label htmlFor="remember" className="text-sm text-slate-600 font-medium cursor-pointer select-none">
-              Save Login Details
+            <label htmlFor="remember" className="text-xs text-slate-700 font-semibold cursor-pointer select-none">
+              Remember me on this device
             </label>
           </div>
 
           <button
             type="submit"
             disabled={loginLoading}
-            className="w-full mt-2 bg-[#0B1340] hover:bg-[#070D2B] text-white py-3.5 rounded-2xl font-semibold text-sm tracking-wider transition-all duration-300 shadow-md shadow-[#0B1340]/20 hover:shadow-lg disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full mt-2 bg-[#0B1340] hover:bg-[#070D2B] text-white py-2 rounded-md font-semibold text-xs tracking-wide transition-all shadow-xs disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
           >
-            {loginLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : null}
-            <span>{loginLoading ? "Login..." : "Login"}</span>
+            {loginLoading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : null}
+            <span>{loginLoading ? "Authenticating..." : "Login to Portal"}</span>
           </button>
         </form>
       </div>
