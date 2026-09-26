@@ -8,7 +8,6 @@ const NAV = [
   { id: "parivars", label: "All Parivars", Icon: Building2, countKey: "parivars" },
   { id: "inquiries", label: "User Inquiries", Icon: MessageSquare, countKey: "inquiries" },
   { id: "pricing", label: "Pricing & Offers", Icon: Tag, countKey: "pricingPlans" },
-  { id: "tasks", label: "Project Tasks & Time", Icon: CheckSquare, countKey: "tasks" },
 ] as const;
 
 export default function Sidebar() {

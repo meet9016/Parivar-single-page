@@ -62,6 +62,7 @@ interface SuperAdminContextType {
   editLoading: boolean;
   handleEditParivar: (e: React.FormEvent, form: any) => Promise<void>;
   handleDeleteParivar: (id: string) => Promise<boolean>;
+  handleAddParivarPayment: (id: string, payment: { amount_received: number; payment_date?: string; screenshot?: string; remarks?: string }) => Promise<boolean>;
 
   // Pricing Plans
   pricingPlans: any[];
@@ -379,6 +380,12 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
           admin_last_name: "",
           admin_email: "",
           admin_mobile: "",
+          company_name: "",
+          country: "India",
+          state: "",
+          city: "",
+          website_url: "",
+          subscription_plan_time: "1 Year",
           notes: "",
         });
         fetchParivars();
@@ -406,13 +413,17 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
     try {
       const updateRes = await axiosInstance.put(ENDPOINTS.UPDATE_PARIVAR(editingParivar._id), {
         parivar_name: editForm.parivar_name,
-        community_type: editForm.community_type,
+        company_name: editForm.company_name || editForm.parivar_name,
+        community_type: editForm.community_type || "Parivar",
         village_name: editForm.village_name,
         status: editForm.status,
         admin_first_name: editForm.admin_first_name,
         admin_last_name: editForm.admin_last_name,
         admin_email: editForm.admin_email,
         admin_mobile: editForm.admin_mobile,
+        city: editForm.city,
+        subscription_plan_time: editForm.subscription_plan_time,
+        project_amount: Number(editForm.project_amount) || 0,
         notes: editForm.notes,
       });
 
@@ -441,6 +452,21 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
       return false;
     } catch (err: any) {
       toast.error(err.response?.data?.message || "Failed to delete Parivar.");
+      return false;
+    }
+  };
+
+  const handleAddParivarPayment = async (id: string, payment: { amount_received: number; payment_date?: string; screenshot?: string; remarks?: string }) => {
+    try {
+      const res = await axiosInstance.post(`${ENDPOINTS.REGISTER_PARIVAR}/${id}/payment`, payment);
+      if (res.status === 200 || res.status === 201) {
+        toast.success("Payment recorded successfully!");
+        fetchParivars();
+        return true;
+      }
+      return false;
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to record payment.");
       return false;
     }
   };
@@ -573,7 +599,7 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
     inquiries, inquiriesLoading, inquirySearch, setInquirySearch, fetchInquiries, handleInquiryStatus,
     parivars, parivarsLoading, parivarSearch, setParivarSearch, fetchParivars,
     isCreateModalOpen, setIsCreateModalOpen, createLoading, createStatus, handleCreateParivar,
-    editingParivar, setEditingParivar, editLoading, handleEditParivar, handleDeleteParivar,
+    editingParivar, setEditingParivar, editLoading, handleEditParivar, handleDeleteParivar, handleAddParivarPayment,
     pricingPlans, pricingLoading, fetchPricingPlans, handleCreatePricingPlan, handleEditPricingPlan, handleDeletePricingPlan,
     projectTasks, tasksLoading, taskSearch, setTaskSearch, taskFilters, setTaskFilters, taskMeta,
     fetchProjectTasks, handleCreateTask, handleUpdateTask, handleLogTaskTime, handleDeleteTask, handleBatchImportTasks

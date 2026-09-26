@@ -447,6 +447,19 @@ export default function ProjectTasksTab() {
   };
 
   // ── MODAL OPEN HANDLERS ──────────────────────────────────────────────
+  // Working hours options (0.25 to 12.0 in 15-min intervals)
+  const workingHourOptions: CustomSelectOption[] = Array.from({ length: 48 }, (_, i) => {
+    const val = (i + 1) * 0.25;
+    const hrs = Math.floor(val);
+    const mins = Math.round((val % 1) * 60);
+    const label = mins > 0 ? (hrs > 0 ? `${hrs} hr ${mins} min (${val}h)` : `${mins} min (${val}h)`) : `${hrs} hr (${val}h)`;
+    return {
+      value: String(val),
+      label: label,
+    };
+  });
+
+  // Modal open handlers
   const openCreateModal = () => {
     const defaultProject = parivars[0]?.parivar_name || "";
     const matchedParivar = parivars.find((p) => p.parivar_name === defaultProject);
@@ -461,12 +474,12 @@ export default function ProjectTasksTab() {
       client_name: clientName,
       task_title: "",
       description: "",
-      assigned_to: "Admin",
+      assigned_to: "",
       category: "Customization",
       priority: "Medium",
       status: "Pending",
-      estimated_hours: 0,
-      spent_hours: 0,
+      estimated_hours: 1,
+      spent_hours: 1,
       billable: true,
       start_date: new Date().toISOString().split("T")[0],
       due_date: "",
@@ -477,7 +490,7 @@ export default function ProjectTasksTab() {
 
   const openEditModal = (task: ProjectTask) => {
     setEditingTask(task);
-    const totalSpent = task.spent_hours || task.estimated_hours || 0;
+    const totalSpent = task.spent_hours || task.estimated_hours || 1;
     const h = Math.floor(totalSpent);
     const m = Math.round((totalSpent % 1) * 60);
     setTaskHours(h);
@@ -488,14 +501,14 @@ export default function ProjectTasksTab() {
       client_name: task.client_name || "",
       task_title: task.task_title,
       description: task.description || "",
-      assigned_to: task.assigned_to || "Admin",
+      assigned_to: task.assigned_to || "",
       category: task.category || "Customization",
       priority: task.priority || "Medium",
       status: task.status || "Pending",
-      estimated_hours: task.estimated_hours || 0,
-      spent_hours: task.spent_hours || 0,
+      estimated_hours: task.estimated_hours || 1,
+      spent_hours: task.spent_hours || 1,
       billable: task.billable ?? true,
-      start_date: task.start_date ? task.start_date.split("T")[0] : "",
+      start_date: task.start_date ? task.start_date.split("T")[0] : new Date().toISOString().split("T")[0],
       due_date: task.due_date ? task.due_date.split("T")[0] : "",
       remarks: task.remarks || "",
     });
@@ -517,20 +530,23 @@ export default function ProjectTasksTab() {
   const handleSubmitTask = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!taskForm.project_name.trim()) {
-      toast.error("Please select or enter a project name");
+      toast.error("Please select a project/parivar name");
       return;
     }
-    if (!taskForm.task_title.trim()) {
-      toast.error("Please enter a task title");
+    if (!taskForm.assigned_to.trim()) {
+      toast.error("Please enter developer name");
       return;
     }
 
-    const calculatedHours = parseFloat((Number(taskHours || 0) + Number(taskMinutes || 0) / 60).toFixed(2));
+    const calculatedHours = Number(taskForm.spent_hours) || 1;
+    const taskTitle = taskForm.description ? (taskForm.description.length > 50 ? taskForm.description.slice(0, 47) + "..." : taskForm.description) : `${taskForm.project_name} Work`;
+
     const payload = {
       ...taskForm,
+      task_title: taskForm.task_title || taskTitle,
       spent_hours: calculatedHours,
       estimated_hours: calculatedHours,
-      assigned_to: taskForm.assigned_to || "Admin",
+      assigned_to: taskForm.assigned_to.trim(),
     };
 
     if (editingTask) {
@@ -1094,7 +1110,7 @@ export default function ProjectTasksTab() {
               className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#0B1340] hover:bg-[#070D2B] text-white text-xs font-bold transition-all cursor-pointer shadow-sm"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>Add Project Task</span>
+              <span>Add Work Hours</span>
             </button>
           </div>
         </div>
@@ -1495,18 +1511,23 @@ export default function ProjectTasksTab() {
         </div>
       )}
 
-      {/* ── CREATE / EDIT TASK MODAL ── */}
+      {/* ── CREATE / EDIT TASK MODAL (WORK HOURS) ── */}
       {(isCreateModalOpen || editingTask) && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="bg-white w-full max-w-xl rounded-3xl p-6 shadow-2xl border border-slate-100 my-8 animate-in fade-in duration-150">
+          <div className="bg-white w-full max-w-lg rounded-3xl p-6 shadow-2xl border border-slate-100 my-8 animate-in fade-in duration-150">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-              <div>
-                <h3 className="text-base font-bold text-slate-900">
-                  {editingTask ? "Edit Project Task" : "Create New Project Task"}
-                </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Record project task details with time and date
-                </p>
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-blue-50 text-[#0B1340] flex items-center justify-center">
+                  <Clock className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">
+                    {editingTask ? "Edit Work Hours" : "Work Hours"}
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    {editingTask ? "Update logged work details" : "Add daily work entry and task log"}
+                  </p>
+                </div>
               </div>
               <button
                 onClick={() => {
@@ -1520,115 +1541,93 @@ export default function ProjectTasksTab() {
             </div>
 
             <form onSubmit={handleSubmitTask} className="space-y-4 mt-4">
-              {/* Project Name & Client Name */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Project / Parivar Name <span className="text-rose-500">*</span>
-                  </label>
-                  <CustomSelect
-                    value={taskForm.project_name}
-                    onChange={(val) => handleProjectSelectChange(val)}
-                    options={modalProjectOptions}
-                    searchable={true}
-                    placeholder="Select Parivar..."
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Client Name
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Ramesh Patel"
-                    value={taskForm.client_name}
-                    onChange={(e) => setTaskForm({ ...taskForm, client_name: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
-                  />
-                </div>
-              </div>
-
-              {/* Task Title */}
+              {/* Parivar / Project Select */}
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Task Title <span className="text-rose-500">*</span>
+                  Project / Parivar Name <span className="text-rose-500">*</span>
+                </label>
+                <CustomSelect
+                  value={taskForm.project_name}
+                  onChange={(val) => handleProjectSelectChange(val)}
+                  options={modalProjectOptions}
+                  searchable={true}
+                  placeholder="Select Parivar / Community..."
+                />
+              </div>
+
+              {/* Date */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Date <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  required
+                  value={taskForm.start_date}
+                  onChange={(e) => setTaskForm({ ...taskForm, start_date: e.target.value })}
+                  className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
+                />
+              </div>
+
+              {/* Working Hours Dropdown */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Working Hours <span className="text-rose-500">*</span>
+                </label>
+                <CustomSelect
+                  value={String(taskForm.spent_hours || "1")}
+                  onChange={(val) => {
+                    const num = parseFloat(val) || 1;
+                    setTaskForm((prev) => ({
+                      ...prev,
+                      spent_hours: num,
+                      estimated_hours: num,
+                    }));
+                  }}
+                  options={workingHourOptions}
+                  searchable={true}
+                  placeholder="-- Select Working Hours --"
+                />
+                <span className="text-[11px] text-slate-400 mt-1 block">
+                  Select in 15-minute intervals (e.g., 2.5 = 2 hours 30 minutes)
+                </span>
+              </div>
+
+              {/* Developer Name */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Developer Name <span className="text-rose-500">*</span>
                 </label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Add custom matrimony filter & report"
-                  value={taskForm.task_title}
-                  onChange={(e) => setTaskForm({ ...taskForm, task_title: e.target.value })}
+                  placeholder="Enter developer name"
+                  value={taskForm.assigned_to}
+                  onChange={(e) => setTaskForm({ ...taskForm, assigned_to: e.target.value })}
                   className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
                 />
               </div>
 
-              {/* Task Description */}
+              {/* Note / Description */}
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Description / Details
+                  Note / Description <span className="text-rose-500">*</span>
                 </label>
                 <textarea
                   rows={3}
-                  placeholder="Enter task description or requirements..."
+                  required
+                  placeholder="Enter work description or notes"
                   value={taskForm.description}
-                  onChange={(e) => setTaskForm({ ...taskForm, description: e.target.value })}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setTaskForm((prev) => ({
+                      ...prev,
+                      description: val,
+                      task_title: val ? (val.length > 50 ? val.slice(0, 47) + "..." : val) : prev.task_title,
+                    }));
+                  }}
                   className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
                 />
-              </div>
-
-              {/* Time (Hours & Minutes) and Date */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Time (Hours and Minutes) */}
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Time (Hours & Minutes)
-                  </label>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="relative">
-                      <input
-                        type="number"
-                        min="0"
-                        placeholder="0"
-                        value={taskHours || ""}
-                        onChange={(e) => setTaskHours(Math.max(0, parseInt(e.target.value) || 0))}
-                        className="w-full pl-3 pr-10 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
-                      />
-                      <span className="absolute right-3 top-2.5 text-[11px] font-bold text-slate-400 pointer-events-none">
-                        Hrs
-                      </span>
-                    </div>
-
-                    <div className="relative">
-                      <input
-                        type="number"
-                        min="0"
-                        max="59"
-                        placeholder="0"
-                        value={taskMinutes || ""}
-                        onChange={(e) => setTaskMinutes(Math.max(0, Math.min(59, parseInt(e.target.value) || 0)))}
-                        className="w-full pl-3 pr-10 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
-                      />
-                      <span className="absolute right-3 top-2.5 text-[11px] font-bold text-slate-400 pointer-events-none">
-                        Min
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Date */}
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Date
-                  </label>
-                  <input
-                    type="date"
-                    value={taskForm.start_date}
-                    onChange={(e) => setTaskForm({ ...taskForm, start_date: e.target.value })}
-                    className="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-[#0B1340]"
-                  />
-                </div>
               </div>
 
               <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
@@ -1646,7 +1645,7 @@ export default function ProjectTasksTab() {
                   type="submit"
                   className="px-5 py-2 rounded-xl bg-[#0B1340] hover:bg-[#070D2B] text-white text-xs font-bold transition-all cursor-pointer shadow-sm"
                 >
-                  {editingTask ? "Update Task" : "Create Task"}
+                  {editingTask ? "Update Work Hours" : "Save Work Hours"}
                 </button>
               </div>
             </form>
