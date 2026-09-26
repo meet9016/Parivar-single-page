@@ -240,7 +240,8 @@ const DEFAULT_PLANS = [
 ];
 
 export default function PricingSection() {
-  const [plans, setPlans] = useState<any[]>(DEFAULT_PLANS);
+  const [plans, setPlans] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [expandedPlans, setExpandedPlans] = useState<Record<string, boolean>>({});
   const [activePlanType, setActivePlanType] = useState<'new' | 'renewal'>('new');
   const { t, language } = useLanguage();
@@ -253,17 +254,30 @@ export default function PricingSection() {
         const res = await axiosInstance.get(ENDPOINTS.PRICING);
         if (res.status === 200 && Array.isArray(res.data.data) && res.data.data.length > 0) {
           const fetchedPlans = res.data.data;
-          const sortedPlans = [...fetchedPlans].sort((a: any, b: any) => {
-            const isA_New = isNewDealPlan(a);
-            const isB_New = isNewDealPlan(b);
-            if (isA_New && !isB_New) return -1;
-            if (!isA_New && isB_New) return 1;
-            return (a.order || 0) - (b.order || 0);
+          
+          // Merge fetched plans with DEFAULT_PLANS so that both 1st Year & Renewal are guaranteed
+          const mergedPlans = [...DEFAULT_PLANS];
+          
+          fetchedPlans.forEach((dbPlan: any) => {
+            const isRenewal = isRenewalPlan(dbPlan);
+            const targetIdx = mergedPlans.findIndex((defPlan) =>
+              isRenewal ? isRenewalPlan(defPlan) : isNewDealPlan(defPlan)
+            );
+            if (targetIdx !== -1) {
+              mergedPlans[targetIdx] = { ...mergedPlans[targetIdx], ...dbPlan };
+            } else {
+              mergedPlans.push(dbPlan);
+            }
           });
-          setPlans(sortedPlans);
+
+          setPlans(mergedPlans);
+        } else {
+          setPlans(DEFAULT_PLANS);
         }
       } catch (err) {
-        // Fallback to default pricing plans quietly
+        setPlans(DEFAULT_PLANS);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchPlans();
@@ -284,8 +298,8 @@ export default function PricingSection() {
     });
   };
 
-  const activePlan = plans.find(p => activePlanType === 'new' ? isNewDealPlan(p) : isRenewalPlan(p)) || plans[0];
-  const otherPlan = plans.find(p => activePlanType === 'new' ? isRenewalPlan(p) : isNewDealPlan(p)) || plans.find(p => p._id !== activePlan?._id);
+  const activePlan = plans.find(p => activePlanType === 'new' ? isNewDealPlan(p) : isRenewalPlan(p)) || plans[0] || DEFAULT_PLANS[0];
+  const otherPlan = plans.find(p => activePlanType === 'new' ? isRenewalPlan(p) : isNewDealPlan(p)) || plans.find(p => p._id !== activePlan?._id) || (activePlanType === 'new' ? DEFAULT_PLANS[1] : DEFAULT_PLANS[0]);
   const hasMultiplePlans = !!otherPlan;
 
   if (!activePlan) return null;
@@ -382,11 +396,32 @@ export default function PricingSection() {
         </div>
 
         {/* Pricing Card */}
-        <div className="max-w-4xl mx-auto relative">
-          <div
-            id={planId}
-            className={`bg-white/95 backdrop-blur-md border-2 ${isNewPlan ? 'border-emerald-300 shadow-[0_12px_40px_-8px_rgba(16,185,129,0.2)]' : 'border-blue-300 shadow-[0_12px_40px_-8px_rgba(59,130,246,0.2)]'} rounded-3xl flex flex-col transition-all duration-500 relative group overflow-hidden`}
-          >
+        <div className="max-w-4xl mx-auto relative min-h-[460px]">
+          {isLoading ? (
+            <div className="bg-white/95 backdrop-blur-md border-2 border-slate-200 rounded-3xl p-6 sm:p-8 md:p-10 shadow-sm animate-pulse flex flex-col md:flex-row gap-8 md:gap-12">
+              <div className="w-full md:w-1/2 space-y-6">
+                <div className="h-6 w-28 bg-slate-200 rounded-full" />
+                <div className="h-9 w-48 bg-slate-200 rounded-lg" />
+                <div className="h-28 w-full bg-slate-100 rounded-3xl" />
+                <div className="h-10 w-full bg-slate-100 rounded-xl" />
+                <div className="h-12 w-full bg-slate-200 rounded-full" />
+              </div>
+              <div className="hidden md:block w-px bg-slate-200 self-stretch my-4" />
+              <div className="w-full md:w-1/2 space-y-4">
+                <div className="h-6 w-44 bg-slate-200 rounded-lg mb-4" />
+                {[...Array(6)].map((_, i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <div className="w-5 h-5 bg-slate-200 rounded-full shrink-0" />
+                    <div className="h-4 bg-slate-100 rounded w-full" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div
+              id={planId}
+              className={`bg-white/95 backdrop-blur-md border-2 ${isNewPlan ? 'border-emerald-300 shadow-[0_12px_40px_-8px_rgba(16,185,129,0.2)]' : 'border-blue-300 shadow-[0_12px_40px_-8px_rgba(59,130,246,0.2)]'} rounded-3xl flex flex-col transition-all duration-500 relative group overflow-hidden`}
+            >
             {/* Top highlight bar */}
             <div className={`absolute top-0 inset-x-0 h-1.5 ${isNewPlan ? 'bg-gradient-to-r from-emerald-500 to-teal-500' : 'bg-gradient-to-r from-blue-600 to-indigo-600'} z-20`} />
 
@@ -502,10 +537,14 @@ export default function PricingSection() {
                   </div>
                   <div>
                     <h5 className={`font-bold text-sm md:text-base ${activePlanType === 'new' ? 'text-blue-900' : 'text-emerald-900'}`}>
-                      {translateText(otherPlan.title, language)} જુઓ
+                      {language === "gu"
+                        ? `${translateText(otherPlan.title, language)} જુઓ`
+                        : language === "hi"
+                        ? `${translateText(otherPlan.title, language)} देखें`
+                        : `View ${translateText(otherPlan.title, language)}`}
                     </h5>
                     <p className={`text-xs md:text-sm font-semibold mt-0.5 ${activePlanType === 'new' ? 'text-blue-600/80' : 'text-emerald-600/80'}`}>
-                      માત્ર ₹{Number(otherPlan.discountedPrice || 0).toLocaleString("en-IN")}
+                      {language === "gu" ? "માત્ર" : language === "hi" ? "मात्र" : "Just"} ₹{Number(otherPlan.discountedPrice || 0).toLocaleString("en-IN")}
                     </p>
                   </div>
                 </div>
@@ -515,7 +554,8 @@ export default function PricingSection() {
               </button>
             )}
 
-          </div>
+            </div>
+          )}
         </div>
 
       </div>

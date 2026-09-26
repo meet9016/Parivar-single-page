@@ -256,7 +256,7 @@ export default function ProjectTasksTab() {
     assigned_to: "",
     category: "Customization",
     priority: "Medium" as "Low" | "Medium" | "High" | "Urgent",
-    status: "Pending" as "Pending" | "In Progress" | "Testing" | "Completed",
+    status: "Pending" as "Pending" | "In Progress" | "Testing" | "Completed" | "On Hold" | "Cancelled",
     estimated_hours: 1,
     spent_hours: 0,
     billable: true,

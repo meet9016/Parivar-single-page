@@ -15,6 +15,7 @@ export default function PricingTab() {
     originalPrice: "",
     discountedPrice: "",
     discountPercent: "",
+    badgeText: "",
     mode: "price", // "price" | "percent"
   });
 
@@ -50,6 +51,7 @@ export default function PricingTab() {
       defaultDiscounted: 19999,
       defaultTitle: "1st year plan",
       defaultSubtitle: "New plan",
+      defaultBadgeText: "Official WhatsApp support - ₹6,000",
       dbPlan: newPlanFromDB,
     },
     {
@@ -65,6 +67,7 @@ export default function PricingTab() {
       defaultDiscounted: 10000,
       defaultTitle: "Annual renewal plan",
       defaultSubtitle: "Renewal plan",
+      defaultBadgeText: "Official WhatsApp support - ₹6,000",
       dbPlan: renewalPlanFromDB,
     },
   ];
@@ -73,12 +76,14 @@ export default function PricingTab() {
     const orig = cfg.dbPlan?.originalPrice ?? cfg.defaultOriginal;
     const disc = cfg.dbPlan?.discountedPrice ?? cfg.defaultDiscounted;
     const calcPct = orig > disc && orig > 0 ? Math.round(((orig - disc) / orig) * 100) : 0;
+    const badge = cfg.dbPlan?.badgeText || cfg.defaultBadgeText;
 
     setEditingPlanType(cfg.type);
     setFormData({
       originalPrice: String(orig),
       discountedPrice: String(disc),
       discountPercent: String(calcPct),
+      badgeText: badge,
       mode: "price",
     });
   };
@@ -144,7 +149,7 @@ export default function PricingTab() {
             "Website and app customization",
             "Free technical support",
           ],
-      badgeText: cfg.dbPlan?.badgeText || "Official WhatsApp support - ₹6,000",
+      badgeText: formData.badgeText.trim() || cfg.defaultBadgeText,
       buttonText: "Contact on WhatsApp",
       whatsappMessage:
         cfg.type === "new"
@@ -174,6 +179,7 @@ export default function PricingTab() {
           const orig = cfg.dbPlan?.originalPrice ?? cfg.defaultOriginal;
           const disc = cfg.dbPlan?.discountedPrice ?? cfg.defaultDiscounted;
           const discountPct = orig > disc && orig > 0 ? Math.round(((orig - disc) / orig) * 100) : 0;
+          const badge = cfg.dbPlan?.badgeText || cfg.defaultBadgeText;
           const isEditing = editingPlanType === cfg.type;
 
           return (
@@ -221,13 +227,19 @@ export default function PricingTab() {
                     </span>
                   </div>
 
+                  {/* Official WhatsApp Support Badge Preview */}
+                  <div className="bg-emerald-50/60 border border-emerald-100 rounded-lg px-3 py-2 text-xs font-semibold text-emerald-800 flex items-center gap-2">
+                    <span>🎧</span>
+                    <span className="truncate">{badge}</span>
+                  </div>
+
                   <div className="pt-2 flex justify-end">
                     <button
                       onClick={() => handleOpenEdit(cfg)}
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0B1340] hover:bg-[#070D2B] text-white text-xs font-bold transition-all shadow-2xs cursor-pointer"
                     >
                       <Edit2 className="w-3 h-3" />
-                      <span>Edit Price & % OFF</span>
+                      <span>Edit Price, % & WhatsApp Support</span>
                     </button>
                   </div>
                 </div>
@@ -292,6 +304,21 @@ export default function PricingTab() {
                           <span className="absolute right-2.5 top-2 text-slate-400 font-bold text-xs">%</span>
                         </div>
                       </div>
+                    </div>
+
+                    {/* WhatsApp Support Text/Price Field */}
+                    <div>
+                      <label className="block text-[11px] font-bold text-slate-600 mb-1">
+                        Official WhatsApp Support Text & Price
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={formData.badgeText}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, badgeText: e.target.value }))}
+                        placeholder="e.g. Official WhatsApp support - ₹6,000"
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-bold text-slate-900 outline-none focus:ring-1 focus:ring-[#0B1340]"
+                      />
                     </div>
                   </div>
 

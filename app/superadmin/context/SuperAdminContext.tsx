@@ -15,7 +15,7 @@ export interface ProjectTask {
   assigned_to: string;
   category: string;
   priority: "Low" | "Medium" | "High" | "Urgent";
-  status: "Pending" | "In Progress" | "Testing" | "Completed";
+  status: "Pending" | "In Progress" | "Testing" | "Completed" | "On Hold" | "Cancelled";
   estimated_hours: number;
   spent_hours: number;
   billable: boolean;
