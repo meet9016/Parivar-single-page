@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Noto_Sans } from "next/font/google";
+import { Noto_Sans, Inter } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
@@ -8,6 +8,11 @@ const notoSans = Noto_Sans({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
   variable: "--font-noto-sans",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
 });
 
 export const metadata: Metadata = {
@@ -37,7 +42,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${notoSans.variable} scroll-smooth`} suppressHydrationWarning>
+    <html lang="en" className={`${notoSans.variable} ${inter.variable} scroll-smooth`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col antialiased bg-white text-slate-900 font-sans" suppressHydrationWarning>
         <LanguageProvider>
           {children}

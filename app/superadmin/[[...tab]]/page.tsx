@@ -50,23 +50,23 @@ function DashboardLayout() {
   const meta = tabMeta[activeTab] ?? { title: "", subtitle: "" };
 
   return (
-    <div className="h-screen w-full bg-[#f8fafc] text-slate-900 flex overflow-hidden font-sans">
+    <div className="h-screen w-full bg-[#f8fafc] text-slate-900 flex overflow-hidden font-inter">
       <Sidebar />
 
       <div className="flex-1 flex flex-col h-full overflow-hidden">
         <Header />
 
         {/* Page top bar */}
-        <div className="bg-white border-b border-slate-300 px-6 py-3.5 flex flex-wrap items-center justify-between gap-3 shrink-0">
+        <div className="bg-white border-b border-slate-200 px-6 py-4 flex flex-wrap items-center justify-between gap-4 shrink-0 shadow-[0_4px_20px_-15px_rgba(0,0,0,0.05)]">
           <div>
-            <h1 className="text-sm font-bold text-slate-900">{meta.title}</h1>
-            <p className="text-xs text-slate-500 mt-0.5">{meta.subtitle}</p>
+            <h1 className="text-xl font-bold text-slate-900 tracking-tight">{meta.title}</h1>
+            <p className="text-sm text-slate-500 mt-1 font-medium">{meta.subtitle}</p>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-3">
             {(activeTab === "inquiries" || activeTab === "parivars") && (
-              <div className="relative">
-                <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-2.5" />
+              <div className="relative group">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 group-focus-within:text-blue-500 transition-colors" />
                 <input
                   type="text"
                   placeholder={
@@ -80,15 +80,15 @@ function DashboardLayout() {
                       ? setInquirySearch(e.target.value)
                       : setParivarSearch(e.target.value)
                   }
-                  className="w-56 sm:w-72 pl-9 pr-3.5 py-1.5 rounded-md bg-white border border-slate-300 text-xs text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                  className="w-56 sm:w-80 pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-200 shadow-sm"
                 />
               </div>
             )}
 
             {activeTab === "parivars" && (
               <PrimaryButton onClick={() => setIsCreateModalOpen(true)}>
-                <PlusCircle className="w-3.5 h-3.5" />
-                <span>Add Parivar</span>
+                <PlusCircle className="w-4 h-4" />
+                <span className="text-sm">Add Parivar</span>
               </PrimaryButton>
             )}
           </div>

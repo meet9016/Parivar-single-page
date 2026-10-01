@@ -57,24 +57,28 @@ export default function LoginView() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f8fafc] text-slate-900 font-sans p-4">
-      <div className="w-full max-w-sm p-6 sm:p-7 bg-white border border-slate-300 rounded-lg shadow-lg relative z-10">
-        <div className="flex flex-col items-center mb-6 text-center">
-          <div className="w-10 h-10 rounded-md bg-[#0B1340] text-white flex items-center justify-center font-black text-base mb-3 shadow-xs">
+    <div className="min-h-screen flex items-center justify-center font-inter p-4 relative overflow-hidden bg-slate-50">
+      {/* Background decorations */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-100 blur-[100px] opacity-70"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-100 blur-[100px] opacity-70"></div>
+
+      <div className="w-full max-w-md p-8 sm:p-10 bg-white/80 backdrop-blur-xl border border-white/50 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative z-10">
+        <div className="flex flex-col items-center mb-8 text-center">
+          {/* <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#0B1340] to-indigo-900 text-white flex items-center justify-center font-black text-xl mb-5 shadow-lg shadow-indigo-900/20">
             SP
-          </div>
-          <h1 className="text-lg font-bold text-slate-900">
-            Super Admin Login
+          </div> */}
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+            Super Admin Access
           </h1>
-          <p className="text-xs text-slate-600 mt-0.5">
-            Enter your credentials to access the management portal
+          <p className="text-sm text-slate-500 mt-2 font-medium">
+            Securely login to manage the Parivar ecosystem
           </p>
         </div>
 
-        <form onSubmit={onSubmit} className="space-y-4" noValidate>
-          <div>
-            <label className="block text-xs font-bold text-slate-800 mb-1">
-              Email Address <span className="text-rose-600">*</span>
+        <form onSubmit={onSubmit} className="space-y-5" noValidate>
+          <div className="space-y-1.5">
+            <label className="block text-sm font-semibold text-slate-700">
+              Email Address
             </label>
             <input
               type="email"
@@ -83,18 +87,18 @@ export default function LoginView() {
                 setLoginForm({ ...loginForm, email: e.target.value });
                 if (formErrors.email) setFormErrors({ ...formErrors, email: "" });
               }}
-              className={`w-full px-3 py-2 bg-white text-slate-900 placeholder:text-slate-500 border rounded-md text-xs font-medium outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340] transition-colors ${formErrors.email ? 'border-rose-500' : 'border-slate-300'}`}
-              placeholder="superadmin@gmail.com"
+              className={`w-full px-4 py-3 bg-white/50 text-slate-900 placeholder:text-slate-400 border rounded-xl text-sm outline-none focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all duration-200 ${formErrors.email ? 'border-rose-300 bg-rose-50/50 focus:border-rose-500 focus:ring-rose-500/10' : 'border-slate-200'}`}
+              placeholder="admin@parivar.me"
               disabled={loginLoading}
             />
             {formErrors.email && (
-              <p className="mt-1 text-[11px] text-rose-600 font-semibold">{formErrors.email}</p>
+              <p className="text-xs text-rose-500 font-medium animate-in fade-in slide-in-from-top-1">{formErrors.email}</p>
             )}
           </div>
 
-          <div>
-            <label className="block text-xs font-bold text-slate-800 mb-1">
-              Password <span className="text-rose-600">*</span>
+          <div className="space-y-1.5">
+            <label className="block text-sm font-semibold text-slate-700">
+              Password
             </label>
             <div className="relative">
               <input
@@ -104,55 +108,55 @@ export default function LoginView() {
                   setLoginForm({ ...loginForm, password: e.target.value });
                   if (formErrors.password) setFormErrors({ ...formErrors, password: "" });
                 }}
-                className={`w-full px-3 py-2 bg-white text-slate-900 placeholder:text-slate-500 border rounded-md text-xs font-medium outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340] transition-colors pr-10 ${formErrors.password ? 'border-rose-500' : 'border-slate-300'}`}
+                className={`w-full px-4 py-3 bg-white/50 text-slate-900 placeholder:text-slate-400 border rounded-xl text-sm outline-none focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all duration-200 pr-12 ${formErrors.password ? 'border-rose-300 bg-rose-50/50 focus:border-rose-500 focus:ring-rose-500/10' : 'border-slate-200'}`}
                 placeholder="••••••••"
                 disabled={loginLoading}
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors p-1 cursor-pointer"
                 tabIndex={-1}
               >
                 {showPassword ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
                 ) : (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                 )}
               </button>
             </div>
             {formErrors.password && (
-              <p className="mt-1 text-[11px] text-rose-600 font-semibold">{formErrors.password}</p>
+              <p className="text-xs text-rose-500 font-medium animate-in fade-in slide-in-from-top-1">{formErrors.password}</p>
             )}
           </div>
 
           {loginError && (
-            <div className="p-2.5 rounded-md bg-rose-50 border border-rose-300 text-rose-800 text-xs font-semibold flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0 text-rose-700" />
+            <div className="p-3.5 rounded-xl bg-rose-50/80 border border-rose-200 text-rose-700 text-sm font-medium flex items-center gap-3 animate-in fade-in zoom-in-95">
+              <AlertCircle className="w-5 h-5 shrink-0 text-rose-500" />
               <span>{loginError}</span>
             </div>
           )}
 
-          <div className="flex items-center gap-2 pt-0.5">
-            <input 
-              type="checkbox" 
-              id="remember" 
+          <div className="flex items-center gap-3 pt-2">
+            <input
+              type="checkbox"
+              id="remember"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
-              className="w-3.5 h-3.5 rounded border-slate-300 text-[#0B1340] focus:ring-[#0B1340] cursor-pointer" 
+              className="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-600/20 cursor-pointer accent-indigo-600 transition-all"
             />
-            <label htmlFor="remember" className="text-xs text-slate-700 font-semibold cursor-pointer select-none">
-              Remember me on this device
+            <label htmlFor="remember" className="text-sm text-slate-600 font-medium cursor-pointer select-none hover:text-slate-900 transition-colors">
+              Remember me
             </label>
           </div>
 
           <button
             type="submit"
             disabled={loginLoading}
-            className="w-full mt-2 bg-[#0B1340] hover:bg-[#070D2B] text-white py-2 rounded-md font-semibold text-xs tracking-wide transition-all shadow-xs disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full mt-4 bg-gradient-to-r from-[#0B1340] to-indigo-900 hover:from-indigo-900 hover:to-[#0B1340] text-white py-3.5 rounded-xl font-bold text-sm tracking-wide transition-all duration-300 shadow-lg shadow-indigo-900/25 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 transform active:scale-[0.98] cursor-pointer"
           >
-            {loginLoading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : null}
-            <span>{loginLoading ? "Authenticating..." : "Login to Portal"}</span>
+            {loginLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : null}
+            <span>{loginLoading ? "Authenticating securely..." : "Sign in to Dashboard"}</span>
           </button>
         </form>
       </div>
