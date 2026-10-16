@@ -81,6 +81,8 @@ export default function ParivarsTab() {
       city: p.city || "",
       subscription_plan_time: p.subscription_plan_time || "1 Year",
       project_amount: p.project_amount !== undefined ? p.project_amount : "",
+      free_customization_hours: p.free_customization_hours !== undefined ? p.free_customization_hours : 15,
+      extra_hourly_rate: p.extra_hourly_rate !== undefined ? p.extra_hourly_rate : 1000,
       notes: p.notes || "",
     });
   };
@@ -156,6 +158,7 @@ export default function ParivarsTab() {
 
   // State to preview receipt screenshot popup
   const [previewReceiptUrl, setPreviewReceiptUrl] = useState<string | null>(null);
+  const [viewPaymentsParivar, setViewPaymentsParivar] = useState<any | null>(null);
 
   // Open Payment modal
   const openPaymentModal = (p: any, e?: React.MouseEvent) => {
@@ -230,12 +233,13 @@ export default function ParivarsTab() {
     }
   };
 
-  // Calculate payment totals for Parivar
-  const getPaymentStats = (p: any) => {
+  // Calculate payment totals for Parivar (including any extra hours customization charges)
+  const getPaymentStats = (p: any, extraCharge: number = 0) => {
     const totalProjectAmount = Number(p.project_amount) || 0;
+    const totalPayable = totalProjectAmount + extraCharge;
     const totalReceived = (p.payments || []).reduce((acc: number, curr: any) => acc + (Number(curr.amount_received) || 0), 0);
-    const pendingAmount = Math.max(0, totalProjectAmount - totalReceived);
-    return { totalProjectAmount, totalReceived, pendingAmount };
+    const pendingAmount = Math.max(0, totalPayable - totalReceived);
+    return { totalProjectAmount, totalPayable, totalReceived, pendingAmount };
   };
 
   // Working hours options (0.25 to 12.0)
@@ -283,10 +287,23 @@ export default function ParivarsTab() {
                 </tr>
               ) : (
                 currentParivars.map((p) => {
-                  const parivarTasksList = projectTasks.filter(
-                    (t) => t.project_name?.toLowerCase() === p.parivar_name?.toLowerCase()
+                  const parivarTasksList = (projectTasks || []).filter(
+                    (t) => (t.project_name || "").trim().toLowerCase() === (p.parivar_name || "").trim().toLowerCase()
                   );
-                  const { totalProjectAmount, totalReceived, pendingAmount } = getPaymentStats(p);
+                  const totalSpentHours = parivarTasksList.reduce(
+                    (acc, curr) => acc + (Number(curr.spent_hours) || 0),
+                    0
+                  );
+                  const freeHours = p.free_customization_hours !== undefined && p.free_customization_hours !== null && !isNaN(Number(p.free_customization_hours))
+                    ? Number(p.free_customization_hours)
+                    : 15;
+                  const extraHourlyRate = p.extra_hourly_rate !== undefined && p.extra_hourly_rate !== null && !isNaN(Number(p.extra_hourly_rate))
+                    ? Number(p.extra_hourly_rate)
+                    : 1000;
+                  const extraHours = Math.max(0, totalSpentHours - freeHours);
+                  const extraCharge = extraHours * extraHourlyRate;
+
+                  const { totalProjectAmount, totalPayable, totalReceived, pendingAmount } = getPaymentStats(p, extraCharge);
 
                   return (
                     <tr 
@@ -356,10 +373,24 @@ export default function ParivarsTab() {
 
                       {/* Project Amount & Payment Stats */}
                       <td className="px-5 py-4">
-                        <div className="space-y-1">
-                          <div className="text-sm font-bold text-slate-900">
-                            Total: ₹{totalProjectAmount.toLocaleString("en-IN")}
-                          </div>
+                        <div className="space-y-1.5">
+                          {extraCharge > 0 ? (
+                            <>
+                              <div className="text-sm font-bold text-slate-900">
+                                Total: ₹{totalPayable.toLocaleString("en-IN")}
+                              </div>
+                              <div className="flex items-center gap-1.5 flex-wrap text-xs">
+                                <span className="text-slate-600 font-medium">Base: ₹{totalProjectAmount.toLocaleString("en-IN")}</span>
+                                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-900 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-300">
+                                  + Extra: ₹{extraCharge.toLocaleString("en-IN")} ({extraHours}h)
+                                </span>
+                              </div>
+                            </>
+                          ) : (
+                            <div className="text-sm font-bold text-slate-900">
+                              Total: ₹{totalProjectAmount.toLocaleString("en-IN")}
+                            </div>
+                          )}
                           <div className="flex items-center gap-2 text-xs flex-wrap">
                             <span className="text-emerald-800 font-semibold bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-300">
                               Paid: ₹{totalReceived.toLocaleString("en-IN")}
@@ -368,27 +399,96 @@ export default function ParivarsTab() {
                               <span className="text-rose-700 font-semibold bg-rose-50 px-2 py-0.5 rounded-md border border-rose-300">
                                 Due: ₹{pendingAmount.toLocaleString("en-IN")}
                               </span>
-                            ) : totalProjectAmount > 0 ? (
+                            ) : totalPayable > 0 ? (
                               <span className="text-emerald-700 font-bold text-xs">
                                 ✓ Cleared
                               </span>
                             ) : null}
                           </div>
+
+                          {/* Uploaded Payment Receipts & History Display */}
+                          {p.payments && p.payments.length > 0 && (() => {
+                            const paymentsWithScreenshots = (p.payments || []).filter((pm: any) => pm.screenshot);
+                            const latestScreenshot = paymentsWithScreenshots[paymentsWithScreenshots.length - 1]?.screenshot;
+
+                            return (
+                              <div className="pt-1 flex items-center gap-2 flex-wrap" onClick={(e) => e.stopPropagation()}>
+                                {paymentsWithScreenshots.length > 0 ? (
+                                  <div className="flex items-center gap-1.5">
+                                    {/* Direct Thumbnail of Uploaded Image */}
+                                    <div 
+                                      onClick={() => setPreviewReceiptUrl(latestScreenshot)}
+                                      className="relative group/thumb cursor-pointer shrink-0"
+                                      title="Click to view full payment screenshot"
+                                    >
+                                      <img 
+                                        src={latestScreenshot} 
+                                        alt="Payment Receipt" 
+                                        className="w-7 h-7 rounded-md object-cover border-2 border-emerald-500 shadow-2xs group-hover/thumb:scale-110 transition-transform bg-white"
+                                      />
+                                      <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-700 text-white rounded-full flex items-center justify-center text-[8px] font-bold">
+                                        {paymentsWithScreenshots.length}
+                                      </span>
+                                    </div>
+
+                                    {/* Button to View All Payments & Receipts */}
+                                    <button
+                                      type="button"
+                                      onClick={() => setViewPaymentsParivar(p)}
+                                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-bold bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 transition-colors cursor-pointer shadow-2xs"
+                                      title="View payment details & all uploaded screenshots"
+                                    >
+                                      <ImageIcon className="w-3 h-3 text-emerald-700" />
+                                      <span>{paymentsWithScreenshots.length} Receipt{paymentsWithScreenshots.length > 1 ? 's' : ''}</span>
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    onClick={() => setViewPaymentsParivar(p)}
+                                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-300 transition-colors cursor-pointer"
+                                    title="View payment history"
+                                  >
+                                    <span>{p.payments.length} Payments</span>
+                                  </button>
+                                )}
+                              </div>
+                            );
+                          })()}
                         </div>
                       </td>
 
-                      {/* Tasks Badge */}
+                      {/* Tasks Badge & Customization Hours status */}
                       <td className="px-5 py-4">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedParivarForTasks(p);
-                          }}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-xs transition-colors cursor-pointer border border-slate-300"
-                        >
-                          <CheckSquare className="w-4 h-4 text-blue-700" />
-                          <span>{parivarTasksList.length} Tasks</span>
-                        </button>
+                        <div className="space-y-1.5">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedParivarForTasks(p);
+                            }}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-xs transition-colors cursor-pointer border border-slate-300"
+                          >
+                            <CheckSquare className="w-4 h-4 text-blue-700" />
+                            <span>{parivarTasksList.length} Tasks ({totalSpentHours}h)</span>
+                          </button>
+
+                          <div>
+                            {totalSpentHours > freeHours ? (
+                              <div className="inline-flex flex-col gap-0.5">
+                                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-900 bg-amber-50 px-2 py-0.5 rounded border border-amber-300">
+                                  ⚡ {extraHours}h extra (+₹{extraCharge.toLocaleString("en-IN")})
+                                </span>
+                                <span className="text-[10px] text-slate-500 font-medium">
+                                  Free: {freeHours}h • Extra: ₹{extraHourlyRate}/h
+                                </span>
+                              </div>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-300">
+                                ✓ {totalSpentHours} / {freeHours}h free used
+                              </span>
+                            )}
+                          </div>
+                        </div>
                       </td>
 
                       {/* Status */}
@@ -488,17 +588,28 @@ export default function ParivarsTab() {
 
       {/* ── PARIVAR TASKS LIST MODAL (POPUP ON ROW CLICK OR TASKS BADGE) ── */}
       {selectedParivarForTasks && (() => {
-        const parivarTasks = projectTasks.filter(
-          (t) => t.project_name?.toLowerCase() === selectedParivarForTasks.parivar_name?.toLowerCase()
+        const parivarTasks = (projectTasks || []).filter(
+          (t) => (t.project_name || "").trim().toLowerCase() === (selectedParivarForTasks.parivar_name || "").trim().toLowerCase()
         );
         const totalLoggedHours = parivarTasks.reduce((acc, curr) => acc + (Number(curr.spent_hours) || 0), 0);
+        const freeHours = selectedParivarForTasks.free_customization_hours !== undefined && selectedParivarForTasks.free_customization_hours !== null && !isNaN(Number(selectedParivarForTasks.free_customization_hours))
+          ? Number(selectedParivarForTasks.free_customization_hours)
+          : 15;
+        const extraHourlyRate = selectedParivarForTasks.extra_hourly_rate !== undefined && selectedParivarForTasks.extra_hourly_rate !== null && !isNaN(Number(selectedParivarForTasks.extra_hourly_rate))
+          ? Number(selectedParivarForTasks.extra_hourly_rate)
+          : 1000;
+        const extraHours = Math.max(0, totalLoggedHours - freeHours);
+        const extraCharge = extraHours * extraHourlyRate;
+        const freeHoursUsed = Math.min(totalLoggedHours, freeHours);
+        const freeHoursRemaining = Math.max(0, freeHours - totalLoggedHours);
+        const freeUsagePercent = freeHours > 0 ? Math.min(100, Math.round((freeHoursUsed / freeHours) * 100)) : 100;
 
         const handleDownloadParivarExcel = () => {
           if (parivarTasks.length === 0) {
             toast.error("No tasks to download for this parivar");
             return;
           }
-          const exportData = parivarTasks.map((t, idx) => ({
+          const exportData: any[] = parivarTasks.map((t, idx) => ({
             "Sr No": idx + 1,
             "Title": t.task_title || "Customization Work",
             "Description": t.description || "",
@@ -507,6 +618,15 @@ export default function ParivarsTab() {
             "Hours": `${t.spent_hours || 0} Hours`,
           }));
 
+          // Add summary rows at the bottom
+          exportData.push(
+            { "Sr No": "", "Title": "--- SUMMARY ---", "Description": "", "Developer": "", "Date": "", "Hours": "" },
+            { "Sr No": "", "Title": "Total Logged Hours", "Description": "", "Developer": "", "Date": "", "Hours": `${totalLoggedHours} Hours` },
+            { "Sr No": "", "Title": "Free Customization Limit", "Description": "Zero extra charge included", "Developer": "", "Date": "", "Hours": `${freeHours} Hours` },
+            { "Sr No": "", "Title": "Extra Billable Hours", "Description": extraHours > 0 ? `Rate: ₹${extraHourlyRate}/hr` : "Within free allowance", "Developer": "", "Date": "", "Hours": `${extraHours} Hours` },
+            { "Sr No": "", "Title": "Total Extra Charges", "Description": extraCharge > 0 ? `₹${extraHourlyRate} x ${extraHours} hrs` : "₹0 (Free)", "Developer": "", "Date": "", "Hours": `₹${extraCharge.toLocaleString("en-IN")}` }
+          );
+
           const worksheet = XLSX.utils.json_to_sheet(exportData);
           const colWidths = [
             { wch: 8 },   // Sr No
@@ -514,7 +634,7 @@ export default function ParivarsTab() {
             { wch: 45 },  // Description
             { wch: 22 },  // Developer
             { wch: 16 },  // Date
-            { wch: 14 },  // Hours
+            { wch: 18 },  // Hours
           ];
           worksheet["!cols"] = colWidths;
 
@@ -571,6 +691,81 @@ export default function ParivarsTab() {
                   >
                     <X className="w-5 h-5" />
                   </button>
+                </div>
+              </div>
+
+              {/* Customization Hours & Extra Charges Billing Rule Card */}
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3.5">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {/* Total Logged */}
+                  <div className="bg-white p-3 rounded-lg border border-slate-200 shadow-2xs">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Total Logged</span>
+                    <div className="text-xl font-extrabold text-slate-900 mt-0.5">{totalLoggedHours} hrs</div>
+                    <span className="text-[10px] text-slate-500">{parivarTasks.length} tasks recorded</span>
+                  </div>
+
+                  {/* Free Allowance */}
+                  <div className="bg-white p-3 rounded-lg border border-emerald-200 shadow-2xs">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-700">Free Allowance</span>
+                    <div className="text-xl font-extrabold text-emerald-800 mt-0.5">{freeHours} hrs</div>
+                    <span className="text-[10px] text-emerald-600 font-medium">Included free (zero charge)</span>
+                  </div>
+
+                  {/* Extra Hours */}
+                  <div className={`p-3 rounded-lg border shadow-2xs ${extraHours > 0 ? "bg-amber-50 border-amber-300" : "bg-white border-slate-200"}`}>
+                    <span className={`text-[11px] font-bold uppercase tracking-wider ${extraHours > 0 ? "text-amber-800" : "text-slate-500"}`}>
+                      Extra Billable
+                    </span>
+                    <div className={`text-xl font-extrabold mt-0.5 ${extraHours > 0 ? "text-amber-900" : "text-slate-900"}`}>
+                      {extraHours} hrs
+                    </div>
+                    <span className={`text-[10px] ${extraHours > 0 ? "text-amber-700 font-semibold" : "text-slate-500"}`}>
+                      {extraHours > 0 ? `@ ₹${extraHourlyRate.toLocaleString("en-IN")}/hr` : `${freeHoursRemaining} hrs free left`}
+                    </span>
+                  </div>
+
+                  {/* Extra Amount */}
+                  <div className={`p-3 rounded-lg border shadow-2xs ${extraCharge > 0 ? "bg-rose-50 border-rose-300" : "bg-white border-slate-200"}`}>
+                    <span className={`text-[11px] font-bold uppercase tracking-wider ${extraCharge > 0 ? "text-rose-700" : "text-slate-500"}`}>
+                      Extra Charges
+                    </span>
+                    <div className={`text-xl font-extrabold mt-0.5 ${extraCharge > 0 ? "text-rose-900" : "text-emerald-700"}`}>
+                      ₹{extraCharge.toLocaleString("en-IN")}
+                    </div>
+                    <span className="text-[10px] text-slate-500">
+                      {extraCharge > 0 ? `Exceeds ${freeHours}h free limit` : "₹0 extra fee"}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Progress bar */}
+                <div className="space-y-1.5 pt-1">
+                  <div className="flex items-center justify-between text-xs font-semibold">
+                    <span className="text-slate-700">
+                      Free Limit Usage: {freeHoursUsed} / {freeHours} hrs ({freeUsagePercent}%)
+                    </span>
+                    {extraHours > 0 ? (
+                      <span className="text-amber-800 font-bold">
+                        ⚡ +{extraHours} hrs extra charged @ ₹{extraHourlyRate}/hr
+                      </span>
+                    ) : (
+                      <span className="text-emerald-700">
+                        ✓ {freeHoursRemaining} hrs remaining before charges apply
+                      </span>
+                    )}
+                  </div>
+                  <div className="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden flex">
+                    <div
+                      className="h-full bg-emerald-600 transition-all duration-300"
+                      style={{ width: `${(freeHoursUsed / Math.max(totalLoggedHours, freeHours, 1)) * 100}%` }}
+                    />
+                    {extraHours > 0 && (
+                      <div
+                        className="h-full bg-amber-500 transition-all duration-300"
+                        style={{ width: `${(extraHours / Math.max(totalLoggedHours, 1)) * 100}%` }}
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -947,14 +1142,26 @@ export default function ParivarsTab() {
                               <span className="text-slate-600 font-medium">
                                 {dateFormatted} {timeFormatted && <span className="text-slate-500 text-xs">({timeFormatted})</span>}
                               </span>
-                              {pm.screenshot && (
-                                <button
-                                  type="button"
-                                  onClick={() => setPreviewReceiptUrl(pm.screenshot)}
-                                  className="text-blue-700 font-bold hover:underline cursor-pointer border border-blue-200 bg-blue-50 px-2 py-0.5 rounded text-xs"
-                                >
-                                  Receipt
-                                </button>
+                              {pm.screenshot ? (
+                                <div className="flex items-center gap-1.5 shrink-0">
+                                  <img 
+                                    src={pm.screenshot} 
+                                    alt="Receipt" 
+                                    className="w-7 h-7 rounded-md object-cover border border-emerald-400 cursor-pointer hover:scale-110 transition-transform bg-white"
+                                    onClick={() => setPreviewReceiptUrl(pm.screenshot)}
+                                    title="Click to view full screenshot"
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => setPreviewReceiptUrl(pm.screenshot)}
+                                    className="inline-flex items-center gap-1 text-emerald-800 font-bold hover:underline cursor-pointer border border-emerald-300 bg-emerald-50 px-2 py-0.5 rounded text-xs"
+                                  >
+                                    <Eye className="w-3 h-3 text-emerald-700" />
+                                    <span>View</span>
+                                  </button>
+                                </div>
+                              ) : (
+                                <span className="text-[11px] text-slate-400 italic">No image</span>
                               )}
                             </div>
                           </div>
@@ -980,6 +1187,136 @@ export default function ParivarsTab() {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* ── ALL PAYMENTS & UPLOADED RECEIPTS MODAL ── */}
+      {viewPaymentsParivar && (() => {
+        const { totalProjectAmount, totalReceived, pendingAmount } = getPaymentStats(viewPaymentsParivar);
+        const paymentsList = viewPaymentsParivar.payments || [];
+
+        return (
+          <div 
+            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 overflow-y-auto"
+            onClick={() => setViewPaymentsParivar(null)}
+          >
+            <div 
+              className="bg-white w-full max-w-xl rounded-xl p-6 shadow-2xl border border-slate-300 my-8 animate-in fade-in"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-300 flex items-center justify-center">
+                    <IndianRupee className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-bold text-slate-900">Payment History & Uploaded Receipts</h3>
+                    <p className="text-xs text-slate-700 font-semibold">{viewPaymentsParivar.parivar_name}</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setViewPaymentsParivar(null)}
+                  className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Summary Cards */}
+              <div className="bg-slate-50 p-3.5 rounded-lg border border-slate-300 grid grid-cols-3 gap-2 text-center my-4">
+                <div>
+                  <span className="text-xs uppercase font-bold text-slate-600 block">Project Amount</span>
+                  <span className="text-base font-black text-slate-900">₹{totalProjectAmount.toLocaleString("en-IN")}</span>
+                </div>
+                <div>
+                  <span className="text-xs uppercase font-bold text-slate-600 block">Total Received</span>
+                  <span className="text-base font-black text-emerald-700">₹{totalReceived.toLocaleString("en-IN")}</span>
+                </div>
+                <div>
+                  <span className="text-xs uppercase font-bold text-slate-600 block">Current Pending</span>
+                  <span className="text-base font-black text-rose-700">₹{pendingAmount.toLocaleString("en-IN")}</span>
+                </div>
+              </div>
+
+              {/* Payments List */}
+              <div className="space-y-3 max-h-96 overflow-y-auto pr-1">
+                {paymentsList.length === 0 ? (
+                  <div className="text-center py-8 text-slate-500 text-xs">
+                    No payments recorded yet for this Parivar.
+                  </div>
+                ) : (
+                  paymentsList.map((pm: any, idx: number) => {
+                    const dateObj = pm.payment_date ? new Date(pm.payment_date) : null;
+                    const dateFormatted = dateObj ? dateObj.toLocaleDateString("en-IN") : "";
+                    const timeFormatted = dateObj ? dateObj.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", hour12: true }) : "";
+
+                    return (
+                      <div key={idx} className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-slate-50 transition-colors flex items-center justify-between gap-3">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-base font-black text-emerald-800">₹{Number(pm.amount_received).toLocaleString("en-IN")}</span>
+                            <span className="text-xs text-slate-500 font-medium">{dateFormatted} {timeFormatted && `(${timeFormatted})`}</span>
+                          </div>
+                          {pm.remarks && (
+                            <p className="text-xs text-slate-700 font-medium">Remarks: <span className="font-semibold text-slate-900">{pm.remarks}</span></p>
+                          )}
+                        </div>
+
+                        {pm.screenshot ? (
+                          <div className="flex items-center gap-2 shrink-0">
+                            <div 
+                              onClick={() => setPreviewReceiptUrl(pm.screenshot)}
+                              className="relative group cursor-pointer"
+                              title="Click to view full image"
+                            >
+                              <img 
+                                src={pm.screenshot} 
+                                alt="Receipt Screenshot" 
+                                className="w-12 h-12 object-cover rounded-lg border-2 border-emerald-400 group-hover:scale-105 transition-transform shadow-xs bg-white"
+                              />
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => setPreviewReceiptUrl(pm.screenshot)}
+                              className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white transition-colors cursor-pointer shadow-2xs"
+                            >
+                              <Eye className="w-3.5 h-3.5" />
+                              <span>View Image</span>
+                            </button>
+                          </div>
+                        ) : (
+                          <span className="text-xs text-slate-400 font-medium italic">No screenshot</span>
+                        )}
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+
+              {/* Footer */}
+              <div className="flex items-center justify-between pt-4 mt-4 border-t border-slate-200">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const par = viewPaymentsParivar;
+                    setViewPaymentsParivar(null);
+                    openPaymentModal(par);
+                  }}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-300 transition-colors cursor-pointer"
+                >
+                  <Plus className="w-4 h-4" />
+                  <span>+ Record New Payment</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setViewPaymentsParivar(null)}
+                  className="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold border border-slate-300 transition-colors cursor-pointer"
+                >
+                  Close
+                </button>
+              </div>
             </div>
           </div>
         );

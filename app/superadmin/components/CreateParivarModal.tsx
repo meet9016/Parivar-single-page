@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { PlusCircle, RefreshCw, CheckCircle, AlertCircle, User, IndianRupee } from "lucide-react";
+import { PlusCircle, RefreshCw, CheckCircle, AlertCircle, User, IndianRupee, Clock } from "lucide-react";
 import { useSuperAdmin } from "../context/SuperAdminContext";
 import CustomSelect from "./CustomSelect";
 
@@ -16,6 +16,8 @@ export default function CreateParivarModal() {
     city: "",
     subscription_plan_time: "1 Year",
     project_amount: "",
+    free_customization_hours: "15",
+    extra_hourly_rate: "1000",
     notes: "",
   });
 
@@ -45,6 +47,8 @@ export default function CreateParivarModal() {
       community_type: "Parivar",
       company_name: newParivar.parivar_name.trim(),
       project_amount: Number(newParivar.project_amount) || 0,
+      free_customization_hours: Number(newParivar.free_customization_hours) || 15,
+      extra_hourly_rate: Number(newParivar.extra_hourly_rate) || 1000,
     };
 
     handleCreateParivar(e, payload, setNewParivar);
@@ -205,6 +209,54 @@ export default function CreateParivarModal() {
                 onChange={(e) => setNewParivar({ ...newParivar, notes: e.target.value })}
                 className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
               />
+            </div>
+          </div>
+
+          {/* Customization Hours & Extra Charges Settings */}
+          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 text-indigo-600" />
+              <span className="text-xs font-bold text-slate-800">Customization Hours & Billing Rule</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Free Hours (Zero Charge)
+                </label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    placeholder="15"
+                    min="0"
+                    step="0.5"
+                    value={newParivar.free_customization_hours}
+                    onChange={(e) => setNewParivar({ ...newParivar, free_customization_hours: e.target.value })}
+                    className="w-full pr-12 pl-3.5 py-2 rounded-lg bg-white border border-slate-300 text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                  />
+                  <span className="absolute right-3 top-2 text-xs font-bold text-slate-500">Hours</span>
+                </div>
+                <p className="text-[11px] text-slate-500 mt-1">E.g. 15 hours free customization included</p>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Extra Hourly Rate (₹ / hr)
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-2 text-slate-600 font-bold text-sm">₹</span>
+                  <input
+                    type="number"
+                    placeholder="1000"
+                    min="0"
+                    step="50"
+                    value={newParivar.extra_hourly_rate}
+                    onChange={(e) => setNewParivar({ ...newParivar, extra_hourly_rate: e.target.value })}
+                    className="w-full pl-8 pr-12 py-2 rounded-lg bg-white border border-slate-300 text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                  />
+                  <span className="absolute right-3 top-2 text-xs font-bold text-slate-500">/ hr</span>
+                </div>
+                <p className="text-[11px] text-slate-500 mt-1">Applicable after free hours are exceeded</p>
+              </div>
             </div>
           </div>
 

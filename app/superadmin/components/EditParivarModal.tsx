@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useSuperAdmin } from "../context/SuperAdminContext";
-import { User, IndianRupee } from "lucide-react";
+import { User, IndianRupee, Clock } from "lucide-react";
 import CustomSelect from "./CustomSelect";
 
 export default function EditParivarModal() {
@@ -17,6 +17,8 @@ export default function EditParivarModal() {
     city: "",
     subscription_plan_time: "1 Year",
     project_amount: "",
+    free_customization_hours: "15",
+    extra_hourly_rate: "1000",
     notes: "",
   });
 
@@ -33,6 +35,8 @@ export default function EditParivarModal() {
         city: editingParivar.city || "",
         subscription_plan_time: editingParivar.subscription_plan_time || "1 Year",
         project_amount: editingParivar.project_amount !== undefined ? String(editingParivar.project_amount) : "",
+        free_customization_hours: editingParivar.free_customization_hours !== undefined ? String(editingParivar.free_customization_hours) : "15",
+        extra_hourly_rate: editingParivar.extra_hourly_rate !== undefined ? String(editingParivar.extra_hourly_rate) : "1000",
         notes: editingParivar.notes || "",
       });
     }
@@ -62,6 +66,8 @@ export default function EditParivarModal() {
       ...editForm,
       company_name: editForm.parivar_name.trim(),
       project_amount: Number(editForm.project_amount) || 0,
+      free_customization_hours: Number(editForm.free_customization_hours) !== undefined && editForm.free_customization_hours !== "" ? Number(editForm.free_customization_hours) : 15,
+      extra_hourly_rate: Number(editForm.extra_hourly_rate) !== undefined && editForm.extra_hourly_rate !== "" ? Number(editForm.extra_hourly_rate) : 1000,
     };
 
     handleEditParivar(e, payload);
@@ -224,6 +230,54 @@ export default function EditParivarModal() {
                   { value: 0, label: "Suspended / Inactive" },
                 ]}
               />
+            </div>
+          </div>
+
+          {/* Customization Hours & Extra Charges Settings */}
+          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 text-indigo-600" />
+              <span className="text-xs font-bold text-slate-800">Customization Hours & Billing Rule</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Free Hours (Zero Charge)
+                </label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    placeholder="15"
+                    min="0"
+                    step="0.5"
+                    value={editForm.free_customization_hours}
+                    onChange={(e) => setEditForm({ ...editForm, free_customization_hours: e.target.value })}
+                    className="w-full pr-12 pl-3.5 py-2 rounded-lg bg-white border border-slate-300 text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                  />
+                  <span className="absolute right-3 top-2 text-xs font-bold text-slate-500">Hours</span>
+                </div>
+                <p className="text-[11px] text-slate-500 mt-1">E.g. 15 hours free customization</p>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Extra Hourly Rate (₹ / hr)
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-2 text-slate-600 font-bold text-sm">₹</span>
+                  <input
+                    type="number"
+                    placeholder="1000"
+                    min="0"
+                    step="50"
+                    value={editForm.extra_hourly_rate}
+                    onChange={(e) => setEditForm({ ...editForm, extra_hourly_rate: e.target.value })}
+                    className="w-full pl-8 pr-12 py-2 rounded-lg bg-white border border-slate-300 text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                  />
+                  <span className="absolute right-3 top-2 text-xs font-bold text-slate-500">/ hr</span>
+                </div>
+                <p className="text-[11px] text-slate-500 mt-1">Charged when total hours &gt; free hours</p>
+              </div>
             </div>
           </div>
 

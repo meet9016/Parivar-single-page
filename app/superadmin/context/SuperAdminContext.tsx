@@ -424,6 +424,8 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
         city: editForm.city,
         subscription_plan_time: editForm.subscription_plan_time,
         project_amount: Number(editForm.project_amount) || 0,
+        free_customization_hours: editForm.free_customization_hours !== undefined ? Number(editForm.free_customization_hours) : 15,
+        extra_hourly_rate: editForm.extra_hourly_rate !== undefined ? Number(editForm.extra_hourly_rate) : 1000,
         notes: editForm.notes,
       });
 
