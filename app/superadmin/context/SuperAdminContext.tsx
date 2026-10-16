@@ -317,7 +317,7 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
           }
         }
       } else {
-        setLoginError(res.data.message || "Invalid Super Admin credentials! Please check.");
+        setLoginError(res.data.message || "Invalid Super Admin credentials");
       }
     } catch (err: any) {
       console.error("Login API error:", err);
@@ -329,7 +329,7 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
           sessionStorage.setItem("superadmin_auth", "true");
         }
       } else {
-        setLoginError("Could not connect to server or invalid credentials.");
+        setLoginError(err?.response?.data?.message || "Invalid Super Admin credentials");
       }
     } finally {
       setLoginLoading(false);
