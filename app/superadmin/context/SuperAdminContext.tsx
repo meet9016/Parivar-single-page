@@ -6,6 +6,15 @@ import { useParams, useRouter } from "next/navigation";
 import axiosInstance from "../../../lib/axiosInstance";
 import { ENDPOINTS } from "../../../lib/endpoints";
 
+export interface ParivarStats {
+  total_parivars: number;
+  total_active_parivars: number;
+  total_inactive_parivars: number;
+  total_project_amount: number;
+  total_received_amount: number;
+  total_pending_amount: number;
+}
+
 export interface ProjectTask {
   _id: string;
   project_name: string;
@@ -50,6 +59,9 @@ interface SuperAdminContextType {
   parivarSearch: string;
   setParivarSearch: (val: string) => void;
   fetchParivars: () => Promise<void>;
+  parivarStats: ParivarStats | null;
+  parivarStatsLoading: boolean;
+  fetchParivarStats: () => Promise<void>;
 
   isCreateModalOpen: boolean;
   setIsCreateModalOpen: (val: boolean) => void;
@@ -156,6 +168,8 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
   const [parivars, setParivars] = useState<any[]>([]);
   const [parivarsLoading, setParivarsLoading] = useState(false);
   const [parivarSearch, setParivarSearch] = useState("");
+  const [parivarStats, setParivarStats] = useState<ParivarStats | null>(null);
+  const [parivarStatsLoading, setParivarStatsLoading] = useState(false);
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [createLoading, setCreateLoading] = useState(false);
@@ -228,6 +242,20 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const fetchParivarStats = async () => {
+    setParivarStatsLoading(true);
+    try {
+      const res = await axiosInstance.get(ENDPOINTS.PARIVAR_STATS);
+      if (res.status === 200 && res.data?.data) {
+        setParivarStats(res.data.data);
+      }
+    } catch (err) {
+      console.error("Failed to load parivar stats", err);
+    } finally {
+      setParivarStatsLoading(false);
+    }
+  };
+
   const fetchPricingPlans = async () => {
     setPricingLoading(true);
     try {
@@ -281,6 +309,7 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
     if (isAuthenticated) {
       fetchInquiries();
       fetchParivars();
+      fetchParivarStats();
       fetchPricingPlans();
       fetchProjectTasks();
     }
@@ -389,6 +418,7 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
           notes: "",
         });
         fetchParivars();
+        fetchParivarStats();
         setTimeout(() => {
           setIsCreateModalOpen(false);
           setCreateStatus(null);
@@ -432,6 +462,7 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
       if (updateRes.status === 200) {
         toast.success(`Parivar "${editForm.parivar_name}" updated successfully!`);
         fetchParivars();
+        fetchParivarStats();
         setEditingParivar(null);
       } else {
         toast.error(updateRes.data.message || "Failed to update Parivar.");
@@ -449,6 +480,7 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
       if (res.status === 200) {
         toast.success("Parivar deleted successfully!");
         fetchParivars();
+        fetchParivarStats();
         return true;
       }
       return false;
@@ -464,6 +496,7 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
       if (res.status === 200 || res.status === 201) {
         toast.success("Payment recorded successfully!");
         fetchParivars();
+        fetchParivarStats();
         return true;
       }
       return false;
@@ -600,6 +633,7 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
     activeTab, setActiveTab,
     inquiries, inquiriesLoading, inquirySearch, setInquirySearch, fetchInquiries, handleInquiryStatus,
     parivars, parivarsLoading, parivarSearch, setParivarSearch, fetchParivars,
+    parivarStats, parivarStatsLoading, fetchParivarStats,
     isCreateModalOpen, setIsCreateModalOpen, createLoading, createStatus, handleCreateParivar,
     editingParivar, setEditingParivar, editLoading, handleEditParivar, handleDeleteParivar, handleAddParivarPayment,
     pricingPlans, pricingLoading, fetchPricingPlans, handleCreatePricingPlan, handleEditPricingPlan, handleDeletePricingPlan,

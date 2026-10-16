@@ -16,6 +16,9 @@ export default function ParivarsTab() {
     parivarSearch,
     setParivarSearch,
     fetchParivars,
+    parivarStats,
+    parivarStatsLoading,
+    fetchParivarStats,
     setEditingParivar,
     handleDeleteParivar,
     handleAddParivarPayment,
@@ -253,8 +256,161 @@ export default function ParivarsTab() {
     };
   });
 
+  // Fallback / live stats computed from local state if API response is pending
+  const computedFallbackStats = React.useMemo(() => {
+    let activeCount = 0;
+    let projAmount = 0;
+    let recAmount = 0;
+    let pendAmount = 0;
+
+    const taskHoursByProject: Record<string, number> = {};
+    (projectTasks || []).forEach((t) => {
+      const pName = (t.project_name || "").trim().toLowerCase();
+      if (pName) {
+        taskHoursByProject[pName] = (taskHoursByProject[pName] || 0) + (Number(t.spent_hours) || 0);
+      }
+    });
+
+    (parivars || []).forEach((p) => {
+      if (Number(p.status) === 1) activeCount += 1;
+
+      const pName = (p.parivar_name || "").trim().toLowerCase();
+      const spentHours = taskHoursByProject[pName] || 0;
+      const freeHours =
+        p.free_customization_hours !== undefined &&
+        p.free_customization_hours !== null &&
+        !isNaN(Number(p.free_customization_hours))
+          ? Number(p.free_customization_hours)
+          : 15;
+      const extraHourlyRate =
+        p.extra_hourly_rate !== undefined &&
+        p.extra_hourly_rate !== null &&
+        !isNaN(Number(p.extra_hourly_rate))
+          ? Number(p.extra_hourly_rate)
+          : 1000;
+      const extraHours = Math.max(0, spentHours - freeHours);
+      const extraCharge = extraHours * extraHourlyRate;
+
+      const baseAmount = Number(p.project_amount) || 0;
+      const totalPayable = baseAmount + extraCharge;
+
+      const received = (p.payments || []).reduce(
+        (sum: number, curr: any) => sum + (Number(curr.amount_received) || 0),
+        0
+      );
+      const pending = Math.max(0, totalPayable - received);
+
+      projAmount += totalPayable > 0 ? totalPayable : baseAmount;
+      recAmount += received;
+      pendAmount += pending;
+    });
+
+    return {
+      total_parivars: parivars.length,
+      total_active_parivars: activeCount,
+      total_inactive_parivars: parivars.length - activeCount,
+      total_project_amount: projAmount,
+      total_received_amount: recAmount,
+      total_pending_amount: pendAmount,
+    };
+  }, [parivars, projectTasks]);
+
+  const activeStats = parivarStats || computedFallbackStats;
+
   return (
-    <div className="space-y-4 font-sans">
+    <div className="space-y-5 font-sans">
+      {/* ── Top 4 Metric Cards ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Card 1: Total Parivar */}
+        <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.04)] hover:shadow-md transition-all duration-200 flex items-center justify-between group">
+          <div className="space-y-1">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              Total Parivar
+            </span>
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                {activeStats.total_parivars}
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-400 font-medium">
+              Registered communities
+            </p>
+          </div>
+          <div className="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100/80 flex items-center justify-center text-[#413afb] group-hover:scale-105 transition-transform shadow-2xs">
+            <Building2 className="w-6 h-6 stroke-[1.8]" />
+          </div>
+        </div>
+
+        {/* Card 2: Total Active Parivar */}
+        <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.04)] hover:shadow-md transition-all duration-200 flex items-center justify-between group">
+          <div className="space-y-1">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              Total Active Parivar
+            </span>
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl sm:text-3xl font-extrabold text-emerald-600 tracking-tight">
+                {activeStats.total_active_parivars}
+              </span>
+              {activeStats.total_inactive_parivars > 0 && (
+                <span className="text-xs font-semibold text-slate-400">
+                  ({activeStats.total_inactive_parivars} inactive)
+                </span>
+              )}
+            </div>
+            <p className="text-[11px] text-emerald-600/90 font-medium flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse inline-block" />
+              Active & operational
+            </p>
+          </div>
+          <div className="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-100/80 flex items-center justify-center text-emerald-600 group-hover:scale-105 transition-transform shadow-2xs">
+            <CheckCircle2 className="w-6 h-6 stroke-[1.8]" />
+          </div>
+        </div>
+
+        {/* Card 3: Total Project Amount */}
+        <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.04)] hover:shadow-md transition-all duration-200 flex items-center justify-between group">
+          <div className="space-y-1">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              Total Project Amount
+            </span>
+            <div className="flex items-baseline gap-1">
+              <span className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight tabular-nums">
+                ₹{activeStats.total_project_amount.toLocaleString("en-IN")}
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-400 font-medium">
+              Received: ₹{activeStats.total_received_amount.toLocaleString("en-IN")}
+            </p>
+          </div>
+          <div className="w-12 h-12 rounded-2xl bg-blue-50 border border-blue-100/80 flex items-center justify-center text-blue-600 group-hover:scale-105 transition-transform shadow-2xs">
+            <IndianRupee className="w-6 h-6 stroke-[1.8]" />
+          </div>
+        </div>
+
+        {/* Card 4: Total Pending Amount */}
+        <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.04)] hover:shadow-md transition-all duration-200 flex items-center justify-between group">
+          <div className="space-y-1">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              Total Pending Amount
+            </span>
+            <div className="flex items-baseline gap-1">
+              <span className={`text-2xl sm:text-3xl font-extrabold tracking-tight tabular-nums ${activeStats.total_pending_amount > 0 ? "text-amber-600" : "text-emerald-600"}`}>
+                ₹{activeStats.total_pending_amount.toLocaleString("en-IN")}
+              </span>
+            </div>
+            <p className="text-[11px] text-slate-400 font-medium">
+              {activeStats.total_pending_amount > 0 ? "Outstanding to collect" : "All payments settled"}
+            </p>
+          </div>
+          <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center group-hover:scale-105 transition-transform shadow-2xs ${
+            activeStats.total_pending_amount > 0
+              ? "bg-amber-50 border-amber-100/80 text-amber-600"
+              : "bg-emerald-50 border-emerald-100/80 text-emerald-600"
+          }`}>
+            <Clock className="w-6 h-6 stroke-[1.8]" />
+          </div>
+        </div>
+      </div>
       <div className="bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm border-collapse">

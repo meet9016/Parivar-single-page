@@ -1,6 +1,7 @@
 export const ENDPOINTS = {
   INQUIRY: '/api/inquiry',
   REGISTER_PARIVAR: '/api/register-parivar',
+  PARIVAR_STATS: '/api/register-parivar/stats',
   SUPERADMIN_LOGIN: '/api/register-parivar/superadmin-login',
   PRICING: '/api/pricing',
   PRICING_ALL: '/api/pricing/all',
