@@ -11,7 +11,7 @@ const NAV = [
 ] as const;
 
 export default function Sidebar() {
-  const { activeTab, setActiveTab, parivars, inquiries, pricingPlans } = useSuperAdmin();
+  const { activeTab, setActiveTab, parivars, inquiries, pricingPlans, projectTasks } = useSuperAdmin();
 
   const countMap: Record<string, number> = {
     parivars: parivars.length,
