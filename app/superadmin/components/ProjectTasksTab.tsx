@@ -109,9 +109,9 @@ function CustomSelect({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full flex items-center justify-between gap-2 text-left transition-colors cursor-pointer bg-white border border-slate-300 text-sm font-semibold text-slate-900 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340] ${
+        className={`w-full flex items-center justify-between gap-2 text-left transition-colors cursor-pointer bg-white border border-slate-300 text-sm font-semibold text-slate-900 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15 ${
           size === "sm" ? "px-3 py-2 rounded-lg" : "px-3.5 py-2.5 rounded-lg"
-        } ${isOpen ? "border-[#0B1340] ring-1 ring-[#0B1340]" : ""}`}
+        } ${isOpen ? "border-[#413afb] ring-2 ring-[#413afb]/15" : ""}`}
       >
         <div className="flex items-center gap-2 truncate min-w-0">
           {icon && <span className="text-slate-500 shrink-0">{icon}</span>}
@@ -145,7 +145,7 @@ function CustomSelect({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onClick={(e) => e.stopPropagation()}
-                  className="w-full pl-8 pr-3 py-1.5 rounded-md bg-white border border-slate-300 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340]"
+                  className="w-full pl-8 pr-3 py-1.5 rounded-md bg-white border border-slate-300 text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#413afb]"
                   autoFocus
                 />
               </div>
@@ -169,7 +169,7 @@ function CustomSelect({
                     }}
                     className={`w-full flex items-center justify-between gap-2 px-3 py-2 rounded-md text-xs text-left transition-colors cursor-pointer ${
                       isSelected
-                        ? "bg-[#0B1340] text-white font-bold"
+                        ? "bg-[#413afb] text-white font-bold"
                         : "text-slate-800 hover:bg-slate-100 font-medium"
                     }`}
                   >
@@ -1077,7 +1077,7 @@ export default function ProjectTasksTab() {
               placeholder="Search by project, task title, developer, client, description..."
               value={taskSearch}
               onChange={(e) => setTaskSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+              className="w-full pl-10 pr-4 py-2 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15"
             />
           </div>
 
@@ -1103,7 +1103,7 @@ export default function ProjectTasksTab() {
 
             <button
               onClick={openCreateModal}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#0B1340] hover:bg-[#070D2B] text-white text-sm font-semibold transition-all cursor-pointer shadow-sm"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#413afb] hover:bg-[#322bd9] text-white text-sm font-semibold transition-all cursor-pointer shadow-sm hover:shadow active:scale-[0.99]"
             >
               <Plus className="w-4 h-4" />
               <span>Add Work Hours</span>
@@ -1502,7 +1502,7 @@ export default function ProjectTasksTab() {
                     type="button"
                     disabled={importLoading || importValidationList.some(r => !r.isValid)}
                     onClick={handleConfirmBatchImport}
-                    className="px-4 py-2 rounded-md bg-[#0B1340] hover:bg-[#070D2B] text-white text-xs font-semibold transition-all cursor-pointer shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-2 rounded-xl bg-[#413afb] hover:bg-[#322bd9] text-white text-xs font-semibold transition-all cursor-pointer shadow-sm hover:shadow active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {importLoading ? "Importing..." : `Import ${importValidationList.length} Tasks`}
                   </button>
@@ -1567,7 +1567,7 @@ export default function ProjectTasksTab() {
                   required
                   value={taskForm.start_date}
                   onChange={(e) => setTaskForm({ ...taskForm, start_date: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-medium text-slate-900 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15"
                 />
               </div>
 
@@ -1606,7 +1606,7 @@ export default function ProjectTasksTab() {
                   placeholder="Enter developer name"
                   value={taskForm.assigned_to}
                   onChange={(e) => setTaskForm({ ...taskForm, assigned_to: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15"
                 />
               </div>
 
@@ -1628,7 +1628,7 @@ export default function ProjectTasksTab() {
                       task_title: val ? (val.length > 50 ? val.slice(0, 47) + "..." : val) : prev.task_title,
                     }));
                   }}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15"
                 />
               </div>
 
@@ -1645,7 +1645,7 @@ export default function ProjectTasksTab() {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-lg bg-[#0B1340] hover:bg-[#070D2B] text-white text-sm font-semibold transition-all cursor-pointer shadow-xs"
+                  className="px-5 py-2.5 rounded-xl bg-[#413afb] hover:bg-[#322bd9] text-white text-sm font-semibold transition-all cursor-pointer shadow-sm hover:shadow active:scale-[0.99]"
                 >
                   {editingTask ? "Update Work Hours" : "Save Work Hours"}
                 </button>
@@ -1714,7 +1714,7 @@ export default function ProjectTasksTab() {
                       hoursDecimal: parseFloat(e.target.value) || 0,
                     })
                   }
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-bold text-slate-900 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-bold text-slate-900 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15"
                 />
               </div>
 
@@ -1734,7 +1734,7 @@ export default function ProjectTasksTab() {
                   placeholder="e.g. Completed feature implementation"
                   value={logRemarksInput}
                   onChange={(e) => setLogRemarksInput(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15"
                 />
               </div>
 
@@ -1828,7 +1828,7 @@ export default function ProjectTasksTab() {
                   placeholder="e.g. 2.5"
                   value={logHoursInput}
                   onChange={(e) => setLogHoursInput(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15"
                 />
               </div>
 
@@ -1848,7 +1848,7 @@ export default function ProjectTasksTab() {
                   placeholder="e.g. Completed API integration and tested"
                   value={logRemarksInput}
                   onChange={(e) => setLogRemarksInput(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15"
                 />
               </div>
 
@@ -1862,7 +1862,7 @@ export default function ProjectTasksTab() {
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-lg bg-[#0B1340] hover:bg-[#070D2B] text-white text-sm font-semibold transition-all cursor-pointer shadow-xs"
+                  className="px-5 py-2.5 rounded-xl bg-[#413afb] hover:bg-[#322bd9] text-white text-sm font-semibold transition-all cursor-pointer shadow-sm hover:shadow active:scale-[0.99]"
                 >
                   Save Time Log
                 </button>

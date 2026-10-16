@@ -110,9 +110,9 @@ export default function InquiriesTab() {
                     <td className="px-5 py-4 text-right whitespace-nowrap">
                       <button
                         onClick={() => handleInquiryStatus(inq._id, inq.status)}
-                        className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg border transition-colors cursor-pointer ${
+                        className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg border transition-all cursor-pointer ${
                           inq.status === 1
-                            ? "bg-[#0B1340] text-white border-[#0B1340] hover:bg-[#070D2B]"
+                            ? "bg-[#413afb] text-white border-[#413afb] hover:bg-[#322bd9] shadow-xs active:scale-[0.98]"
                             : "bg-white text-slate-700 border-slate-300 hover:bg-slate-100"
                         }`}
                       >

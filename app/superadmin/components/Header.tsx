@@ -18,13 +18,13 @@ export default function Header() {
     <header className="bg-white/90 backdrop-blur-md border-b border-slate-200 h-16 px-6 flex items-center justify-between shrink-0 z-20 sticky top-0">
       {/* Left: breadcrumb */}
       <div className="flex items-center gap-3 text-sm font-medium">
-        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-50 text-blue-600 shadow-sm border border-blue-100/50">
+        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#413afb]/10 text-[#413afb] shadow-sm border border-[#413afb]/20">
           <Shield className="w-4.5 h-4.5" />
         </div>
         <div className="flex items-center gap-2.5">
           <span className="text-slate-900 font-bold tracking-tight text-[15px]">Super Admin</span>
           <span className="text-slate-300 font-light text-base leading-none">/</span>
-          <span className="text-blue-700 font-semibold bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-100 text-xs tracking-wide">
+          <span className="text-[#413afb] font-semibold bg-[#413afb]/10 px-2.5 py-0.5 rounded-md border border-[#413afb]/20 text-xs tracking-wide">
             {tabLabels[activeTab] ?? activeTab}
           </span>
         </div>

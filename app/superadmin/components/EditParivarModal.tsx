@@ -109,7 +109,7 @@ export default function EditParivarModal() {
                   setEditForm({ ...editForm, admin_first_name: e.target.value });
                   if (errors.admin_first_name) setErrors(prev => ({ ...prev, admin_first_name: "" }));
                 }}
-                className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15 transition-all"
               />
               {errors.admin_first_name && <p className="text-xs text-rose-600 mt-1 font-semibold">{errors.admin_first_name}</p>}
             </div>
@@ -129,7 +129,7 @@ export default function EditParivarModal() {
                   });
                   if (errors.parivar_name) setErrors(prev => ({ ...prev, parivar_name: "" }));
                 }}
-                className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15 transition-all"
               />
               {errors.parivar_name && <p className="text-xs text-rose-600 mt-1 font-semibold">{errors.parivar_name}</p>}
             </div>
@@ -149,7 +149,7 @@ export default function EditParivarModal() {
                   setEditForm({ ...editForm, admin_mobile: e.target.value.replace(/\D/g, '') });
                   if (errors.admin_mobile) setErrors(prev => ({ ...prev, admin_mobile: "" }));
                 }}
-                className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15 transition-all"
               />
               {errors.admin_mobile && <p className="text-xs text-rose-600 mt-1 font-semibold">{errors.admin_mobile}</p>}
             </div>
@@ -161,8 +161,8 @@ export default function EditParivarModal() {
               <input
                 type="email"
                 value={editForm.admin_email}
-                onChange={(e) => setEditForm({ ...editForm, admin_email: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                onChange={(e) => setEditForm({...editForm, admin_email: e.target.value})}
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15 transition-all"
               />
             </div>
           </div>
@@ -176,8 +176,8 @@ export default function EditParivarModal() {
               <input
                 type="text"
                 value={editForm.city}
-                onChange={(e) => setEditForm({ ...editForm, city: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                onChange={(e) => setEditForm({...editForm, city: e.target.value})}
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15 transition-all"
               />
             </div>
 
@@ -215,7 +215,7 @@ export default function EditParivarModal() {
                   min="0"
                   value={editForm.project_amount}
                   onChange={(e) => setEditForm({ ...editForm, project_amount: e.target.value })}
-                  className="w-full pl-8 pr-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                  className="w-full pl-8 pr-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15 transition-all"
                 />
               </div>
             </div>
@@ -236,12 +236,12 @@ export default function EditParivarModal() {
           {/* Customization Hours & Extra Charges Settings */}
           <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
             <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-indigo-600" />
+              <Clock className="w-4 h-4 text-[#413afb]" />
               <span className="text-xs font-bold text-slate-800">Customization Hours & Billing Rule</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                   Free Hours (Zero Charge)
                 </label>
                 <div className="relative">
@@ -252,19 +252,18 @@ export default function EditParivarModal() {
                     step="0.5"
                     value={editForm.free_customization_hours}
                     onChange={(e) => setEditForm({ ...editForm, free_customization_hours: e.target.value })}
-                    className="w-full pr-12 pl-3.5 py-2 rounded-lg bg-white border border-slate-300 text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                    className="w-full pr-14 pl-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15 transition-all"
                   />
-                  <span className="absolute right-3 top-2 text-xs font-bold text-slate-500">Hours</span>
+                  <span className="absolute right-3.5 top-2.5 text-xs font-bold text-slate-500">Hours</span>
                 </div>
-                <p className="text-[11px] text-slate-500 mt-1">E.g. 15 hours free customization</p>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                   Extra Hourly Rate (₹ / hr)
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-2 text-slate-600 font-bold text-sm">₹</span>
+                  <span className="absolute left-3.5 top-2.5 text-slate-600 font-bold text-sm">₹</span>
                   <input
                     type="number"
                     placeholder="150"
@@ -272,37 +271,26 @@ export default function EditParivarModal() {
                     step="50"
                     value={editForm.extra_hourly_rate}
                     onChange={(e) => setEditForm({ ...editForm, extra_hourly_rate: e.target.value })}
-                    className="w-full pl-8 pr-12 py-2 rounded-lg bg-white border border-slate-300 text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                    className="w-full pl-8 pr-12 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15 transition-all"
                   />
-                  <span className="absolute right-3 top-2 text-xs font-bold text-slate-500">/ hr</span>
+                  <span className="absolute right-3.5 top-2.5 text-xs font-bold text-slate-500">/ hr</span>
                 </div>
-                <p className="text-[11px] text-slate-500 mt-1">Charged when total hours &gt; free hours</p>
               </div>
             </div>
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold text-slate-800 mb-1.5">Notes (Optional)</label>
-            <input
-              type="text"
-              value={editForm.notes}
-              onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })}
-              className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
-            />
           </div>
 
           <div className="flex items-center gap-3 pt-3 border-t border-slate-200">
             <button
               type="button"
               onClick={() => setEditingParivar(null)}
-              className="flex-1 py-2.5 rounded-lg font-semibold text-sm text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 transition-colors cursor-pointer"
+              className="flex-1 py-2.5 rounded-xl font-semibold text-sm text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={editLoading}
-              className="flex-1 py-2.5 rounded-lg font-semibold text-sm text-white bg-[#0B1340] hover:bg-[#070D2B] shadow-sm transition-all cursor-pointer disabled:opacity-50"
+              className="flex-1 py-2.5 rounded-xl font-semibold text-sm text-white bg-[#413afb] hover:bg-[#322bd9] shadow-sm transition-all cursor-pointer disabled:opacity-50"
             >
               {editLoading ? "Saving..." : "Save Changes"}
             </button>

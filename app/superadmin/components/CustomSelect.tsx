@@ -54,9 +54,9 @@ export default function CustomSelect({
         type="button"
         disabled={disabled}
         onClick={() => !disabled && setIsOpen(!isOpen)}
-        className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg bg-white border transition-colors text-left text-sm font-medium text-slate-900 cursor-pointer ${
+        className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-white border transition-colors text-left text-sm font-medium text-slate-900 cursor-pointer ${
           isOpen
-            ? "border-[#0B1340] ring-1 ring-[#0B1340]"
+            ? "border-[#413afb] ring-2 ring-[#413afb]/15"
             : "border-slate-300 hover:border-slate-400"
         } ${disabled ? "opacity-50 cursor-not-allowed bg-slate-50" : ""}`}
       >
@@ -66,7 +66,7 @@ export default function CustomSelect({
         </span>
         <ChevronDown
           className={`w-4 h-4 text-slate-500 shrink-0 transition-transform duration-150 ${
-            isOpen ? "transform rotate-180 text-[#0B1340]" : ""
+            isOpen ? "transform rotate-180 text-[#413afb]" : ""
           }`}
         />
       </button>
@@ -75,7 +75,7 @@ export default function CustomSelect({
       {isOpen && (
         <div
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-          className="no-scrollbar absolute left-0 right-0 top-full mt-1.5 z-50 bg-white border border-slate-300 rounded-lg shadow-lg overflow-hidden py-1 max-h-60 overflow-y-auto"
+          className="no-scrollbar absolute left-0 right-0 top-full mt-1.5 z-50 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden py-1 max-h-60 overflow-y-auto"
         >
           {formattedOptions.map((opt) => {
             const isSelected = String(opt.value) === String(value);
@@ -89,8 +89,8 @@ export default function CustomSelect({
                 }}
                 className={`w-full flex items-center justify-between px-3.5 py-2.5 text-sm text-left transition-colors cursor-pointer ${
                   isSelected
-                    ? "bg-[#0B1340] text-white font-semibold"
-                    : "text-slate-800 hover:bg-slate-100 font-medium"
+                    ? "bg-[#413afb] text-white font-semibold"
+                    : "text-slate-800 hover:bg-slate-50 font-medium"
                 }`}
               >
                 <span className="truncate flex items-center gap-2">

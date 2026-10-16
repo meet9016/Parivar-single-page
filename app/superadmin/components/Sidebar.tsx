@@ -22,10 +22,10 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="w-64 bg-[#0B1340] text-white flex flex-col shrink-0 h-full z-30 border-r border-[#070D2B] shadow-lg">
+    <aside className="w-64 bg-white text-slate-800 flex flex-col shrink-0 h-full z-30 border-r border-slate-200/90 shadow-[2px_0_12px_-4px_rgba(0,0,0,0.03)]">
       {/* Brand Logo */}
-      <div className="h-16 px-5 flex items-center border-b border-white/10 bg-[#070D2B]">
-        <img src="/logo.png" alt="Parivar.me" className="h-8 w-auto object-contain brightness-0 invert" />
+      <div className="h-16 px-5 flex items-center border-b border-slate-100 bg-white">
+        <img src="/logo.png" alt="Parivar.me" className="h-8 w-auto object-contain" />
       </div>
 
       {/* Navigation List */}
@@ -40,10 +40,10 @@ export default function Sidebar() {
             <button
               key={id}
               onClick={() => setActiveTab(id)}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer group ${
+              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm transition-all cursor-pointer group ${
                 active
-                  ? "bg-blue-600 text-white shadow-md border border-blue-500"
-                  : "text-slate-300 hover:bg-white/10 hover:text-white border border-transparent"
+                  ? "bg-[#413afb] text-white shadow-md shadow-[#413afb]/20 font-bold"
+                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium"
               }`}
             >
               <div className="flex items-center gap-3">
@@ -69,7 +69,7 @@ export default function Sidebar() {
       </div>
 
       {/* Footer Quick Stats */}
-      <div className="p-3 m-3 rounded-xl bg-[#070D2B] border border-white/10">
+      <div className="p-3 m-3 rounded-2xl bg-slate-50/80 border border-slate-200/70">
         <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2 px-1">
           Platform Overview
         </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
-import { Search, Building2, Calendar, Edit2, Trash2, Tag, User, Phone, Mail, CheckSquare, Plus, IndianRupee, Image as ImageIcon, Upload, X, Clock, Play, Square, Eye, CheckCircle2, FileSpreadsheet, Download } from "lucide-react";
+import { Search, Building2, Calendar, Edit2, Trash2, Tag, User, Phone, Mail, CheckSquare, Plus, IndianRupee, Image as ImageIcon, Upload, X, Clock, Play, Square, Eye, CheckCircle2, FileSpreadsheet, Download, FileText } from "lucide-react";
 import * as XLSX from "xlsx";
 import { useSuperAdmin, ProjectTask } from "../context/SuperAdminContext";
 import { toast } from "sonner";
@@ -373,37 +373,36 @@ export default function ParivarsTab() {
 
                       {/* Project Amount & Payment Stats */}
                       <td className="px-5 py-4">
-                        <div className="space-y-1.5">
-                          {extraCharge > 0 ? (
-                            <>
-                              <div className="text-sm font-bold text-slate-900">
-                                Total: ₹{totalPayable.toLocaleString("en-IN")}
-                              </div>
-                              <div className="flex items-center gap-1.5 flex-wrap text-xs">
-                                <span className="text-slate-600 font-medium">Base: ₹{totalProjectAmount.toLocaleString("en-IN")}</span>
-                                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-900 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-300">
-                                  + Extra: ₹{extraCharge.toLocaleString("en-IN")} ({extraHours}h)
-                                </span>
-                              </div>
-                            </>
-                          ) : (
-                            <div className="text-sm font-bold text-slate-900">
-                              Total: ₹{totalProjectAmount.toLocaleString("en-IN")}
-                            </div>
-                          )}
-                          <div className="flex items-center gap-2 text-xs flex-wrap">
-                            <span className="text-emerald-800 font-semibold bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-300">
-                              Paid: ₹{totalReceived.toLocaleString("en-IN")}
+                        <div 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (p.payments && p.payments.length > 0) {
+                              setViewPaymentsParivar(p);
+                            } else {
+                              openPaymentModal(p);
+                            }
+                          }}
+                          className="w-48 text-xs space-y-1.5 py-0.5 cursor-pointer group/pm select-none"
+                          title={p.payments?.length > 0 ? "Click to view payments & receipts" : "Click to record payment"}
+                        >
+                          <div className="flex items-center justify-between gap-3 text-slate-600">
+                            <span className="flex items-center gap-1.5 text-slate-500 font-medium">
+                              <FileText className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                              <span>Total Amount</span>
                             </span>
-                            {pendingAmount > 0 ? (
-                              <span className="text-rose-700 font-semibold bg-rose-50 px-2 py-0.5 rounded-md border border-rose-300">
-                                Due: ₹{pendingAmount.toLocaleString("en-IN")}
-                              </span>
-                            ) : totalPayable > 0 ? (
-                              <span className="text-emerald-700 font-bold text-xs">
-                                ✓ Cleared
-                              </span>
-                            ) : null}
+                            <span className="font-bold text-slate-900 tabular-nums">
+                              ₹{(totalPayable > 0 ? totalPayable : totalProjectAmount).toLocaleString("en-IN")}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center justify-between gap-3 text-slate-600">
+                            <span className="flex items-center gap-1.5 text-slate-500 font-medium">
+                              <IndianRupee className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                              <span>Paid Amount</span>
+                            </span>
+                            <span className="font-bold text-teal-600 tabular-nums">
+                              ₹{totalReceived.toLocaleString("en-IN")}
+                            </span>
                           </div>
 
                           {/* Uploaded Payment Receipts & History Display */}
@@ -477,22 +476,13 @@ export default function ParivarsTab() {
                             <span>{parivarTasksList.length} Tasks ({totalSpentHours}h)</span>
                           </button>
 
-                          <div>
-                            {totalSpentHours > freeHours ? (
-                              <div className="inline-flex flex-col gap-0.5">
-                                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-900 bg-amber-50 px-2 py-0.5 rounded border border-amber-300">
-                                  ⚡ {extraHours}h extra (+₹{extraCharge.toLocaleString("en-IN")})
-                                </span>
-                                <span className="text-[10px] text-slate-500 font-medium">
-                                  Free: {freeHours}h • Extra: ₹{extraHourlyRate}/h
-                                </span>
-                              </div>
-                            ) : (
-                              <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-300">
-                                ✓ {totalSpentHours} / {freeHours}h free used
+                          {totalSpentHours > freeHours && (
+                            <div>
+                              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-900 bg-amber-50 px-2 py-0.5 rounded border border-amber-300">
+                                ⚡ {extraHours}h extra (+₹{extraCharge.toLocaleString("en-IN")})
                               </span>
-                            )}
-                          </div>
+                            </div>
+                          )}
                         </div>
                       </td>
 
@@ -685,7 +675,7 @@ export default function ParivarsTab() {
                     onClick={() => {
                       openAddTaskForParivar(selectedParivarForTasks);
                     }}
-                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#0B1340] text-white text-xs font-semibold hover:bg-[#070D2B] transition-colors cursor-pointer shadow-xs"
+                    className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#413afb] text-white text-xs font-semibold hover:bg-[#322bd9] transition-all cursor-pointer shadow-sm hover:shadow active:scale-[0.99]"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Add Task</span>
@@ -884,17 +874,17 @@ export default function ParivarsTab() {
       {/* ── QUICK ADD WORK HOURS / TASK FOR PARIVAR MODAL ── */}
       {taskModalParivar && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 overflow-y-auto">
-          <div className="bg-white w-full max-w-lg rounded-xl p-6 shadow-xl border border-slate-300 my-8 animate-in fade-in duration-150">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-200">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-lg bg-blue-50 text-blue-900 border border-blue-200 flex items-center justify-center">
+          <div className="bg-white w-full max-w-lg rounded-2xl p-6 shadow-2xl border border-slate-200 my-8 animate-in fade-in duration-150">
+            <div className="flex items-center justify-between pb-3.5 border-b border-slate-200">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-[#413afb]/10 text-[#413afb] border border-[#413afb]/20 flex items-center justify-center shadow-2xs">
                   <Clock className="w-5 h-5" />
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-slate-900">
                     {editingTaskId ? "Edit Work Hours" : "Add Work Hours"}
                   </h3>
-                  <p className="text-xs text-slate-700 font-semibold">{taskModalParivar.parivar_name}</p>
+                  <p className="text-xs text-slate-500 font-medium">{taskModalParivar.parivar_name}</p>
                 </div>
               </div>
               <button
@@ -902,7 +892,7 @@ export default function ParivarsTab() {
                   setTaskModalParivar(null);
                   setEditingTaskId(null);
                 }}
-                className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
+                className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -910,7 +900,7 @@ export default function ParivarsTab() {
 
             <form onSubmit={handleSaveTaskForParivar} className="space-y-4 mt-4">
               <div>
-                <label className="block text-xs font-bold text-slate-800 mb-1">
+                <label className="block text-xs font-bold text-slate-800 mb-1.5">
                   Date <span className="text-rose-600">*</span>
                 </label>
                 <input
@@ -918,12 +908,12 @@ export default function ParivarsTab() {
                   required
                   value={taskForm.start_date}
                   onChange={(e) => setTaskForm({ ...taskForm, start_date: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-medium text-slate-900 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15 transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-800 mb-1">
+                <label className="block text-xs font-bold text-slate-800 mb-1.5">
                   Working Hours <span className="text-rose-600">*</span>
                 </label>
                 <CustomSelect
@@ -931,13 +921,13 @@ export default function ParivarsTab() {
                   onChange={(val) => setTaskForm({ ...taskForm, spent_hours: parseFloat(val) || 1 })}
                   options={workingHourOptions}
                 />
-                <span className="text-xs text-slate-600 font-medium mt-1 block">
+                <span className="text-xs text-slate-500 font-medium mt-1.5 block">
                   Select in 15-minute intervals (e.g. 2.5 = 2 hours 30 minutes)
                 </span>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-800 mb-1">
+                <label className="block text-xs font-bold text-slate-800 mb-1.5">
                   Developer Name <span className="text-rose-600">*</span>
                 </label>
                 <input
@@ -946,12 +936,12 @@ export default function ParivarsTab() {
                   placeholder="Enter developer name"
                   value={taskForm.assigned_to}
                   onChange={(e) => setTaskForm({ ...taskForm, assigned_to: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15 transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-800 mb-1">
+                <label className="block text-xs font-bold text-slate-800 mb-1.5">
                   Note / Description <span className="text-rose-600">*</span>
                 </label>
                 <textarea
@@ -960,26 +950,27 @@ export default function ParivarsTab() {
                   placeholder="Enter work description or notes"
                   value={taskForm.description}
                   onChange={(e) => setTaskForm({ ...taskForm, description: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15 transition-all"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-200">
+              <div className="flex items-center gap-3 pt-4 border-t border-slate-200">
                 <button
                   type="button"
                   onClick={() => {
                     setTaskModalParivar(null);
                     setEditingTaskId(null);
                   }}
-                  className="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-sm font-semibold transition-colors cursor-pointer"
+                  className="flex-1 py-2.5 rounded-xl font-semibold text-sm text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-lg bg-[#0B1340] hover:bg-[#070D2B] text-white text-sm font-semibold transition-all cursor-pointer shadow-xs"
+                  className="flex-1 py-2.5 rounded-xl bg-[#413afb] hover:bg-[#322bd9] text-white font-semibold text-sm shadow-sm hover:shadow transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-[0.99]"
                 >
-                  {editingTaskId ? "Update Work Hours" : "Save Work Hours"}
+                  <Clock className="w-4 h-4" />
+                  <span>{editingTaskId ? "Update Work Hours" : "Save Work Hours"}</span>
                 </button>
               </div>
             </form>
@@ -994,38 +985,38 @@ export default function ParivarsTab() {
 
         return (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 overflow-y-auto">
-            <div className="bg-white w-full max-w-lg rounded-xl p-6 shadow-xl border border-slate-300 my-8 animate-in fade-in duration-150">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-200">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-300 flex items-center justify-center">
+            <div className="bg-white w-full max-w-lg rounded-2xl p-6 shadow-2xl border border-slate-200 my-8 animate-in fade-in duration-150">
+              <div className="flex items-center justify-between pb-3.5 border-b border-slate-200">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center justify-center shadow-2xs">
                     <IndianRupee className="w-5 h-5" />
                   </div>
                   <div>
                     <h3 className="text-base font-bold text-slate-900">Record Client Payment</h3>
-                    <p className="text-xs text-slate-700 font-semibold">{paymentModalParivar.parivar_name}</p>
+                    <p className="text-xs text-slate-500 font-medium">{paymentModalParivar.parivar_name}</p>
                   </div>
                 </div>
                 <button
                   onClick={() => setPaymentModalParivar(null)}
-                  className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
+                  className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
               {/* Payment summary box */}
-              <div className="bg-slate-50 p-3.5 rounded-lg border border-slate-300 grid grid-cols-3 gap-2 text-center my-4">
+              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 grid grid-cols-3 gap-2 text-center my-4">
                 <div>
-                  <span className="text-xs uppercase font-bold text-slate-600 block">Project Amount</span>
+                  <span className="text-xs uppercase font-bold text-slate-500 block">Project Amount</span>
                   <span className="text-base font-black text-slate-900">₹{totalProjectAmount.toLocaleString("en-IN")}</span>
                 </div>
                 <div>
-                  <span className="text-xs uppercase font-bold text-slate-600 block">Total Received</span>
-                  <span className="text-base font-black text-emerald-700">₹{totalReceived.toLocaleString("en-IN")}</span>
+                  <span className="text-xs uppercase font-bold text-slate-500 block">Total Received</span>
+                  <span className="text-base font-black text-emerald-600">₹{totalReceived.toLocaleString("en-IN")}</span>
                 </div>
                 <div>
-                  <span className="text-xs uppercase font-bold text-slate-600 block">Current Pending</span>
-                  <span className="text-base font-black text-rose-700">₹{pendingAmount.toLocaleString("en-IN")}</span>
+                  <span className="text-xs uppercase font-bold text-slate-500 block">Current Pending</span>
+                  <span className="text-base font-black text-rose-600">₹{pendingAmount.toLocaleString("en-IN")}</span>
                 </div>
               </div>
 
@@ -1047,7 +1038,7 @@ export default function ParivarsTab() {
                         placeholder="Enter amount received"
                         value={paymentForm.amount_received}
                         onChange={(e) => setPaymentForm({ ...paymentForm, amount_received: e.target.value })}
-                        className="w-full pl-8 pr-3.5 h-[42px] rounded-lg bg-white border border-slate-300 text-sm font-bold text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                        className="w-full pl-8 pr-3.5 h-[42px] rounded-xl bg-white border border-slate-300 text-sm font-bold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 transition-all"
                       />
                     </div>
                     {paymentForm.amount_received && (
@@ -1075,7 +1066,7 @@ export default function ParivarsTab() {
                         type="button"
                         disabled={uploadingScreenshot}
                         onClick={() => paymentFileInputRef.current?.click()}
-                        className="flex-1 flex items-center justify-center gap-2 px-3.5 h-[42px] rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-colors cursor-pointer border border-slate-300 disabled:opacity-50"
+                        className="flex-1 flex items-center justify-center gap-2 px-3.5 h-[42px] rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-colors cursor-pointer border border-slate-200 disabled:opacity-50"
                       >
                         {uploadingScreenshot ? (
                           <div className="w-4 h-4 border-2 border-slate-400 border-t-slate-800 rounded-full animate-spin" />
@@ -1095,7 +1086,7 @@ export default function ParivarsTab() {
                           <img
                             src={paymentForm.screenshot}
                             alt="Receipt Preview"
-                            className="w-[42px] h-[42px] object-cover rounded-lg border border-slate-300 cursor-pointer"
+                            className="w-[42px] h-[42px] object-cover rounded-xl border border-slate-300 cursor-pointer"
                             onClick={() => setPreviewReceiptUrl(paymentForm.screenshot)}
                           />
                           <button
@@ -1113,7 +1104,7 @@ export default function ParivarsTab() {
 
                 {/* Remarks */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-800 mb-1">
+                  <label className="block text-xs font-bold text-slate-800 mb-1.5">
                     Remarks / Transaction ID (Optional)
                   </label>
                   <input
@@ -1121,7 +1112,7 @@ export default function ParivarsTab() {
                     placeholder="e.g. UPI / Bank Transfer / Advance payment"
                     value={paymentForm.remarks}
                     onChange={(e) => setPaymentForm({ ...paymentForm, remarks: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-600/15 transition-all"
                   />
                 </div>
 
@@ -1176,19 +1167,20 @@ export default function ParivarsTab() {
                   </div>
                 )}
 
-                <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-200">
+                <div className="flex items-center gap-3 pt-4 border-t border-slate-200">
                   <button
                     type="button"
                     onClick={() => setPaymentModalParivar(null)}
-                    className="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-sm font-semibold transition-colors cursor-pointer"
+                    className="flex-1 py-2.5 rounded-xl font-semibold text-sm text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-colors cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white text-sm font-semibold transition-all cursor-pointer shadow-xs"
+                    className="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm shadow-sm hover:shadow transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-[0.99]"
                   >
-                    Save Payment
+                    <IndianRupee className="w-4 h-4" />
+                    <span>Save Payment</span>
                   </button>
                 </div>
               </form>
