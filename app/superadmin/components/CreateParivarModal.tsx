@@ -246,7 +246,7 @@ export default function CreateParivarModal() {
                   <span className="absolute left-3 top-2 text-slate-600 font-bold text-sm">₹</span>
                   <input
                     type="number"
-                    placeholder="1000"
+                    placeholder="150"
                     min="0"
                     step="50"
                     value={newParivar.extra_hourly_rate}

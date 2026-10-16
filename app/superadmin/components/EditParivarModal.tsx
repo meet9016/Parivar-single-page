@@ -18,7 +18,7 @@ export default function EditParivarModal() {
     subscription_plan_time: "1 Year",
     project_amount: "",
     free_customization_hours: "15",
-    extra_hourly_rate: "1000",
+    extra_hourly_rate: "150",
     notes: "",
   });
 
@@ -50,7 +50,7 @@ export default function EditParivarModal() {
     if (!editForm.parivar_name.trim()) {
       newErrors.parivar_name = "Parivar Name is required.";
     }
-    
+
     if (editForm.admin_mobile.trim() && !/^\d{10}$/.test(editForm.admin_mobile.trim())) {
       newErrors.admin_mobile = "Mobile Number must be 10 digits.";
     }
@@ -61,7 +61,7 @@ export default function EditParivarModal() {
     }
 
     setErrors({});
-    
+
     const payload = {
       ...editForm,
       company_name: editForm.parivar_name.trim(),
@@ -78,13 +78,13 @@ export default function EditParivarModal() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-in fade-in overflow-y-auto">
       <div className="bg-white rounded-xl p-6 sm:p-7 w-full max-w-lg shadow-2xl relative space-y-4 border border-slate-300 my-8">
-        <button 
+        <button
           onClick={() => setEditingParivar(null)}
           className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900 transition-colors cursor-pointer text-base font-bold"
         >
           ✕
         </button>
-        
+
         <div className="border-b border-slate-200 pb-3.5">
           <div className="flex items-center gap-2 text-blue-700 font-bold text-xs uppercase tracking-wider mb-1">
             <User className="w-4 h-4" />
@@ -94,7 +94,7 @@ export default function EditParivarModal() {
             Edit Customer / Parivar Details
           </h3>
         </div>
-        
+
         <form onSubmit={validateAndSubmit} noValidate className="space-y-4">
           {/* Full Name & Parivar Name */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -106,7 +106,7 @@ export default function EditParivarModal() {
                 type="text"
                 value={editForm.admin_first_name}
                 onChange={(e) => {
-                  setEditForm({...editForm, admin_first_name: e.target.value});
+                  setEditForm({ ...editForm, admin_first_name: e.target.value });
                   if (errors.admin_first_name) setErrors(prev => ({ ...prev, admin_first_name: "" }));
                 }}
                 className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
@@ -124,8 +124,8 @@ export default function EditParivarModal() {
                 value={editForm.parivar_name}
                 onChange={(e) => {
                   setEditForm({
-                    ...editForm, 
-                    parivar_name: e.target.value 
+                    ...editForm,
+                    parivar_name: e.target.value
                   });
                   if (errors.parivar_name) setErrors(prev => ({ ...prev, parivar_name: "" }));
                 }}
@@ -146,7 +146,7 @@ export default function EditParivarModal() {
                 maxLength={10}
                 value={editForm.admin_mobile}
                 onChange={(e) => {
-                  setEditForm({...editForm, admin_mobile: e.target.value.replace(/\D/g, '')});
+                  setEditForm({ ...editForm, admin_mobile: e.target.value.replace(/\D/g, '') });
                   if (errors.admin_mobile) setErrors(prev => ({ ...prev, admin_mobile: "" }));
                 }}
                 className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
@@ -161,7 +161,7 @@ export default function EditParivarModal() {
               <input
                 type="email"
                 value={editForm.admin_email}
-                onChange={(e) => setEditForm({...editForm, admin_email: e.target.value})}
+                onChange={(e) => setEditForm({ ...editForm, admin_email: e.target.value })}
                 className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
               />
             </div>
@@ -176,7 +176,7 @@ export default function EditParivarModal() {
               <input
                 type="text"
                 value={editForm.city}
-                onChange={(e) => setEditForm({...editForm, city: e.target.value})}
+                onChange={(e) => setEditForm({ ...editForm, city: e.target.value })}
                 className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
               />
             </div>
@@ -267,7 +267,7 @@ export default function EditParivarModal() {
                   <span className="absolute left-3 top-2 text-slate-600 font-bold text-sm">₹</span>
                   <input
                     type="number"
-                    placeholder="1000"
+                    placeholder="150"
                     min="0"
                     step="50"
                     value={editForm.extra_hourly_rate}
@@ -286,7 +286,7 @@ export default function EditParivarModal() {
             <input
               type="text"
               value={editForm.notes}
-              onChange={(e) => setEditForm({...editForm, notes: e.target.value})}
+              onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })}
               className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
             />
           </div>
