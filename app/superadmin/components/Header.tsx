@@ -8,7 +8,7 @@ export default function Header() {
   const { activeTab, handleLogout } = useSuperAdmin();
 
   const tabLabels: Record<string, string> = {
-    parivars: "All Parivars (Tenants)",
+    parivars: "All Parivars",
     inquiries: "User Inquiries",
     pricing: "Pricing & Offers",
     tasks: "Project Tasks & Hours",

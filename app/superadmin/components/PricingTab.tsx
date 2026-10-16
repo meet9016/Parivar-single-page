@@ -174,7 +174,7 @@ export default function PricingTab() {
   return (
     <div className="space-y-4 max-w-4xl">
       {/* Compact Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         {plansConfig.map((cfg) => {
           const orig = cfg.dbPlan?.originalPrice ?? cfg.defaultOriginal;
           const disc = cfg.dbPlan?.discountedPrice ?? cfg.defaultDiscounted;
@@ -185,23 +185,23 @@ export default function PricingTab() {
               return (
                 <div
                   key={cfg.type}
-                  className={`bg-white border rounded-lg p-4 transition-colors flex flex-col justify-between ${
-                    isEditing ? "border-[#0B1340] ring-1 ring-[#0B1340]" : "border-slate-300 hover:border-slate-400"
+                  className={`bg-white border rounded-xl p-5 transition-colors flex flex-col justify-between shadow-sm ${
+                    isEditing ? "border-[#0B1340] ring-2 ring-[#0B1340]" : "border-slate-300 hover:border-slate-400"
                   }`}
                 >
                   {/* Card Header */}
                   <div className="flex items-center justify-between gap-2 mb-3">
-                    <div className="flex items-center gap-2">
-                      <span className="text-base">{cfg.icon}</span>
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-xl">{cfg.icon}</span>
                       <div>
-                        <h3 className="text-xs font-bold text-slate-900 leading-tight">
+                        <h3 className="text-sm font-bold text-slate-900 leading-tight">
                           {cfg.title}
                         </h3>
                       </div>
                     </div>
 
                     {discountPct > 0 && (
-                      <span className="bg-rose-50 text-rose-800 border border-rose-300 font-bold text-[11px] px-2 py-0.5 rounded shrink-0">
+                      <span className="bg-rose-50 text-rose-800 border border-rose-300 font-bold text-xs px-2.5 py-1 rounded-md shrink-0">
                         🔥 {discountPct}% OFF
                       </span>
                     )}
@@ -209,26 +209,26 @@ export default function PricingTab() {
 
                   {!isEditing ? (
                     /* Compact View */
-                    <div className="space-y-3 pt-1">
-                      <div className="bg-slate-50 border border-slate-200 rounded-md p-3 flex items-baseline justify-between">
+                    <div className="space-y-3.5 pt-1">
+                      <div className="bg-slate-50 border border-slate-200 rounded-lg p-3.5 flex items-baseline justify-between">
                         <div>
-                          <span className="text-[11px] font-semibold text-slate-600 block mb-0.5">Offer Price</span>
-                          <div className="flex items-baseline gap-2">
-                            <span className="text-xl font-extrabold text-slate-900">
+                          <span className="text-xs font-semibold text-slate-600 block mb-0.5">Offer Price</span>
+                          <div className="flex items-baseline gap-2.5">
+                            <span className="text-2xl font-black text-slate-900">
                               ₹{disc.toLocaleString("en-IN")}
                             </span>
-                            <span className="text-xs text-slate-500 line-through font-medium">
+                            <span className="text-sm text-slate-500 line-through font-medium">
                               ₹{orig.toLocaleString("en-IN")}
                             </span>
                           </div>
                         </div>
-                        <span className="text-[11px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-300 px-2 py-0.5 rounded">
+                        <span className="text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-300 px-2.5 py-1 rounded-md">
                           Save ₹{(orig - disc).toLocaleString("en-IN")}
                         </span>
                       </div>
 
                       {/* Official WhatsApp Support Badge Preview */}
-                      <div className="bg-emerald-50 border border-emerald-200 rounded-md px-3 py-2 text-xs font-semibold text-emerald-900 flex items-center gap-2">
+                      <div className="bg-emerald-50 border border-emerald-200 rounded-lg px-3.5 py-2.5 text-xs font-semibold text-emerald-900 flex items-center gap-2">
                         <span>🎧</span>
                         <span className="truncate">{badge}</span>
                       </div>
@@ -236,9 +236,9 @@ export default function PricingTab() {
                       <div className="pt-1 flex justify-end">
                         <button
                           onClick={() => handleOpenEdit(cfg)}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#0B1340] hover:bg-[#070D2B] text-white text-xs font-semibold transition-colors cursor-pointer shadow-xs"
+                          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#0B1340] hover:bg-[#070D2B] text-white text-sm font-semibold transition-colors cursor-pointer shadow-xs"
                         >
-                          <Edit2 className="w-3 h-3" />
+                          <Edit2 className="w-4 h-4" />
                           <span>Edit Price, % & Support</span>
                         </button>
                       </div>
@@ -250,46 +250,46 @@ export default function PricingTab() {
                         e.preventDefault();
                         handleSubmit(cfg);
                       }}
-                      className="space-y-3 pt-1"
+                      className="space-y-3.5 pt-1"
                     >
-                      <div className="bg-slate-50 border border-slate-200 rounded-md p-3 space-y-2.5">
+                      <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 space-y-3">
                         <div>
-                          <label className="block text-[11px] font-bold text-slate-700 mb-1">
+                          <label className="block text-xs font-bold text-slate-700 mb-1">
                             Original Price (₹)
                           </label>
                           <div className="relative">
-                            <span className="absolute left-2.5 top-1.5 text-slate-500 font-bold text-xs">₹</span>
+                            <span className="absolute left-3 top-2 text-slate-500 font-bold text-sm">₹</span>
                             <input
                               type="number"
                               required
                               min="1"
                               value={formData.originalPrice}
                               onChange={(e) => handlePriceChange(e.target.value, formData.discountedPrice)}
-                              className="w-full pl-6 pr-2.5 py-1.5 rounded-md bg-white border border-slate-300 text-xs font-bold text-slate-900 outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                              className="w-full pl-7 pr-3 py-2 rounded-lg bg-white border border-slate-300 text-sm font-bold text-slate-900 outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
                             />
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-2">
+                        <div className="grid grid-cols-2 gap-3">
                           <div>
-                            <label className="block text-[11px] font-bold text-slate-700 mb-1">
+                            <label className="block text-xs font-bold text-slate-700 mb-1">
                               Offer Price (₹)
                             </label>
                             <div className="relative">
-                              <span className="absolute left-2.5 top-1.5 text-slate-500 font-bold text-xs">₹</span>
+                              <span className="absolute left-3 top-2 text-slate-500 font-bold text-sm">₹</span>
                               <input
                                 type="number"
                                 required
                                 min="1"
                                 value={formData.discountedPrice}
                                 onChange={(e) => handlePriceChange(formData.originalPrice, e.target.value)}
-                                className="w-full pl-6 pr-2.5 py-1.5 rounded-md bg-white border border-slate-300 text-xs font-bold text-emerald-800 outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600"
+                                className="w-full pl-7 pr-3 py-2 rounded-lg bg-white border border-slate-300 text-sm font-bold text-emerald-800 outline-none focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600"
                               />
                             </div>
                           </div>
 
                           <div>
-                            <label className="block text-[11px] font-bold text-slate-700 mb-1">
+                            <label className="block text-xs font-bold text-slate-700 mb-1">
                               Discount (% OFF)
                             </label>
                             <div className="relative">
@@ -299,16 +299,16 @@ export default function PricingTab() {
                                 max="99"
                                 value={formData.discountPercent}
                                 onChange={(e) => handlePercentChange(formData.originalPrice, e.target.value)}
-                                className="w-full pr-6 pl-2.5 py-1.5 rounded-md bg-white border border-slate-300 text-xs font-bold text-rose-700 outline-none focus:border-rose-600 focus:ring-1 focus:ring-rose-600"
+                                className="w-full pr-7 pl-3 py-2 rounded-lg bg-white border border-slate-300 text-sm font-bold text-rose-700 outline-none focus:border-rose-600 focus:ring-1 focus:ring-rose-600"
                               />
-                              <span className="absolute right-2.5 top-1.5 text-slate-500 font-bold text-xs">%</span>
+                              <span className="absolute right-3 top-2 text-slate-500 font-bold text-sm">%</span>
                             </div>
                           </div>
                         </div>
 
                         {/* WhatsApp Support Text/Price Field */}
                         <div>
-                          <label className="block text-[11px] font-bold text-slate-700 mb-1">
+                          <label className="block text-xs font-bold text-slate-700 mb-1">
                             Official WhatsApp Support Text & Price
                           </label>
                           <input
@@ -317,26 +317,26 @@ export default function PricingTab() {
                             value={formData.badgeText}
                             onChange={(e) => setFormData((prev) => ({ ...prev, badgeText: e.target.value }))}
                             placeholder="e.g. Official WhatsApp support - ₹6,000"
-                            className="w-full px-2.5 py-1.5 rounded-md bg-white border border-slate-300 text-xs font-medium text-slate-900 outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                            className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
                           />
                         </div>
                       </div>
 
                       {/* Actions */}
-                      <div className="flex items-center justify-end gap-2 pt-1">
+                      <div className="flex items-center justify-end gap-2.5 pt-1">
                         <button
                           type="button"
                           onClick={() => setEditingPlanType(null)}
-                          className="px-3 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition-colors cursor-pointer border border-slate-300"
+                          className="px-4 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold transition-colors cursor-pointer border border-slate-300"
                         >
                           Cancel
                         </button>
                         <button
                           type="submit"
                           disabled={pricingLoading}
-                          className="px-3.5 py-1.5 rounded-md bg-[#0B1340] hover:bg-[#070D2B] text-white text-xs font-semibold transition-colors cursor-pointer shadow-xs disabled:opacity-50 flex items-center gap-1.5"
+                          className="px-4.5 py-2 rounded-lg bg-[#0B1340] hover:bg-[#070D2B] text-white text-sm font-semibold transition-colors cursor-pointer shadow-xs disabled:opacity-50 flex items-center gap-2"
                         >
-                          {pricingLoading ? <RefreshCw className="w-3 h-3 animate-spin" /> : <CheckCircle2 className="w-3 h-3" />}
+                          {pricingLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
                           <span>Save</span>
                         </button>
                       </div>

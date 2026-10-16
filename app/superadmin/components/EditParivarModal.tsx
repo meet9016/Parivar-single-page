@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useSuperAdmin } from "../context/SuperAdminContext";
-import { User, IndianRupee } from "lucide-react";
+import { User, IndianRupee, Clock } from "lucide-react";
 import CustomSelect from "./CustomSelect";
 
 export default function EditParivarModal() {
@@ -17,6 +17,8 @@ export default function EditParivarModal() {
     city: "",
     subscription_plan_time: "1 Year",
     project_amount: "",
+    free_customization_hours: "15",
+    extra_hourly_rate: "1000",
     notes: "",
   });
 
@@ -33,6 +35,8 @@ export default function EditParivarModal() {
         city: editingParivar.city || "",
         subscription_plan_time: editingParivar.subscription_plan_time || "1 Year",
         project_amount: editingParivar.project_amount !== undefined ? String(editingParivar.project_amount) : "",
+        free_customization_hours: editingParivar.free_customization_hours !== undefined ? String(editingParivar.free_customization_hours) : "15",
+        extra_hourly_rate: editingParivar.extra_hourly_rate !== undefined ? String(editingParivar.extra_hourly_rate) : "1000",
         notes: editingParivar.notes || "",
       });
     }
@@ -62,6 +66,8 @@ export default function EditParivarModal() {
       ...editForm,
       company_name: editForm.parivar_name.trim(),
       project_amount: Number(editForm.project_amount) || 0,
+      free_customization_hours: Number(editForm.free_customization_hours) !== undefined && editForm.free_customization_hours !== "" ? Number(editForm.free_customization_hours) : 15,
+      extra_hourly_rate: Number(editForm.extra_hourly_rate) !== undefined && editForm.extra_hourly_rate !== "" ? Number(editForm.extra_hourly_rate) : 1000,
     };
 
     handleEditParivar(e, payload);
@@ -71,103 +77,112 @@ export default function EditParivarModal() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-in fade-in overflow-y-auto">
-      <div className="bg-white rounded-lg p-5 sm:p-6 w-full max-w-lg shadow-xl relative space-y-4 border border-slate-300 my-8">
+      <div className="bg-white rounded-xl p-6 sm:p-7 w-full max-w-lg shadow-2xl relative space-y-4 border border-slate-300 my-8">
         <button 
           onClick={() => setEditingParivar(null)}
-          className="absolute top-4 right-4 w-7 h-7 flex items-center justify-center rounded-md bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900 transition-colors cursor-pointer text-sm font-bold"
+          className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900 transition-colors cursor-pointer text-base font-bold"
         >
           ✕
         </button>
         
-        <div className="border-b border-slate-200 pb-3">
-          <div className="flex items-center gap-1.5 text-blue-700 font-bold text-xs uppercase tracking-wider mb-1">
-            <User className="w-3.5 h-3.5" />
+        <div className="border-b border-slate-200 pb-3.5">
+          <div className="flex items-center gap-2 text-blue-700 font-bold text-xs uppercase tracking-wider mb-1">
+            <User className="w-4 h-4" />
             <span>Update Details</span>
           </div>
-          <h3 className="text-base font-bold text-slate-900">
+          <h3 className="text-lg font-bold text-slate-900">
             Edit Customer / Parivar Details
           </h3>
         </div>
         
-        <form onSubmit={validateAndSubmit} noValidate className="space-y-3.5">
+        <form onSubmit={validateAndSubmit} noValidate className="space-y-4">
           {/* Full Name & Parivar Name */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-xs font-bold text-slate-800 mb-1">
+              <label className="block text-xs font-bold text-slate-800 mb-1.5">
                 Full Name <span className="text-rose-600">*</span>
               </label>
               <input
                 type="text"
                 value={editForm.admin_first_name}
-                onChange={(e) => setEditForm({...editForm, admin_first_name: e.target.value})}
-                className="w-full px-3 py-2 rounded-md bg-white border border-slate-300 text-xs font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                onChange={(e) => {
+                  setEditForm({...editForm, admin_first_name: e.target.value});
+                  if (errors.admin_first_name) setErrors(prev => ({ ...prev, admin_first_name: "" }));
+                }}
+                className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
               />
-              {errors.admin_first_name && <p className="text-[11px] text-rose-600 mt-1 font-semibold">{errors.admin_first_name}</p>}
+              {errors.admin_first_name && <p className="text-xs text-rose-600 mt-1 font-semibold">{errors.admin_first_name}</p>}
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-800 mb-1">
+              <label className="block text-xs font-bold text-slate-800 mb-1.5">
                 Parivar Name <span className="text-rose-600">*</span>
               </label>
               <input
                 type="text"
                 required
                 value={editForm.parivar_name}
-                onChange={(e) => setEditForm({
-                  ...editForm, 
-                  parivar_name: e.target.value 
-                })}
-                className="w-full px-3 py-2 rounded-md bg-white border border-slate-300 text-xs font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                onChange={(e) => {
+                  setEditForm({
+                    ...editForm, 
+                    parivar_name: e.target.value 
+                  });
+                  if (errors.parivar_name) setErrors(prev => ({ ...prev, parivar_name: "" }));
+                }}
+                className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
               />
-              {errors.parivar_name && <p className="text-[11px] text-rose-600 mt-1 font-semibold">{errors.parivar_name}</p>}
+              {errors.parivar_name && <p className="text-xs text-rose-600 mt-1 font-semibold">{errors.parivar_name}</p>}
             </div>
           </div>
 
           {/* Number & Email */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-xs font-bold text-slate-800 mb-1">
+              <label className="block text-xs font-bold text-slate-800 mb-1.5">
                 Number
               </label>
               <input
                 type="tel"
                 maxLength={10}
                 value={editForm.admin_mobile}
-                onChange={(e) => setEditForm({...editForm, admin_mobile: e.target.value.replace(/\D/g, '')})}
-                className="w-full px-3 py-2 rounded-md bg-white border border-slate-300 text-xs font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                onChange={(e) => {
+                  setEditForm({...editForm, admin_mobile: e.target.value.replace(/\D/g, '')});
+                  if (errors.admin_mobile) setErrors(prev => ({ ...prev, admin_mobile: "" }));
+                }}
+                className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
               />
-              {errors.admin_mobile && <p className="text-[11px] text-rose-600 mt-1 font-semibold">{errors.admin_mobile}</p>}
+              {errors.admin_mobile && <p className="text-xs text-rose-600 mt-1 font-semibold">{errors.admin_mobile}</p>}
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-800 mb-1">
+              <label className="block text-xs font-bold text-slate-800 mb-1.5">
                 Email
               </label>
               <input
                 type="email"
                 value={editForm.admin_email}
                 onChange={(e) => setEditForm({...editForm, admin_email: e.target.value})}
-                className="w-full px-3 py-2 rounded-md bg-white border border-slate-300 text-xs font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
               />
             </div>
           </div>
 
           {/* City & Plan Time */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-xs font-bold text-slate-800 mb-1">
+              <label className="block text-xs font-bold text-slate-800 mb-1.5">
                 City
               </label>
               <input
                 type="text"
                 value={editForm.city}
                 onChange={(e) => setEditForm({...editForm, city: e.target.value})}
-                className="w-full px-3 py-2 rounded-md bg-white border border-slate-300 text-xs font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-800 mb-1">
+              <label className="block text-xs font-bold text-slate-800 mb-1.5">
                 Plan Time (Subscription) <span className="text-rose-600">*</span>
               </label>
               <CustomSelect
@@ -187,26 +202,26 @@ export default function EditParivarModal() {
           </div>
 
           {/* Project Amount & Status */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-xs font-bold text-slate-800 mb-1">
+              <label className="block text-xs font-bold text-slate-800 mb-1.5">
                 Project Amount (₹)
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-2 text-slate-600 font-bold text-xs">₹</span>
+                <span className="absolute left-3.5 top-2.5 text-slate-600 font-bold text-sm">₹</span>
                 <input
                   type="number"
                   placeholder="e.g. 25000"
                   min="0"
                   value={editForm.project_amount}
                   onChange={(e) => setEditForm({ ...editForm, project_amount: e.target.value })}
-                  className="w-full pl-7 pr-3 py-2 rounded-md bg-white border border-slate-300 text-xs font-semibold text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                  className="w-full pl-8 pr-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-800 mb-1">Status</label>
+              <label className="block text-xs font-bold text-slate-800 mb-1.5">Status</label>
               <CustomSelect
                 value={editForm.status}
                 onChange={(val) => setEditForm({ ...editForm, status: Number(val) })}
@@ -218,28 +233,76 @@ export default function EditParivarModal() {
             </div>
           </div>
 
+          {/* Customization Hours & Extra Charges Settings */}
+          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 text-indigo-600" />
+              <span className="text-xs font-bold text-slate-800">Customization Hours & Billing Rule</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Free Hours (Zero Charge)
+                </label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    placeholder="15"
+                    min="0"
+                    step="0.5"
+                    value={editForm.free_customization_hours}
+                    onChange={(e) => setEditForm({ ...editForm, free_customization_hours: e.target.value })}
+                    className="w-full pr-12 pl-3.5 py-2 rounded-lg bg-white border border-slate-300 text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                  />
+                  <span className="absolute right-3 top-2 text-xs font-bold text-slate-500">Hours</span>
+                </div>
+                <p className="text-[11px] text-slate-500 mt-1">E.g. 15 hours free customization</p>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  Extra Hourly Rate (₹ / hr)
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-2 text-slate-600 font-bold text-sm">₹</span>
+                  <input
+                    type="number"
+                    placeholder="1000"
+                    min="0"
+                    step="50"
+                    value={editForm.extra_hourly_rate}
+                    onChange={(e) => setEditForm({ ...editForm, extra_hourly_rate: e.target.value })}
+                    className="w-full pl-8 pr-12 py-2 rounded-lg bg-white border border-slate-300 text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                  />
+                  <span className="absolute right-3 top-2 text-xs font-bold text-slate-500">/ hr</span>
+                </div>
+                <p className="text-[11px] text-slate-500 mt-1">Charged when total hours &gt; free hours</p>
+              </div>
+            </div>
+          </div>
+
           <div>
-            <label className="block text-xs font-bold text-slate-800 mb-1">Notes (Optional)</label>
+            <label className="block text-xs font-bold text-slate-800 mb-1.5">Notes (Optional)</label>
             <input
               type="text"
               value={editForm.notes}
               onChange={(e) => setEditForm({...editForm, notes: e.target.value})}
-              className="w-full px-3 py-2 rounded-md bg-white border border-slate-300 text-xs font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+              className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
             />
           </div>
 
-          <div className="flex items-center gap-2.5 pt-3 border-t border-slate-200">
+          <div className="flex items-center gap-3 pt-3 border-t border-slate-200">
             <button
               type="button"
               onClick={() => setEditingParivar(null)}
-              className="flex-1 py-2 rounded-md font-semibold text-xs text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 transition-colors cursor-pointer"
+              className="flex-1 py-2.5 rounded-lg font-semibold text-sm text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={editLoading}
-              className="flex-1 py-2 rounded-md font-semibold text-xs text-white bg-[#0B1340] hover:bg-[#070D2B] shadow-xs transition-all cursor-pointer disabled:opacity-50"
+              className="flex-1 py-2.5 rounded-lg font-semibold text-sm text-white bg-[#0B1340] hover:bg-[#070D2B] shadow-sm transition-all cursor-pointer disabled:opacity-50"
             >
               {editLoading ? "Saving..." : "Save Changes"}
             </button>

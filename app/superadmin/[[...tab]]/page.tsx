@@ -18,7 +18,7 @@ function PrimaryButton({ onClick, children }: { onClick: () => void; children: R
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-1.5 px-3.5 py-2 rounded-md bg-[#0B1340] hover:bg-[#070D2B] text-white text-xs font-semibold transition-colors cursor-pointer shadow-xs"
+      className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#0B1340] hover:bg-[#070D2B] text-white text-sm font-semibold transition-colors cursor-pointer shadow-sm"
     >
       {children}
     </button>
@@ -42,7 +42,7 @@ function DashboardLayout() {
   }
 
   const tabMeta: Record<string, { title: string; subtitle: string }> = {
-    parivars: { title: "All Parivars (Tenants)", subtitle: "Manage isolated community databases, admins, and status" },
+    parivars: { title: "All Parivars ", subtitle: "Manage isolated community databases, admins, and status" },
     inquiries: { title: "User Inquiries", subtitle: "Landing page visitor requests and contact inquiries" },
     pricing: { title: "Pricing & Offers", subtitle: "Live landing page price & discount percentage" },
     tasks: { title: "Project Tasks & Time Tracking", subtitle: "Assign customization tasks, record work hours, and generate Excel reports" },
@@ -95,7 +95,7 @@ function DashboardLayout() {
         </div>
 
         {/* Content */}
-        <main className="flex-1 p-6 overflow-y-auto bg-[#f8fafc]">
+        <main className="flex-1 p-6 sm:p-7 overflow-y-auto bg-[#f8fafc]">
           {activeTab === "inquiries" && <InquiriesTab />}
           {activeTab === "parivars" && <ParivarsTab />}
           {activeTab === "pricing" && <PricingTab />}
