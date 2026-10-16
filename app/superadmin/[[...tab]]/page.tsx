@@ -18,7 +18,7 @@ function PrimaryButton({ onClick, children }: { onClick: () => void; children: R
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#0B1340] hover:bg-[#070D2B] text-white text-sm font-semibold transition-colors cursor-pointer shadow-sm"
+      className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#413afb] hover:bg-[#322bd9] text-white text-sm font-semibold transition-all cursor-pointer shadow-sm hover:shadow active:scale-[0.99]"
     >
       {children}
     </button>
@@ -80,7 +80,7 @@ function DashboardLayout() {
                       ? setInquirySearch(e.target.value)
                       : setParivarSearch(e.target.value)
                   }
-                  className="w-56 sm:w-80 pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-200 shadow-sm"
+                  className="w-56 sm:w-80 pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-[#413afb] focus:ring-4 focus:ring-[#413afb]/10 transition-all duration-200 shadow-sm"
                 />
               </div>
             )}

@@ -61,7 +61,7 @@ export default function PricingTab() {
       subtitle: "Renewal Plan Offer",
       theme: "blue",
       badgeColor: "bg-blue-50 text-blue-700 border-blue-200",
-      btnColor: "bg-[#0B1340] hover:bg-[#070D2B]",
+      btnColor: "bg-[#413afb] hover:bg-[#322bd9]",
       borderActive: "border-blue-300 ring-4 ring-blue-50",
       defaultOriginal: 15000,
       defaultDiscounted: 10000,
@@ -186,7 +186,7 @@ export default function PricingTab() {
                 <div
                   key={cfg.type}
                   className={`bg-white border rounded-xl p-5 transition-colors flex flex-col justify-between shadow-sm ${
-                    isEditing ? "border-[#0B1340] ring-2 ring-[#0B1340]" : "border-slate-300 hover:border-slate-400"
+                    isEditing ? "border-[#413afb] ring-2 ring-[#413afb]/20" : "border-slate-300 hover:border-slate-400"
                   }`}
                 >
                   {/* Card Header */}
@@ -236,7 +236,7 @@ export default function PricingTab() {
                       <div className="pt-1 flex justify-end">
                         <button
                           onClick={() => handleOpenEdit(cfg)}
-                          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#0B1340] hover:bg-[#070D2B] text-white text-sm font-semibold transition-colors cursor-pointer shadow-xs"
+                          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#413afb] hover:bg-[#322bd9] text-white text-sm font-semibold transition-all cursor-pointer shadow-sm hover:shadow active:scale-[0.99]"
                         >
                           <Edit2 className="w-4 h-4" />
                           <span>Edit Price, % & Support</span>
@@ -265,7 +265,7 @@ export default function PricingTab() {
                               min="1"
                               value={formData.originalPrice}
                               onChange={(e) => handlePriceChange(e.target.value, formData.discountedPrice)}
-                              className="w-full pl-7 pr-3 py-2 rounded-lg bg-white border border-slate-300 text-sm font-bold text-slate-900 outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                              className="w-full pl-7 pr-3 py-2 rounded-lg bg-white border border-slate-300 text-sm font-bold text-slate-900 outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15"
                             />
                           </div>
                         </div>
@@ -317,7 +317,7 @@ export default function PricingTab() {
                             value={formData.badgeText}
                             onChange={(e) => setFormData((prev) => ({ ...prev, badgeText: e.target.value }))}
                             placeholder="e.g. Official WhatsApp support - ₹6,000"
-                            className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                            className="w-full px-3 py-2 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15"
                           />
                         </div>
                       </div>
@@ -334,7 +334,7 @@ export default function PricingTab() {
                         <button
                           type="submit"
                           disabled={pricingLoading}
-                          className="px-4.5 py-2 rounded-lg bg-[#0B1340] hover:bg-[#070D2B] text-white text-sm font-semibold transition-colors cursor-pointer shadow-xs disabled:opacity-50 flex items-center gap-2"
+                          className="px-5 py-2.5 rounded-xl bg-[#413afb] hover:bg-[#322bd9] text-white text-sm font-semibold transition-all cursor-pointer shadow-sm hover:shadow active:scale-[0.99] disabled:opacity-50 flex items-center gap-2"
                         >
                           {pricingLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
                           <span>Save</span>

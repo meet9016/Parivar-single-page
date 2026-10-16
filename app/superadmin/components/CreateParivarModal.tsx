@@ -59,24 +59,24 @@ export default function CreateParivarModal() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-in fade-in overflow-y-auto">
       <div className="bg-white rounded-xl p-6 w-full max-w-lg shadow-xl relative space-y-4 border border-slate-300 my-8">
-        <button 
-          onClick={() => setIsCreateModalOpen(false)}
-          className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900 transition-colors cursor-pointer text-sm font-bold"
-        >
-          ✕
-        </button>
-
-        <div className="border-b border-slate-200 pb-3">
+        <div className="flex items-center justify-between pb-3 border-b border-slate-200">
           <h3 className="text-lg font-bold text-slate-900">
             Add Parivar
           </h3>
+          <button 
+            type="button"
+            onClick={() => setIsCreateModalOpen(false)}
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-900 transition-colors cursor-pointer text-sm font-bold"
+          >
+            ✕
+          </button>
         </div>
 
         <form onSubmit={validateAndSubmit} noValidate className="space-y-4">
           {/* Full Name & Parivar Name */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-xs font-bold text-slate-800 mb-1">
+              <label className="block text-xs font-bold text-slate-800 mb-1.5">
                 Full Name <span className="text-rose-600">*</span>
               </label>
               <input
@@ -87,13 +87,13 @@ export default function CreateParivarModal() {
                   setNewParivar({ ...newParivar, admin_first_name: e.target.value });
                   if (errors.admin_first_name) setErrors(prev => ({ ...prev, admin_first_name: "" }));
                 }}
-                className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15 transition-all"
               />
               {errors.admin_first_name && <p className="text-xs text-rose-600 mt-1 font-semibold">{errors.admin_first_name}</p>}
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-800 mb-1">
+              <label className="block text-xs font-bold text-slate-800 mb-1.5">
                 Parivar Name <span className="text-rose-600">*</span>
               </label>
               <input
@@ -104,7 +104,7 @@ export default function CreateParivarModal() {
                   setNewParivar({ ...newParivar, parivar_name: e.target.value });
                   if (errors.parivar_name) setErrors(prev => ({ ...prev, parivar_name: "" }));
                 }}
-                className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15 transition-all"
               />
               {errors.parivar_name && <p className="text-xs text-rose-600 mt-1 font-semibold">{errors.parivar_name}</p>}
             </div>
@@ -113,8 +113,8 @@ export default function CreateParivarModal() {
           {/* Number & Email */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-xs font-bold text-slate-800 mb-1">
-                Number <span className="text-rose-600">*</span>
+              <label className="block text-xs font-bold text-slate-800 mb-1.5">
+                Mobile Number <span className="text-rose-600">*</span>
               </label>
               <input
                 type="tel"
@@ -125,21 +125,21 @@ export default function CreateParivarModal() {
                   setNewParivar({ ...newParivar, admin_mobile: e.target.value.replace(/\D/g, '') });
                   if (errors.admin_mobile) setErrors(prev => ({ ...prev, admin_mobile: "" }));
                 }}
-                className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15 transition-all"
               />
               {errors.admin_mobile && <p className="text-xs text-rose-600 mt-1 font-semibold">{errors.admin_mobile}</p>}
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-800 mb-1">
-                Email
+              <label className="block text-xs font-bold text-slate-800 mb-1.5">
+                Email Address
               </label>
               <input
                 type="email"
-                placeholder="customer@example.com"
+                placeholder="admin@example.com"
                 value={newParivar.admin_email}
                 onChange={(e) => setNewParivar({ ...newParivar, admin_email: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15 transition-all"
               />
             </div>
           </div>
@@ -147,7 +147,7 @@ export default function CreateParivarModal() {
           {/* City & Plan Time */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div>
-              <label className="block text-xs font-bold text-slate-800 mb-1">
+              <label className="block text-xs font-bold text-slate-800 mb-1.5">
                 City
               </label>
               <input
@@ -155,13 +155,13 @@ export default function CreateParivarModal() {
                 placeholder="Enter city"
                 value={newParivar.city}
                 onChange={(e) => setNewParivar({ ...newParivar, city: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15 transition-all"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-800 mb-1">
-                Plan Time (Subscription) <span className="text-rose-600">*</span>
+              <label className="block text-xs font-bold text-slate-800 mb-1.5">
+                Subscription Plan <span className="text-rose-600">*</span>
               </label>
               <CustomSelect
                 value={newParivar.subscription_plan_time}
@@ -179,48 +179,33 @@ export default function CreateParivarModal() {
             </div>
           </div>
 
-          {/* Project Amount & Notes */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            <div>
-              <label className="block text-xs font-bold text-slate-800 mb-1">
-                Project Amount (₹)
-              </label>
-              <div className="relative">
-                <span className="absolute left-3.5 top-2.5 text-slate-600 font-bold text-sm">₹</span>
-                <input
-                  type="number"
-                  placeholder="e.g. 25000"
-                  min="0"
-                  value={newParivar.project_amount}
-                  onChange={(e) => setNewParivar({ ...newParivar, project_amount: e.target.value })}
-                  className="w-full pl-8 pr-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-semibold text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-800 mb-1">
-                Notes
-              </label>
+          {/* Project Amount */}
+          <div>
+            <label className="block text-xs font-bold text-slate-800 mb-1.5">
+              Project Amount (₹)
+            </label>
+            <div className="relative">
+              <span className="absolute left-3.5 top-2.5 text-slate-600 font-bold text-sm">₹</span>
               <input
-                type="text"
-                placeholder="e.g. Direct customer"
-                value={newParivar.notes}
-                onChange={(e) => setNewParivar({ ...newParivar, notes: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-slate-300 text-sm font-medium text-slate-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                type="number"
+                placeholder="e.g. 25000"
+                min="0"
+                value={newParivar.project_amount}
+                onChange={(e) => setNewParivar({ ...newParivar, project_amount: e.target.value })}
+                className="w-full pl-8 pr-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15 transition-all"
               />
             </div>
           </div>
 
           {/* Customization Hours & Extra Charges Settings */}
-          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
             <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-indigo-600" />
+              <Clock className="w-4 h-4 text-[#413afb]" />
               <span className="text-xs font-bold text-slate-800">Customization Hours & Billing Rule</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                   Free Hours (Zero Charge)
                 </label>
                 <div className="relative">
@@ -231,19 +216,18 @@ export default function CreateParivarModal() {
                     step="0.5"
                     value={newParivar.free_customization_hours}
                     onChange={(e) => setNewParivar({ ...newParivar, free_customization_hours: e.target.value })}
-                    className="w-full pr-12 pl-3.5 py-2 rounded-lg bg-white border border-slate-300 text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                    className="w-full pr-14 pl-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15 transition-all"
                   />
-                  <span className="absolute right-3 top-2 text-xs font-bold text-slate-500">Hours</span>
+                  <span className="absolute right-3.5 top-2.5 text-xs font-bold text-slate-500">Hours</span>
                 </div>
-                <p className="text-[11px] text-slate-500 mt-1">E.g. 15 hours free customization included</p>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
                   Extra Hourly Rate (₹ / hr)
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-2 text-slate-600 font-bold text-sm">₹</span>
+                  <span className="absolute left-3.5 top-2.5 text-slate-600 font-bold text-sm">₹</span>
                   <input
                     type="number"
                     placeholder="1000"
@@ -251,18 +235,17 @@ export default function CreateParivarModal() {
                     step="50"
                     value={newParivar.extra_hourly_rate}
                     onChange={(e) => setNewParivar({ ...newParivar, extra_hourly_rate: e.target.value })}
-                    className="w-full pl-8 pr-12 py-2 rounded-lg bg-white border border-slate-300 text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#0B1340] focus:ring-1 focus:ring-[#0B1340]"
+                    className="w-full pl-8 pr-12 py-2.5 rounded-xl bg-white border border-slate-300 text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15 transition-all"
                   />
-                  <span className="absolute right-3 top-2 text-xs font-bold text-slate-500">/ hr</span>
+                  <span className="absolute right-3.5 top-2.5 text-xs font-bold text-slate-500">/ hr</span>
                 </div>
-                <p className="text-[11px] text-slate-500 mt-1">Applicable after free hours are exceeded</p>
               </div>
             </div>
           </div>
 
           {createStatus && (
             <div
-              className={`p-3.5 rounded-lg text-xs font-semibold flex items-center gap-2.5 ${
+              className={`p-3.5 rounded-xl text-xs font-semibold flex items-center gap-2.5 ${
                 createStatus.type === "success"
                   ? "bg-emerald-50 border border-emerald-300 text-emerald-800"
                   : "bg-rose-50 border border-rose-300 text-rose-800"
@@ -281,17 +264,17 @@ export default function CreateParivarModal() {
             <button
               type="button"
               onClick={() => setIsCreateModalOpen(false)}
-              className="flex-1 py-2.5 rounded-lg font-semibold text-sm text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 transition-colors cursor-pointer"
+              className="flex-1 py-2.5 rounded-xl font-semibold text-sm text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={createLoading}
-              className="flex-1 py-2.5 rounded-lg bg-[#0B1340] hover:bg-[#070D2B] text-white font-semibold text-sm shadow-xs transition-all cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+              className="flex-1 py-2.5 rounded-xl bg-[#413afb] hover:bg-[#322bd9] text-white font-semibold text-sm shadow-xs transition-all cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {createLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <PlusCircle className="w-4 h-4" />}
-              <span>{createLoading ? "Saving..." : "Add Customer"}</span>
+              <span>{createLoading ? "Saving..." : "Add Parivar"}</span>
             </button>
           </div>
         </form>

@@ -64,9 +64,6 @@ export default function LoginView() {
 
       <div className="w-full max-w-md p-8 sm:p-10 bg-white/80 backdrop-blur-xl border border-white/50 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative z-10">
         <div className="flex flex-col items-center mb-8 text-center">
-          {/* <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#0B1340] to-indigo-900 text-white flex items-center justify-center font-black text-xl mb-5 shadow-lg shadow-indigo-900/20">
-            SP
-          </div> */}
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
             Super Admin Access
           </h1>
@@ -153,7 +150,7 @@ export default function LoginView() {
           <button
             type="submit"
             disabled={loginLoading}
-            className="w-full mt-4 bg-gradient-to-r from-[#0B1340] to-indigo-900 hover:from-indigo-900 hover:to-[#0B1340] text-white py-3.5 rounded-xl font-bold text-sm tracking-wide transition-all duration-300 shadow-lg shadow-indigo-900/25 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 transform active:scale-[0.98] cursor-pointer"
+            className="w-full mt-4 bg-[#413afb] hover:bg-[#322bd9] text-white py-3.5 rounded-xl font-bold text-sm tracking-wide transition-all duration-200 shadow-md shadow-[#413afb]/25 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2 transform active:scale-[0.98] cursor-pointer"
           >
             {loginLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : null}
             <span>{loginLoading ? "Authenticating securely..." : "Sign in to Dashboard"}</span>
