@@ -23,8 +23,10 @@ export default function Header() {
         </div>
         <div className="flex items-center gap-2.5">
           <span className="text-slate-900 font-bold tracking-tight text-[15px]">Super Admin</span>
-          {/* <span className="text-slate-300 font-light text-lg leading-none">/</span>
-          <span className="text-blue-600 font-semibold bg-blue-50/50 px-2.5 py-1 rounded-md border border-blue-100/50 text-xs tracking-wide">{tabLabels[activeTab] ?? activeTab}</span> */}
+          <span className="text-slate-300 font-light text-base leading-none">/</span>
+          <span className="text-blue-700 font-semibold bg-blue-50 px-2.5 py-0.5 rounded-md border border-blue-100 text-xs tracking-wide">
+            {tabLabels[activeTab] ?? activeTab}
+          </span>
         </div>
       </div>
 

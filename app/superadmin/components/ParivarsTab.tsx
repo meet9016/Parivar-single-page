@@ -255,10 +255,10 @@ export default function ParivarsTab() {
 
   return (
     <div className="space-y-4 font-sans">
-      <div className="bg-white border border-slate-300 rounded-lg shadow-sm overflow-hidden">
+      <div className="bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm border-collapse">
-            <thead className="bg-slate-100 border-b border-slate-300 text-xs font-bold text-slate-700 uppercase tracking-wider">
+            <thead className="bg-slate-50/80 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider">
               <tr>
                 <th className="px-5 py-3.5">Parivar Name</th>
                 <th className="px-5 py-3.5">City</th>
@@ -270,7 +270,7 @@ export default function ParivarsTab() {
                 <th className="px-5 py-3.5 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200">
+            <tbody className="divide-y divide-slate-100">
               {parivarsLoading && parivars.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="text-center py-14 text-slate-600 font-medium text-sm">
@@ -309,21 +309,21 @@ export default function ParivarsTab() {
                     <tr 
                       key={p._id} 
                       onClick={() => setSelectedParivarForTasks(p)}
-                      className="hover:bg-slate-50 transition-colors cursor-pointer group"
+                      className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
                       title="Click to view tasks list"
                     >
                       {/* Parivar Name */}
                       <td className="px-5 py-4 font-bold text-slate-900">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 flex items-center justify-center font-bold text-sm shrink-0">
-                            {p.parivar_name?.charAt(0) || "P"}
+                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200/70 text-blue-700 flex items-center justify-center font-bold text-sm shrink-0 shadow-2xs">
+                            {p.parivar_name?.charAt(0)?.toUpperCase() || "P"}
                           </div>
                           <div>
-                            <div className="font-bold text-sm text-slate-900 group-hover:text-blue-700 transition-colors">
+                            <div className="font-bold text-sm text-slate-900 group-hover:text-blue-600 transition-colors">
                               {p.parivar_name}
                             </div>
                             {p.village_name && (
-                              <div className="text-xs text-slate-500 font-normal">
+                              <div className="text-xs text-slate-400 font-normal mt-0.5">
                                 {p.village_name}
                               </div>
                             )}
@@ -334,7 +334,7 @@ export default function ParivarsTab() {
                       {/* City */}
                       <td className="px-5 py-4">
                         {p.city ? (
-                          <span className="inline-flex items-center text-xs font-semibold text-slate-800 bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200">
+                          <span className="inline-flex items-center text-xs font-semibold text-slate-700 bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200/70">
                             {p.city}
                           </span>
                         ) : (
@@ -344,7 +344,7 @@ export default function ParivarsTab() {
 
                       {/* Plan Duration */}
                       <td className="px-5 py-4">
-                        <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 text-blue-900 border border-blue-200 text-xs font-semibold">
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 border border-blue-200/60 text-xs font-semibold">
                           <span>{p.subscription_plan_time || "1 Year"}</span>
                         </span>
                       </td>
@@ -352,19 +352,19 @@ export default function ParivarsTab() {
                       {/* Contact */}
                       <td className="px-5 py-4">
                         <div className="space-y-1">
-                          <div className="font-semibold text-slate-900 text-sm flex items-center gap-1.5">
-                            <User className="w-4 h-4 text-slate-500" />
+                          <div className="font-semibold text-slate-800 text-sm flex items-center gap-1.5">
+                            <User className="w-3.5 h-3.5 text-slate-400" />
                             <span>{p.admin?.first_name || p.admin_first_name || "—"}</span>
                           </div>
                           {p.admin?.mobile && (
-                            <div className="text-xs text-slate-600 flex items-center gap-1.5 font-medium">
-                              <Phone className="w-3.5 h-3.5 text-slate-500" />
+                            <div className="text-xs text-slate-500 flex items-center gap-1.5 font-medium">
+                              <Phone className="w-3 h-3 text-slate-400" />
                               <span>{p.admin.mobile}</span>
                             </div>
                           )}
                           {p.admin?.email && (
-                            <div className="text-xs text-slate-600 flex items-center gap-1.5">
-                              <Mail className="w-3.5 h-3.5 text-slate-500" />
+                            <div className="text-xs text-slate-500 flex items-center gap-1.5">
+                              <Mail className="w-3 h-3 text-slate-400" />
                               <span>{p.admin.email}</span>
                             </div>
                           )}
@@ -424,9 +424,14 @@ export default function ParivarsTab() {
                                       <img 
                                         src={latestScreenshot} 
                                         alt="Payment Receipt" 
-                                        className="w-7 h-7 rounded-md object-cover border-2 border-emerald-500 shadow-2xs group-hover/thumb:scale-110 transition-transform bg-white"
+                                        className="w-7 h-7 rounded-md object-cover border border-emerald-400 shadow-2xs group-hover/thumb:scale-105 transition-transform bg-emerald-50"
+                                        onError={(e: any) => {
+                                          if (e.target && e.target.parentElement) {
+                                            e.target.parentElement.style.display = 'none';
+                                          }
+                                        }}
                                       />
-                                      <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-700 text-white rounded-full flex items-center justify-center text-[8px] font-bold">
+                                      <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-600 text-white rounded-full flex items-center justify-center text-[8px] font-bold">
                                         {paymentsWithScreenshots.length}
                                       </span>
                                     </div>
@@ -466,9 +471,9 @@ export default function ParivarsTab() {
                               e.stopPropagation();
                               setSelectedParivarForTasks(p);
                             }}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-xs transition-colors cursor-pointer border border-slate-300"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50/70 hover:bg-blue-100 text-blue-700 font-semibold text-xs transition-colors cursor-pointer border border-blue-200/80"
                           >
-                            <CheckSquare className="w-4 h-4 text-blue-700" />
+                            <CheckSquare className="w-4 h-4 text-blue-600" />
                             <span>{parivarTasksList.length} Tasks ({totalSpentHours}h)</span>
                           </button>
 
@@ -494,13 +499,13 @@ export default function ParivarsTab() {
                       {/* Status */}
                       <td className="px-5 py-4">
                         {Number(p.status ?? 1) === 1 ? (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-300">
-                            <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
                             <span>Active</span>
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-300">
-                            <span className="w-2 h-2 rounded-full bg-rose-600"></span>
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+                            <span className="w-1.5 h-1.5 rounded-full bg-rose-600"></span>
                             <span>Suspended</span>
                           </span>
                         )}
@@ -508,11 +513,11 @@ export default function ParivarsTab() {
 
                       {/* Actions with Task & Payment icons */}
                       <td className="px-5 py-4 text-right whitespace-nowrap">
-                        <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-end gap-1.5" onClick={(e) => e.stopPropagation()}>
                           {/* Payment Icon */}
                           <button
                             onClick={(e) => openPaymentModal(p, e)}
-                            className="p-2 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 transition-colors cursor-pointer"
+                            className="p-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/80 transition-colors cursor-pointer shadow-2xs"
                             title="Record Payment & Upload Screenshot"
                           >
                             <IndianRupee className="w-4 h-4" />
@@ -521,7 +526,7 @@ export default function ParivarsTab() {
                           {/* Add Task Icon */}
                           <button
                             onClick={(e) => openAddTaskForParivar(p, e)}
-                            className="p-2 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-300 transition-colors cursor-pointer"
+                            className="p-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200/80 transition-colors cursor-pointer shadow-2xs"
                             title="Add Task / Work Hours for this Parivar"
                           >
                             <Plus className="w-4 h-4" />
@@ -530,7 +535,7 @@ export default function ParivarsTab() {
                           {/* Edit Parivar */}
                           <button
                             onClick={(e) => openEditModal(p, e)}
-                            className="p-2 rounded-lg hover:bg-slate-100 text-slate-700 border border-slate-300 transition-colors cursor-pointer bg-white"
+                            className="p-2 rounded-xl hover:bg-slate-100 text-slate-600 border border-slate-200 transition-colors cursor-pointer bg-white shadow-2xs"
                             title="Edit Details"
                           >
                             <Edit2 className="w-4 h-4" />
@@ -539,7 +544,7 @@ export default function ParivarsTab() {
                           {/* Delete Parivar */}
                           <button
                             onClick={(e) => onDelete(p, e)}
-                            className="p-2 rounded-lg hover:bg-rose-50 text-rose-700 border border-rose-300 transition-colors cursor-pointer bg-white"
+                            className="p-2 rounded-xl hover:bg-rose-50 text-rose-600 border border-rose-200 transition-colors cursor-pointer bg-white shadow-2xs"
                             title="Delete Parivar"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -555,29 +560,29 @@ export default function ParivarsTab() {
         </div>
         
         {parivars.length > 0 && (
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-5 py-3.5 border-t border-slate-300 bg-slate-50">
-            <span className="text-sm text-slate-700 font-medium">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-5 py-3.5 border-t border-slate-200 bg-slate-50/60">
+            <span className="text-xs text-slate-600 font-medium">
               Showing <span className="font-semibold text-slate-900">{startIndex + 1}</span> to{" "}
               <span className="font-semibold text-slate-900">
                 {Math.min(startIndex + itemsPerPage, parivars.length)}
               </span>{" "}
               of <span className="font-semibold text-slate-900">{parivars.length}</span> parivars
             </span>
-            <div className="flex items-center rounded-lg border border-slate-300 bg-white overflow-hidden shadow-xs">
+            <div className="flex items-center rounded-xl border border-slate-200 bg-white overflow-hidden shadow-2xs">
               <button 
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                className="px-3.5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors border-r border-slate-300 cursor-pointer"
+                className="px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors border-r border-slate-200 cursor-pointer"
               >
                 Previous
               </button>
-              <div className="flex items-center px-4 py-2 text-sm font-bold text-slate-900 bg-slate-50 border-r border-slate-300">
+              <div className="flex items-center px-3.5 py-1.5 text-xs font-bold text-slate-800 bg-slate-50/50 border-r border-slate-200">
                 {currentPage} / {totalPages || 1}
               </div>
               <button 
                 disabled={currentPage === totalPages || totalPages === 0}
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                className="px-3.5 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                className="px-3.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
               >
                 Next
               </button>

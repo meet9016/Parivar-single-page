@@ -18,7 +18,7 @@ function PrimaryButton({ onClick, children }: { onClick: () => void; children: R
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-[#0B1340] hover:bg-[#070D2B] text-white text-sm font-semibold transition-colors cursor-pointer shadow-sm"
+      className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-all cursor-pointer shadow-sm hover:shadow active:scale-[0.99]"
     >
       {children}
     </button>
@@ -42,7 +42,7 @@ function DashboardLayout() {
   }
 
   const tabMeta: Record<string, { title: string; subtitle: string }> = {
-    parivars: { title: "All Parivars ", subtitle: "Manage isolated community databases, admins, and status" },
+    parivars: { title: "All Parivars", subtitle: "Manage isolated community databases, admins, and status" },
     inquiries: { title: "User Inquiries", subtitle: "Landing page visitor requests and contact inquiries" },
     pricing: { title: "Pricing & Offers", subtitle: "Live landing page price & discount percentage" },
     tasks: { title: "Project Tasks & Time Tracking", subtitle: "Assign customization tasks, record work hours, and generate Excel reports" },
@@ -57,10 +57,10 @@ function DashboardLayout() {
         <Header />
 
         {/* Page top bar */}
-        <div className="bg-white border-b border-slate-200 px-6 py-4 flex flex-wrap items-center justify-between gap-4 shrink-0 shadow-[0_4px_20px_-15px_rgba(0,0,0,0.05)]">
+        <div className="bg-white border-b border-slate-200/80 px-6 py-4 flex flex-wrap items-center justify-between gap-4 shrink-0 shadow-[0_2px_8px_-4px_rgba(0,0,0,0.02)]">
           <div>
             <h1 className="text-xl font-bold text-slate-900 tracking-tight">{meta.title}</h1>
-            <p className="text-sm text-slate-500 mt-1 font-medium">{meta.subtitle}</p>
+            <p className="text-xs sm:text-sm text-slate-500 mt-0.5 font-normal">{meta.subtitle}</p>
           </div>
 
           <div className="flex items-center gap-3">
