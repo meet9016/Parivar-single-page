@@ -2,12 +2,13 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { Search, Building2, Calendar, Edit2, Trash2, Tag, User, Phone, Mail, CheckSquare, Plus, IndianRupee, Image as ImageIcon, Upload, X, Clock, Play, Square, Eye, CheckCircle2, FileSpreadsheet, Download, FileText } from "lucide-react";
-import * as XLSX from "xlsx";
+import * as XLSX from "xlsx-js-style";
 import { useSuperAdmin, ProjectTask } from "../context/SuperAdminContext";
 import { toast } from "sonner";
 import CustomSelect from "./CustomSelect";
 import axiosInstance from "../../../lib/axiosInstance";
 import { ENDPOINTS } from "../../../lib/endpoints";
+import { formatHoursToHMin } from "../../../lib/formatHours";
 
 export default function ParivarsTab() {
   const {
@@ -83,6 +84,8 @@ export default function ParivarsTab() {
       state: p.state || "",
       city: p.city || "",
       subscription_plan_time: p.subscription_plan_time || "1 Year",
+      subscription_start_date: p.subscription_start_date || p.createdAt || "",
+      subscription_expiry_date: p.subscription_expiry_date || "",
       project_amount: p.project_amount !== undefined ? p.project_amount : "",
       free_customization_hours: p.free_customization_hours !== undefined ? p.free_customization_hours : 15,
       extra_hourly_rate: p.extra_hourly_rate !== undefined ? p.extra_hourly_rate : 1000,
@@ -252,7 +255,7 @@ export default function ParivarsTab() {
     const mins = Math.round((val % 1) * 60);
     return {
       value: String(val),
-      label: mins > 0 ? (hrs > 0 ? `${hrs} hr ${mins} min (${val}h)` : `${mins} min (${val}h)`) : `${hrs} hr (${val}h)`,
+      label: mins > 0 ? (hrs > 0 ? `${hrs}h ${mins}min` : `${mins}min`) : `${hrs}h`,
     };
   });
 
@@ -629,13 +632,13 @@ export default function ParivarsTab() {
                             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50/70 hover:bg-blue-100 text-blue-700 font-semibold text-xs transition-colors cursor-pointer border border-blue-200/80"
                           >
                             <CheckSquare className="w-4 h-4 text-blue-600" />
-                            <span>{parivarTasksList.length} Tasks ({totalSpentHours}h)</span>
+                            <span>{parivarTasksList.length} Tasks ({formatHoursToHMin(totalSpentHours)})</span>
                           </button>
 
                           {totalSpentHours > freeHours && (
                             <div>
                               <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-900 bg-amber-50 px-2 py-0.5 rounded border border-amber-300">
-                                ⚡ {extraHours}h extra (+₹{extraCharge.toLocaleString("en-IN")})
+                                ⚡ {formatHoursToHMin(extraHours)} extra (+₹{extraCharge.toLocaleString("en-IN")})
                               </span>
                             </div>
                           )}
@@ -760,34 +763,105 @@ export default function ParivarsTab() {
             toast.error("No tasks to download for this parivar");
             return;
           }
+          // Remove description column as requested
           const exportData: any[] = parivarTasks.map((t, idx) => ({
             "Sr No": idx + 1,
             "Title": t.task_title || "Customization Work",
-            "Description": t.description || "",
-            "Developer": t.assigned_to || "",
-            "Date": t.start_date ? new Date(t.start_date).toLocaleDateString("en-IN") : "",
-            "Hours": `${t.spent_hours || 0} Hours`,
+            "Developer": t.assigned_to || "—",
+            "Date": t.start_date ? new Date(t.start_date).toLocaleDateString("en-IN") : "—",
+            "Hours": formatHoursToHMin(t.spent_hours || 0),
           }));
 
-          // Add summary rows at the bottom
+          const tasksCount = exportData.length;
+
+          // Add summary rows at the bottom (Without Description column)
           exportData.push(
-            { "Sr No": "", "Title": "--- SUMMARY ---", "Description": "", "Developer": "", "Date": "", "Hours": "" },
-            { "Sr No": "", "Title": "Total Logged Hours", "Description": "", "Developer": "", "Date": "", "Hours": `${totalLoggedHours} Hours` },
-            { "Sr No": "", "Title": "Free Customization Limit", "Description": "Zero extra charge included", "Developer": "", "Date": "", "Hours": `${freeHours} Hours` },
-            { "Sr No": "", "Title": "Extra Billable Hours", "Description": extraHours > 0 ? `Rate: ₹${extraHourlyRate}/hr` : "Within free allowance", "Developer": "", "Date": "", "Hours": `${extraHours} Hours` },
-            { "Sr No": "", "Title": "Total Extra Charges", "Description": extraCharge > 0 ? `₹${extraHourlyRate} x ${extraHours} hrs` : "₹0 (Free)", "Developer": "", "Date": "", "Hours": `₹${extraCharge.toLocaleString("en-IN")}` }
+            { "Sr No": "", "Title": "--- SUMMARY ---", "Developer": "", "Date": "", "Hours": "" },
+            { "Sr No": "", "Title": "Total Logged Hours", "Developer": "", "Date": "", "Hours": formatHoursToHMin(totalLoggedHours) },
+            { "Sr No": "", "Title": "Free Customization Limit", "Developer": "Zero extra charge included", "Date": "", "Hours": formatHoursToHMin(freeHours) },
+            { "Sr No": "", "Title": "Extra Billable Hours", "Developer": extraHours > 0 ? `Rate: ₹${extraHourlyRate}/hr` : "Within free allowance", "Date": "", "Hours": formatHoursToHMin(extraHours) },
+            { "Sr No": "", "Title": "Total Extra Charges", "Developer": extraCharge > 0 ? `₹${extraHourlyRate} x ${formatHoursToHMin(extraHours)}` : "₹0 (Free)", "Date": "", "Hours": `₹${extraCharge.toLocaleString("en-IN")}` }
           );
 
           const worksheet = XLSX.utils.json_to_sheet(exportData);
           const colWidths = [
             { wch: 8 },   // Sr No
-            { wch: 30 },  // Title
-            { wch: 45 },  // Description
-            { wch: 22 },  // Developer
+            { wch: 38 },  // Title
+            { wch: 28 },  // Developer / Notes
             { wch: 16 },  // Date
-            { wch: 18 },  // Hours
+            { wch: 20 },  // Hours
           ];
           worksheet["!cols"] = colWidths;
+
+          // ── HIGHLIGHT HEADER ROW (Row 1) ──
+          const headerCols = ["A", "B", "C", "D", "E"];
+          headerCols.forEach((col) => {
+            const cellRef = `${col}1`;
+            if (worksheet[cellRef]) {
+              worksheet[cellRef].s = {
+                fill: { fgColor: { rgb: "1E40AF" } }, // Deep Royal Blue Header
+                font: { bold: true, color: { rgb: "FFFFFF" }, sz: 11 },
+                alignment: { horizontal: col === "A" || col === "D" || col === "E" ? "center" : "left", vertical: "center" },
+                border: {
+                  top: { style: "thin", color: { rgb: "0F172A" } },
+                  bottom: { style: "medium", color: { rgb: "0F172A" } },
+                  left: { style: "thin", color: { rgb: "3B82F6" } },
+                  right: { style: "thin", color: { rgb: "3B82F6" } },
+                },
+              };
+            }
+          });
+
+          // ── HIGHLIGHT TOTAL LOGGED HOURS ROW ──
+          const summaryRowIdx = tasksCount + 2;
+          const totalRowIdx = tasksCount + 3;
+
+          // Summary divider row styling
+          headerCols.forEach((col) => {
+            const cellRef = `${col}${summaryRowIdx}`;
+            if (worksheet[cellRef]) {
+              worksheet[cellRef].s = {
+                fill: { fgColor: { rgb: "F1F5F9" } },
+                font: { bold: true, color: { rgb: "64748B" }, italic: true, sz: 10 },
+                alignment: { horizontal: "center", vertical: "center" },
+              };
+            }
+          });
+
+          // Highlight Total Logged Hours row in prominent bright yellow / golden highlight
+          headerCols.forEach((col) => {
+            const cellRef = `${col}${totalRowIdx}`;
+            if (worksheet[cellRef]) {
+              worksheet[cellRef].s = {
+                fill: { fgColor: { rgb: "FEF08A" } }, // Bright Gold/Yellow Highlight
+                font: { bold: true, color: { rgb: "854D0E" }, sz: 11 },
+                alignment: { horizontal: col === "E" ? "center" : "left", vertical: "center" },
+                border: {
+                  top: { style: "thin", color: { rgb: "CA8A04" } },
+                  bottom: { style: "double", color: { rgb: "CA8A04" } }, // Accounting double underline
+                  left: { style: "thin", color: { rgb: "FEF08A" } },
+                  right: { style: "thin", color: { rgb: "FEF08A" } },
+                },
+              };
+            }
+          });
+
+          // Style remaining summary rows
+          for (let r = totalRowIdx + 1; r <= totalRowIdx + 3; r++) {
+            headerCols.forEach((col) => {
+              const cellRef = `${col}${r}`;
+              if (worksheet[cellRef]) {
+                worksheet[cellRef].s = {
+                  font: { bold: true, color: { rgb: "1E293B" }, sz: 10 },
+                  fill: { fgColor: { rgb: "F8FAFC" } },
+                  alignment: { horizontal: col === "E" ? "center" : "left", vertical: "center" },
+                  border: {
+                    bottom: { style: "thin", color: { rgb: "E2E8F0" } },
+                  },
+                };
+              }
+            });
+          }
 
           const workbook = XLSX.utils.book_new();
           XLSX.utils.book_append_sheet(workbook, worksheet, "Tasks_Report");
@@ -810,7 +884,7 @@ export default function ParivarsTab() {
                         Tasks for {selectedParivarForTasks.parivar_name}
                       </h3>
                       <span className="px-3 py-1 rounded-md bg-blue-50 border border-blue-300 text-blue-900 font-bold text-xs">
-                        Total: {totalLoggedHours} Hours
+                        Total: {formatHoursToHMin(totalLoggedHours)}
                       </span>
                     </div>
                     <p className="text-xs text-slate-600 font-medium mt-0.5">
@@ -851,14 +925,14 @@ export default function ParivarsTab() {
                   {/* Total Logged */}
                   <div className="bg-white p-3 rounded-lg border border-slate-200 shadow-2xs">
                     <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Total Logged</span>
-                    <div className="text-xl font-extrabold text-slate-900 mt-0.5">{totalLoggedHours} hrs</div>
+                    <div className="text-xl font-extrabold text-slate-900 mt-0.5">{formatHoursToHMin(totalLoggedHours)}</div>
                     <span className="text-[10px] text-slate-500">{parivarTasks.length} tasks recorded</span>
                   </div>
 
                   {/* Free Allowance */}
                   <div className="bg-white p-3 rounded-lg border border-emerald-200 shadow-2xs">
                     <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-700">Free Allowance</span>
-                    <div className="text-xl font-extrabold text-emerald-800 mt-0.5">{freeHours} hrs</div>
+                    <div className="text-xl font-extrabold text-emerald-800 mt-0.5">{formatHoursToHMin(freeHours)}</div>
                     <span className="text-[10px] text-emerald-600 font-medium">Included free (zero charge)</span>
                   </div>
 
@@ -868,10 +942,10 @@ export default function ParivarsTab() {
                       Extra Billable
                     </span>
                     <div className={`text-xl font-extrabold mt-0.5 ${extraHours > 0 ? "text-amber-900" : "text-slate-900"}`}>
-                      {extraHours} hrs
+                      {formatHoursToHMin(extraHours)}
                     </div>
                     <span className={`text-[10px] ${extraHours > 0 ? "text-amber-700 font-semibold" : "text-slate-500"}`}>
-                      {extraHours > 0 ? `@ ₹${extraHourlyRate.toLocaleString("en-IN")}/hr` : `${freeHoursRemaining} hrs free left`}
+                      {extraHours > 0 ? `@ ₹${extraHourlyRate.toLocaleString("en-IN")}/hr` : `${formatHoursToHMin(freeHoursRemaining)} free left`}
                     </span>
                   </div>
 
@@ -884,7 +958,7 @@ export default function ParivarsTab() {
                       ₹{extraCharge.toLocaleString("en-IN")}
                     </div>
                     <span className="text-[10px] text-slate-500">
-                      {extraCharge > 0 ? `Exceeds ${freeHours}h free limit` : "₹0 extra fee"}
+                      {extraCharge > 0 ? `Exceeds ${formatHoursToHMin(freeHours)} free limit` : "₹0 extra fee"}
                     </span>
                   </div>
                 </div>
@@ -893,15 +967,15 @@ export default function ParivarsTab() {
                 <div className="space-y-1.5 pt-1">
                   <div className="flex items-center justify-between text-xs font-semibold">
                     <span className="text-slate-700">
-                      Free Limit Usage: {freeHoursUsed} / {freeHours} hrs ({freeUsagePercent}%)
+                      Free Limit Usage: {formatHoursToHMin(freeHoursUsed)} / {formatHoursToHMin(freeHours)} ({freeUsagePercent}%)
                     </span>
                     {extraHours > 0 ? (
                       <span className="text-amber-800 font-bold">
-                        ⚡ +{extraHours} hrs extra charged @ ₹{extraHourlyRate}/hr
+                        ⚡ +{formatHoursToHMin(extraHours)} extra charged @ ₹{extraHourlyRate}/hr
                       </span>
                     ) : (
                       <span className="text-emerald-700">
-                        ✓ {freeHoursRemaining} hrs remaining before charges apply
+                        ✓ {formatHoursToHMin(freeHoursRemaining)} remaining before charges apply
                       </span>
                     )}
                   </div>
@@ -969,7 +1043,7 @@ export default function ParivarsTab() {
 
                           <td className="py-3 px-4 whitespace-nowrap">
                             <span className="font-bold text-blue-900 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-300 text-xs">
-                              {task.spent_hours || 0} Hours
+                              {formatHoursToHMin(task.spent_hours || 0)}
                             </span>
                           </td>
 

@@ -34,6 +34,7 @@ import {
 import * as XLSX from "xlsx";
 import { useSuperAdmin, ProjectTask } from "../context/SuperAdminContext";
 import { toast } from "sonner";
+import { formatHoursToHMin } from "../../../lib/formatHours";
 
 interface ActiveTimer {
   taskId: string;
@@ -448,7 +449,7 @@ export default function ProjectTasksTab() {
     const val = (i + 1) * 0.25;
     const hrs = Math.floor(val);
     const mins = Math.round((val % 1) * 60);
-    const label = mins > 0 ? (hrs > 0 ? `${hrs} hr ${mins} min (${val}h)` : `${mins} min (${val}h)`) : `${hrs} hr (${val}h)`;
+    const label = mins > 0 ? (hrs > 0 ? `${hrs}h ${mins}min` : `${mins}min`) : `${hrs}h`;
     return {
       value: String(val),
       label: label,
@@ -1283,8 +1284,8 @@ export default function ProjectTasksTab() {
                           )}
 
                           <div className="text-sm">
-                            <span className="font-bold text-slate-900">{t.spent_hours || 0} hrs</span>
-                            <span className="text-xs text-slate-500 ml-1">/ {t.estimated_hours || 0}h est</span>
+                            <span className="font-bold text-slate-900">{formatHoursToHMin(t.spent_hours || 0)}</span>
+                            <span className="text-xs text-slate-500 ml-1">/ {formatHoursToHMin(t.estimated_hours || 0)} est</span>
                           </div>
                         </div>
                       </td>
@@ -1454,7 +1455,7 @@ export default function ProjectTasksTab() {
                           </span>
                         </td>
                         <td className="py-2 px-3 text-slate-800 font-medium">
-                          {item.estimated_hours}h <span className="text-slate-500">/ {item.spent_hours}h</span>
+                          {formatHoursToHMin(item.estimated_hours)} <span className="text-slate-500">/ {formatHoursToHMin(item.spent_hours)}</span>
                         </td>
                         <td className="py-2 px-3">
                           {item.isValid ? (
@@ -1782,11 +1783,11 @@ export default function ProjectTasksTab() {
               <div className="bg-slate-50 p-3.5 rounded-lg border border-slate-300 flex items-center justify-between text-xs">
                 <div>
                   <span className="text-slate-600 block text-xs uppercase font-bold">Spent Time</span>
-                  <span className="font-bold text-slate-900 text-base">{quickLogTask.spent_hours || 0} Hours</span>
+                  <span className="font-bold text-slate-900 text-base">{formatHoursToHMin(quickLogTask.spent_hours || 0)}</span>
                 </div>
                 <div>
                   <span className="text-slate-600 block text-xs uppercase font-bold">Estimated</span>
-                  <span className="font-bold text-blue-900 text-base">{quickLogTask.estimated_hours || 0} Hours</span>
+                  <span className="font-bold text-blue-900 text-base">{formatHoursToHMin(quickLogTask.estimated_hours || 0)}</span>
                 </div>
               </div>
 

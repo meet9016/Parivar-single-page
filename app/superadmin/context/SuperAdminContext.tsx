@@ -15,6 +15,68 @@ export interface ParivarStats {
   total_pending_amount: number;
 }
 
+export interface SubscriptionWatchlistItem {
+  _id: string;
+  parivar_name: string;
+  community_type?: string;
+  village_name?: string;
+  city?: string;
+  state?: string;
+  admin_name?: string;
+  admin_mobile?: string;
+  admin_email?: string;
+  status: number;
+  base_amount: number;
+  extra_hours: number;
+  extra_charge: number;
+  total_amount: number;
+  received_amount: number;
+  pending_amount: number;
+  createdAt?: string;
+  subscription_plan_time?: string;
+  subscription_start_date?: string;
+  subscription_expiry_date?: string;
+  days_remaining: number | null;
+  subscription_status: "expired" | "expiring_soon" | "active" | "lifetime";
+  status_label: string;
+  elapsed_days?: number;
+  elapsed_label?: string;
+  plan_progress_percent?: number;
+}
+
+export interface DashboardData {
+  metrics: {
+    total_parivars: number;
+    total_active_parivars: number;
+    total_inactive_parivars: number;
+    active_percentage: number;
+    total_project_amount: number;
+    avg_deal_amount: number;
+    total_base_amount: number;
+    total_customization_charges: number;
+    total_received_amount: number;
+    collection_rate: number;
+    total_pending_amount: number;
+    communities_with_pending: number;
+
+    // Subscription & Expiry metrics
+    total_expired: number;
+    total_expiring_soon: number;
+    total_active_plans: number;
+
+    total_inquiries: number;
+    pending_inquiries: number;
+    resolved_inquiries: number;
+    total_tasks: number;
+    total_spent_hours: number;
+    completed_tasks: number;
+    in_progress_tasks: number;
+  };
+  recent_parivars: any[];
+  recent_inquiries: any[];
+  subscription_watchlist: SubscriptionWatchlistItem[];
+}
+
 export interface ProjectTask {
   _id: string;
   project_name: string;
@@ -44,8 +106,13 @@ interface SuperAdminContextType {
   handleLogin: (e: React.FormEvent, form: any, rememberMe?: boolean) => Promise<void>;
   handleLogout: () => void;
   
-  activeTab: "inquiries" | "parivars" | "pricing" | "tasks";
-  setActiveTab: (tab: "inquiries" | "parivars" | "pricing" | "tasks") => void;
+  activeTab: "dashboard" | "inquiries" | "parivars" | "pricing" | "tasks";
+  setActiveTab: (tab: "dashboard" | "inquiries" | "parivars" | "pricing" | "tasks") => void;
+
+  // Dedicated Dashboard API state
+  dashboardData: DashboardData | null;
+  dashboardLoading: boolean;
+  fetchDashboardData: () => Promise<void>;
 
   inquiries: any[];
   inquiriesLoading: boolean;
@@ -130,28 +197,33 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
   const params = useParams();
   
   const tabPath = params?.tab?.[0];
-  const derivedTab = tabPath === "inquiries"
-    ? "inquiries"
-    : tabPath === "pricing"
-    ? "pricing"
-    : tabPath === "tasks"
-    ? "tasks"
-    : "parivars";
+  const derivedTab: "dashboard" | "inquiries" | "parivars" | "pricing" | "tasks" =
+    tabPath === "inquiries"
+      ? "inquiries"
+      : tabPath === "pricing"
+      ? "pricing"
+      : tabPath === "tasks"
+      ? "tasks"
+      : tabPath === "all-parivar" || tabPath === "parivars"
+      ? "parivars"
+      : "dashboard";
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
   const [loginError, setLoginError] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   
-  const [activeTab, setActiveTabState] = useState<"inquiries" | "parivars" | "pricing" | "tasks">(derivedTab);
+  const [activeTab, setActiveTabState] = useState<"dashboard" | "inquiries" | "parivars" | "pricing" | "tasks">(derivedTab);
 
   useEffect(() => {
     setActiveTabState(derivedTab);
   }, [derivedTab]);
 
-  const setActiveTab = (tab: "inquiries" | "parivars" | "pricing" | "tasks") => {
+  const setActiveTab = (tab: "dashboard" | "inquiries" | "parivars" | "pricing" | "tasks") => {
     setActiveTabState(tab);
-    const path = tab === "inquiries"
+    const path = tab === "dashboard"
+      ? "dashboard"
+      : tab === "inquiries"
       ? "inquiries"
       : tab === "pricing"
       ? "pricing"
@@ -204,6 +276,24 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
     projectStats: {},
     devStats: {},
   });
+
+  // Dedicated Dashboard Data State
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  const [dashboardLoading, setDashboardLoading] = useState(false);
+
+  const fetchDashboardData = async () => {
+    setDashboardLoading(true);
+    try {
+      const res = await axiosInstance.get(ENDPOINTS.DASHBOARD_STATS);
+      if (res.status === 200 && res.data?.data) {
+        setDashboardData(res.data.data);
+      }
+    } catch (err) {
+      console.error("Failed to load dashboard data", err);
+    } finally {
+      setDashboardLoading(false);
+    }
+  };
 
   useEffect(() => {
     const savedLocal = localStorage.getItem("superadmin_auth");
@@ -307,6 +397,7 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (isAuthenticated) {
+      fetchDashboardData();
       fetchInquiries();
       fetchParivars();
       fetchParivarStats();
@@ -419,6 +510,7 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
         });
         fetchParivars();
         fetchParivarStats();
+        fetchDashboardData();
         setTimeout(() => {
           setIsCreateModalOpen(false);
           setCreateStatus(null);
@@ -453,6 +545,8 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
         admin_mobile: editForm.admin_mobile,
         city: editForm.city,
         subscription_plan_time: editForm.subscription_plan_time,
+        subscription_start_date: editForm.subscription_start_date,
+        subscription_expiry_date: editForm.subscription_expiry_date,
         project_amount: Number(editForm.project_amount) || 0,
         free_customization_hours: editForm.free_customization_hours !== undefined ? Number(editForm.free_customization_hours) : 15,
         extra_hourly_rate: editForm.extra_hourly_rate !== undefined ? Number(editForm.extra_hourly_rate) : 1000,
@@ -463,6 +557,7 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
         toast.success(`Parivar "${editForm.parivar_name}" updated successfully!`);
         fetchParivars();
         fetchParivarStats();
+        fetchDashboardData();
         setEditingParivar(null);
       } else {
         toast.error(updateRes.data.message || "Failed to update Parivar.");
@@ -638,7 +733,8 @@ export function SuperAdminProvider({ children }: { children: ReactNode }) {
     editingParivar, setEditingParivar, editLoading, handleEditParivar, handleDeleteParivar, handleAddParivarPayment,
     pricingPlans, pricingLoading, fetchPricingPlans, handleCreatePricingPlan, handleEditPricingPlan, handleDeletePricingPlan,
     projectTasks, tasksLoading, taskSearch, setTaskSearch, taskFilters, setTaskFilters, taskMeta,
-    fetchProjectTasks, handleCreateTask, handleUpdateTask, handleLogTaskTime, handleDeleteTask, handleBatchImportTasks
+    fetchProjectTasks, handleCreateTask, handleUpdateTask, handleLogTaskTime, handleDeleteTask, handleBatchImportTasks,
+    dashboardData, dashboardLoading, fetchDashboardData
   };
 
 

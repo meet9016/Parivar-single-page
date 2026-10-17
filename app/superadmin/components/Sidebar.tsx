@@ -1,10 +1,11 @@
 "use client";
 
 import React from "react";
-import { Building2, MessageSquare, Tag, Briefcase } from "lucide-react";
+import { LayoutDashboard, Building2, MessageSquare, Tag, Briefcase } from "lucide-react";
 import { useSuperAdmin } from "../context/SuperAdminContext";
 
 const NAV = [
+  { id: "dashboard", label: "Dashboard", Icon: LayoutDashboard, countKey: null },
   { id: "parivars", label: "All Parivars", Icon: Building2, countKey: "parivars" },
   { id: "inquiries", label: "User Inquiries", Icon: MessageSquare, countKey: "inquiries" },
   { id: "pricing", label: "Pricing & Offers", Icon: Tag, countKey: "pricingPlans" },
@@ -36,6 +37,7 @@ export default function Sidebar() {
 
         {NAV.map(({ id, label, Icon, countKey }) => {
           const active = activeTab === id;
+          const count = countKey ? countMap[countKey] ?? 0 : null;
           return (
             <button
               key={id}
@@ -49,20 +51,22 @@ export default function Sidebar() {
               <div className="flex items-center gap-3">
                 <Icon
                   className={`w-4 h-4 transition-colors ${
-                    active ? "text-white" : "text-slate-400 group-hover:text-slate-200"
+                    active ? "text-white" : "text-slate-400 group-hover:text-slate-600"
                   }`}
                 />
                 <span className="text-sm font-medium">{label}</span>
               </div>
-              <span
-                className={`text-xs font-bold px-2 py-0.5 rounded-full transition-colors ${
-                  active
-                    ? "bg-white text-blue-700 shadow-2xs"
-                    : "bg-white/10 text-slate-300 group-hover:bg-white/20 group-hover:text-white border border-white/10"
-                }`}
-              >
-                {countMap[countKey] ?? 0}
-              </span>
+              {count !== null && (
+                <span
+                  className={`text-xs font-bold px-2 py-0.5 rounded-full transition-colors ${
+                    active
+                      ? "bg-white text-blue-700 shadow-2xs"
+                      : "bg-slate-100 text-slate-600 group-hover:bg-slate-200 group-hover:text-slate-900 border border-slate-200/60"
+                  }`}
+                >
+                  {count}
+                </span>
+              )}
             </button>
           );
         })}
@@ -74,17 +78,17 @@ export default function Sidebar() {
           Platform Overview
         </div>
         <div className="grid grid-cols-3 gap-1.5 text-center">
-          <div className="bg-white/10 rounded-lg p-2 border border-white/5 shadow-2xs">
-            <span className="text-sm font-bold text-white block">{parivars.length}</span>
-            <span className="text-[10px] font-semibold text-slate-300 uppercase tracking-tight">Parivars</span>
+          <div className="bg-white rounded-lg p-2 border border-slate-200/60 shadow-2xs">
+            <span className="text-sm font-bold text-slate-800 block">{parivars.length}</span>
+            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-tight">Parivars</span>
           </div>
-          <div className="bg-white/10 rounded-lg p-2 border border-white/5 shadow-2xs">
-            <span className="text-sm font-bold text-amber-300 block">{inquiries.length}</span>
-            <span className="text-[10px] font-semibold text-slate-300 uppercase tracking-tight">Leads</span>
+          <div className="bg-white rounded-lg p-2 border border-slate-200/60 shadow-2xs">
+            <span className="text-sm font-bold text-amber-600 block">{inquiries.length}</span>
+            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-tight">Leads</span>
           </div>
-          <div className="bg-white/10 rounded-lg p-2 border border-white/5 shadow-2xs">
-            <span className="text-sm font-bold text-blue-400 block">{projectTasks?.length || 0}</span>
-            <span className="text-[10px] font-semibold text-slate-300 uppercase tracking-tight">Tasks</span>
+          <div className="bg-white rounded-lg p-2 border border-slate-200/60 shadow-2xs">
+            <span className="text-sm font-bold text-[#413afb] block">{projectTasks?.length || 0}</span>
+            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-tight">Tasks</span>
           </div>
         </div>
       </div>

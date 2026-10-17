@@ -1,12 +1,66 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useSuperAdmin } from "../context/SuperAdminContext";
-import { User, IndianRupee, Clock } from "lucide-react";
+import { User, IndianRupee, Clock, Calendar, AlertTriangle, CheckCircle2, Sparkles, RefreshCw } from "lucide-react";
 import CustomSelect from "./CustomSelect";
+
+const toDateInputValue = (val: any): string => {
+  if (!val) return "";
+  if (typeof val === "string" && /^\d{4}-\d{2}-\d{2}$/.test(val)) {
+    return val;
+  }
+  const d = new Date(val);
+  if (isNaN(d.getTime())) return "";
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const dt = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${dt}`;
+};
+
+const getTodayStr = (): string => {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, "0");
+  const d = String(now.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+};
+
+const calculateExpiryFromPlan = (start: string, plan: string): string => {
+  if (!start || !plan || plan === "Lifetime") return "";
+  try {
+    const parts = start.split("-");
+    if (parts.length !== 3) return "";
+    const year = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10) - 1;
+    const day = parseInt(parts[2], 10);
+    if (isNaN(year) || isNaN(month) || isNaN(day)) return "";
+
+    const d = new Date(year, month, day);
+    if (isNaN(d.getTime())) return "";
+
+    const clean = plan.toLowerCase();
+    if (clean.includes("1 month")) d.setMonth(d.getMonth() + 1);
+    else if (clean.includes("3 month")) d.setMonth(d.getMonth() + 3);
+    else if (clean.includes("6 month")) d.setMonth(d.getMonth() + 6);
+    else if (clean.includes("1 year")) d.setFullYear(d.getFullYear() + 1);
+    else if (clean.includes("2 year")) d.setFullYear(d.getFullYear() + 2);
+    else if (clean.includes("3 year")) d.setFullYear(d.getFullYear() + 3);
+    else d.setFullYear(d.getFullYear() + 1);
+
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const dt = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${dt}`;
+  } catch {
+    return "";
+  }
+};
 
 export default function EditParivarModal() {
   const { editingParivar, setEditingParivar, editLoading, handleEditParivar } = useSuperAdmin();
+
+  const todayStr = getTodayStr();
 
   const [editForm, setEditForm] = useState({
     parivar_name: "",
@@ -16,9 +70,11 @@ export default function EditParivarModal() {
     admin_mobile: "",
     city: "",
     subscription_plan_time: "1 Year",
+    subscription_start_date: todayStr,
+    subscription_expiry_date: calculateExpiryFromPlan(todayStr, "1 Year"),
     project_amount: "",
     free_customization_hours: "15",
-    extra_hourly_rate: "150",
+    extra_hourly_rate: "1000",
     notes: "",
   });
 
@@ -26,6 +82,13 @@ export default function EditParivarModal() {
 
   useEffect(() => {
     if (editingParivar) {
+      const rawStart = editingParivar.subscription_start_date || editingParivar.createdAt;
+      const startDateStr = toDateInputValue(rawStart) || getTodayStr();
+      const rawExp = editingParivar.subscription_expiry_date;
+      const expiryDateStr = rawExp
+        ? toDateInputValue(rawExp)
+        : calculateExpiryFromPlan(startDateStr, editingParivar.subscription_plan_time || "1 Year");
+
       setEditForm({
         parivar_name: editingParivar.parivar_name || editingParivar.company_name || "",
         status: editingParivar.status ?? 1,
@@ -34,6 +97,8 @@ export default function EditParivarModal() {
         admin_mobile: editingParivar.admin_mobile || editingParivar.admin?.mobile || "",
         city: editingParivar.city || "",
         subscription_plan_time: editingParivar.subscription_plan_time || "1 Year",
+        subscription_start_date: startDateStr,
+        subscription_expiry_date: expiryDateStr,
         project_amount: editingParivar.project_amount !== undefined ? String(editingParivar.project_amount) : "",
         free_customization_hours: editingParivar.free_customization_hours !== undefined ? String(editingParivar.free_customization_hours) : "15",
         extra_hourly_rate: editingParivar.extra_hourly_rate !== undefined ? String(editingParivar.extra_hourly_rate) : "1000",
@@ -41,6 +106,65 @@ export default function EditParivarModal() {
       });
     }
   }, [editingParivar]);
+
+  const expiryPreview = useMemo(() => {
+    if (editForm.subscription_plan_time === "Lifetime") {
+      return {
+        formatted: "Never Expires",
+        label: "Lifetime Access",
+        status: "lifetime",
+      };
+    }
+
+    if (!editForm.subscription_expiry_date) {
+      return {
+        formatted: "No Expiry Date Set",
+        label: "Active",
+        status: "active",
+      };
+    }
+
+    const exp = new Date(editForm.subscription_expiry_date);
+    if (isNaN(exp.getTime())) {
+      return {
+        formatted: "Invalid Date",
+        label: "Select valid date",
+        status: "expired",
+      };
+    }
+
+    const now = new Date();
+    const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const expMidnight = new Date(exp.getFullYear(), exp.getMonth(), exp.getDate());
+    const diffDays = Math.round((expMidnight.getTime() - todayMidnight.getTime()) / (1000 * 60 * 60 * 24));
+
+    const formatted = exp.toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+
+    if (diffDays < 0) {
+      const overdue = Math.abs(diffDays);
+      return {
+        formatted,
+        label: overdue === 0 ? "Expired today" : `Expired ${overdue} days ago`,
+        status: "expired",
+      };
+    } else if (diffDays <= 30) {
+      return {
+        formatted,
+        label: diffDays === 0 ? "Expires today!" : `Expiring soon (${diffDays}d left)`,
+        status: "expiring_soon",
+      };
+    } else {
+      return {
+        formatted,
+        label: `Active (${diffDays} days remaining)`,
+        status: "active",
+      };
+    }
+  }, [editForm.subscription_expiry_date, editForm.subscription_plan_time]);
 
   const validateAndSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -187,7 +311,18 @@ export default function EditParivarModal() {
               </label>
               <CustomSelect
                 value={editForm.subscription_plan_time}
-                onChange={(val) => setEditForm({ ...editForm, subscription_plan_time: val })}
+                onChange={(val) => {
+                  setEditForm((prev) => ({
+                    ...prev,
+                    subscription_plan_time: val,
+                    subscription_expiry_date:
+                      val === "Lifetime"
+                        ? ""
+                        : val === "Custom"
+                        ? prev.subscription_expiry_date
+                        : calculateExpiryFromPlan(prev.subscription_start_date, val),
+                  }));
+                }}
                 options={[
                   "1 Month",
                   "3 Months",
@@ -195,9 +330,130 @@ export default function EditParivarModal() {
                   "1 Year",
                   "2 Years",
                   "3 Years",
+                  "Custom",
                   "Lifetime",
                 ]}
               />
+            </div>
+          </div>
+
+          {/* Subscription Start Date & Plan Expiry Date (Manually Editable) */}
+          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                <Calendar className="w-3.5 h-3.5 text-[#413afb]" />
+                Subscription Dates & Validity Control
+              </span>
+              {editForm.subscription_plan_time !== "Lifetime" && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const autoExp = calculateExpiryFromPlan(
+                      editForm.subscription_start_date,
+                      editForm.subscription_plan_time
+                    );
+                    setEditForm((prev) => ({ ...prev, subscription_expiry_date: autoExp }));
+                  }}
+                  className="text-[11px] font-semibold text-[#413afb] hover:underline flex items-center gap-1 cursor-pointer"
+                  title="Auto-calculate expiry date from plan duration"
+                >
+                  <RefreshCw className="w-3 h-3" />
+                  <span>Auto-Calculate</span>
+                </button>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* Start Date */}
+              <div>
+                <label className="block text-[11px] font-bold text-slate-700 mb-1 flex items-center justify-between">
+                  <span>Subscription Start Date</span>
+                  <span className="text-[10px] text-[#413afb] font-medium">Editable</span>
+                </label>
+                <input
+                  type="date"
+                  value={editForm.subscription_start_date || ""}
+                  onClick={(e) => {
+                    try {
+                      (e.target as any).showPicker?.();
+                    } catch {}
+                  }}
+                  onChange={(e) => {
+                    const newStart = e.target.value;
+                    setEditForm((prev) => ({
+                      ...prev,
+                      subscription_start_date: newStart,
+                      subscription_expiry_date:
+                        newStart && prev.subscription_plan_time !== "Custom" && prev.subscription_plan_time !== "Lifetime"
+                          ? calculateExpiryFromPlan(newStart, prev.subscription_plan_time)
+                          : prev.subscription_expiry_date,
+                    }));
+                  }}
+                  className="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-xs font-semibold text-slate-900 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15 transition-all cursor-pointer"
+                />
+              </div>
+
+              {/* Expiry Date (Manually Editable) */}
+              <div>
+                <label className="block text-[11px] font-bold text-slate-700 mb-1 flex items-center justify-between">
+                  <span>Plan Expiry Date</span>
+                  <span className="text-[10px] text-[#413afb] font-medium">Editable</span>
+                </label>
+                {editForm.subscription_plan_time === "Lifetime" ? (
+                  <div className="px-3 py-2 rounded-xl bg-purple-50 border border-purple-200 text-xs font-semibold text-purple-700 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Lifetime Access</span>
+                  </div>
+                ) : (
+                  <input
+                    type="date"
+                    value={editForm.subscription_expiry_date || ""}
+                    onClick={(e) => {
+                      try {
+                        (e.target as any).showPicker?.();
+                      } catch {}
+                    }}
+                    onChange={(e) => {
+                      setEditForm((prev) => ({
+                        ...prev,
+                        subscription_expiry_date: e.target.value,
+                      }));
+                    }}
+                    className="w-full px-3 py-2 rounded-xl bg-white border border-slate-300 text-xs font-semibold text-slate-900 focus:outline-none focus:border-[#413afb] focus:ring-2 focus:ring-[#413afb]/15 transition-all cursor-pointer"
+                  />
+                )}
+              </div>
+            </div>
+
+            {/* Calculated Expiry Live Preview */}
+            <div
+              className={`p-2.5 rounded-lg text-xs font-semibold flex items-center justify-between border gap-2 ${
+                expiryPreview.status === "expired"
+                  ? "bg-rose-50 text-rose-700 border-rose-200"
+                  : expiryPreview.status === "expiring_soon"
+                  ? "bg-amber-50 text-amber-800 border-amber-200"
+                  : expiryPreview.status === "lifetime"
+                  ? "bg-purple-50 text-purple-700 border-purple-200"
+                  : "bg-emerald-50 text-emerald-800 border-emerald-200"
+              }`}
+            >
+              <div className="flex items-center gap-1.5 min-w-0">
+                {expiryPreview.status === "expired" ? (
+                  <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+                ) : expiryPreview.status === "expiring_soon" ? (
+                  <Clock className="w-4 h-4 text-amber-600 shrink-0" />
+                ) : expiryPreview.status === "lifetime" ? (
+                  <Sparkles className="w-4 h-4 text-purple-600 shrink-0" />
+                ) : (
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                )}
+                <span className="truncate">
+                  Calculated Target: <strong>{expiryPreview.formatted}</strong>
+                </span>
+              </div>
+              <span className="shrink-0 text-[11px] font-bold">
+                {expiryPreview.label}
+              </span>
             </div>
           </div>
 
